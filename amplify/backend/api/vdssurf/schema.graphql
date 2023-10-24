@@ -4,3 +4,33 @@ type Note @model @auth(rules: [ { allow: public } ] ){
   description: String
   image: String
 }
+
+enum AutosEnum {
+  JEEP
+  VOLVO
+}
+
+enum LevelsEnum {
+  TRESPALMAS
+  SANDY
+  STEPS
+}
+
+enum CommitmentEnum {
+  THINKINGABOUTIT
+  PRETTYSURE
+  CONFIRMED
+}
+
+type VDSBooking {
+  id: ID!
+  guests: String!
+  description: String
+  checkIn: AWSDateTime!
+  checkOut: AWSDateTime!
+  levels: [LevelsEnum]!
+  autos: [AutosEnum]!
+  commitment: CommitmentEnum!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
