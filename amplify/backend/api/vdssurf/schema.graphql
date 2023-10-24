@@ -1,4 +1,4 @@
-type Note @model @auth(rules: [ { allow: public } ] ){
+type Note @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
   description: String
@@ -34,3 +34,4 @@ type VDSBooking {
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
+ 
