@@ -6,4 +6,6 @@
 
 export { default as NoteCreateForm } from "./NoteCreateForm";
 export { default as NoteUpdateForm } from "./NoteUpdateForm";
+export { default as VDSBookingCreateForm } from "./VDSBookingCreateForm";
+export { default as VDSBookingUpdateForm } from "./VDSBookingUpdateForm";
 export { default as studioTheme } from "./studioTheme";
