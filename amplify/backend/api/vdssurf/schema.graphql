@@ -22,7 +22,7 @@ enum CommitmentEnum {
   CONFIRMED
 }
 
-type VDSBooking {
+type VDSBooking @model{
   id: ID!
   guests: String!
   description: String
