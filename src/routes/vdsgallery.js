@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Storage } from 'aws-amplify';
-import { AmplifyS3Image, AmplifyS3Album, AmplifyS3ImagePicker } from "@aws-amplify/ui-react/legacy";
+// import { AmplifyS3Image, AmplifyS3Album, AmplifyS3ImagePicker } from "@aws-amplify/ui-react/legacy";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip';
