@@ -2,5 +2,11 @@
   "AppSyncApiName": "vdssurf",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "AuthModeLastUpdated": "2023-10-24T14:39:48.800Z"
+  "AuthModeLastUpdated": "2023-10-24T14:39:48.800Z",
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authvdssurfeed6ea65",
+      "Outputs.UserPoolId"
+    ]
+  }
 }
