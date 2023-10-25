@@ -1,137 +1,171 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import "@aws-amplify/ui-react/styles.css";
-import { API, Storage } from 'aws-amplify';
+/* src/App.js */
+import React from 'react';
+
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import { I18n } from 'aws-amplify';
+
 import {
-  Button,
-  Flex,
-  Heading,
-  Image,
-  Text,
-  TextField,
-  View,
-  withAuthenticator,
-} from '@aws-amplify/ui-react';
+  ApolloProvider,
+} from '@apollo/client';
+import client from './apollo/client.js'
 
-import { listNotes } from "./graphql/queries";
 import {
-  createNote as createNoteMutation,
-  deleteNote as deleteNoteMutation,
-} from "./graphql/mutations";
+  Link,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useNavigate,
+  BrowserRouter,
+} from "react-router-dom";
+
+import Box from '@mui/material/Box';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Avatar from '@mui/material/Avatar';
+import { deepOrange, deepPurple } from '@mui/material/colors';
+
+import VDSErrorBoundary from './components/vdserrorboundary';
+import VDSBookings from './routes/vdsbookings'
+import VDSGallery from './routes/vdsgallery'
+import VDSAppBar from './vdsappbar';
+import { AddBoxOutlined } from '@mui/icons-material';
+import react from 'react';
+import { CssBaseline } from '@mui/material';
+
+const appTitle = 'VDS ✌🏄';
+
+const pages = [
+  { label: 'Gallery', link: '/gallery', },
+  { label: 'Bookings', link: '/bookings', },
+]
 
 
-const App = ({ signOut }) => {
-  const [notes, setNotes] = useState([]);
+const SignInText = 'Drop-In';
+const SignOutText = 'Bail';
+I18n.putVocabulariesForLanguage('en', {
+  'Sign In': SignInText, // Tab header
+  'Sign in': SignInText, // Button label
+  'Sign in to your account': 'Welcome Back!',
+  Username: 'Enter your username', // Username label
+  Password: 'Enter your password', // Password label
+  'Forgot your password?': 'Rewax Password',
+});
 
-  useEffect(() => {
-    fetchNotes();
-  }, []);
+function SettingsMenuIcon(user) {
 
-  async function fetchNotes() {
-    const apiData = await API.graphql({ query: listNotes });
-    const notesFromAPI = apiData.data.listNotes.items;
-    await Promise.all(
-      notesFromAPI.map(async (note) => {
-        if (note.image) {
-          const url = await Storage.get(note.name);
-          note.image = url;
-        }
-        return note;
-      })
-    );
-    setNotes(notesFromAPI);
-  }
+  return ((user === undefined ?
+    <AccountCircleIcon />
+    : <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.attributes.email.substring(0, 2).toUpperCase()}</Avatar>
+  ));
 
-  async function createNote(event) {
-    event.preventDefault();
-    const form = new FormData(event.target);
-    const image = form.get("image");
-    const data = {
-      name: form.get("name"),
-      description: form.get("description"),
-      image: image.name,
-    };
-    if (!!data.image) await Storage.put(data.name, image);
-    await API.graphql({
-      query: createNoteMutation,
-      variables: { input: data },
-    });
-    fetchNotes();
-    event.target.reset();
-  }
-  
-
-  async function deleteNote({ id, name }) {
-    const newNotes = notes.filter((note) => note.id !== id);
-    setNotes(newNotes);
-    await Storage.remove(name);
-    await API.graphql({
-      query: deleteNoteMutation,
-      variables: { input: { id } },
-    });
-  }
-
-  return (
-    <View className="App">
-      <Heading level={1}>My Notes App</Heading>
-      <View as="form" margin="3rem 0" onSubmit={createNote}>
-        <Flex direction="row" justifyContent="center">
-          <TextField
-            name="name"
-            placeholder="Note Name"
-            label="Note Name"
-            labelHidden
-            variation="quiet"
-            required
-          />
-          <TextField
-            name="description"
-            placeholder="Note Description"
-            label="Note Description"
-            labelHidden
-            variation="quiet"
-            required
-          />
-          <View
-            name="image"
-            as="input"
-            type="file"
-            style={{ alignSelf: "end" }}
-          />
-          <Button type="submit" variation="primary">
-            Create Note
-          </Button>
-        </Flex>
-      </View>
-      <Heading level={2}>Current Notes</Heading>
-      <View margin="3rem 0">
-      {notes.map((note) => (
-        <Flex
-          key={note.id || note.name}
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Text as="strong" fontWeight={700}>
-            {note.name}
-          </Text>
-          <Text as="span">{note.description}</Text>
-          {note.image && (
-            <Image
-              src={note.image}
-              alt={`visual aid for ${notes.name}`}
-              style={{ width: 400 }}
-            />
-          )}
-          <Button variation="link" onClick={() => deleteNote(note)}>
-            Delete note
-          </Button>
-        </Flex>
-      ))}
-      </View>
-      <Button onClick={signOut}>Sign Out</Button>
-    </View>
-  );
 };
 
-export default withAuthenticator(App);
+function Login() {
+
+  const { user, signOut } = useAuthenticator((context) => [context.user]);
+  return (
+    (user === undefined ?
+      <Authenticator variation="modal" hideSignUp={true} />
+      : <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.attributes.email.substring(0, 2).toUpperCase()}</Avatar>
+    )
+  )
+};
+
+
+function App() {
+
+  const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const navigate = useNavigate()
+
+  const handleNavigate = (selection) => {
+    navigate(selection.link)
+  }
+
+  const handleSettingsClick = (selection) => {
+
+    if (selection === SignOutText) {
+      signOut();
+      navigate('/gallery')
+    } else if (selection === SignInText) {
+      navigate('/login')
+    };
+  };
+
+  return (
+    <ApolloProvider client={client}>
+      <VDSErrorBoundary>
+
+        <Box
+          display="flex"
+          flexDirection="column"
+          height="100vh"
+          width="100%"
+          sx={{
+            // border: "4px solid purple",
+          }}
+        >
+
+          <VDSAppBar
+            title={appTitle}
+            pages={pages}
+            setPage={handleNavigate}
+            rightMenu={(user !== undefined ? [SignOutText] : [SignInText])}
+            rightMenuIcon={SettingsMenuIcon(user)}
+            selectRightMenu={handleSettingsClick}
+          />
+
+          <Box
+            display="flex"
+            flex={1}
+            overflow='auto'
+            width='100%'
+            sx={{
+              // border: "3px solid green",
+            }}
+          >
+
+            <Routes>
+              <Route path="/" element={<VDSGallery />} />
+              <Route path="/gallery" element={<VDSGallery />} />
+              <Route
+                path="/login"
+                element={
+                  <React.Fragment>
+                    <Authenticator variation="modal" hideSignUp={true} />
+                    <VDSGallery />
+                  </React.Fragment>
+                }
+              />
+              <Route
+                path="/bookings"
+                element={
+                  <React.Fragment>
+                    <Authenticator variation="modal" hideSignUp={true} />
+                    <VDSBookings />
+                  </React.Fragment>
+                }
+              />
+            </Routes>
+          </Box>
+        </Box>
+      </VDSErrorBoundary>
+    </ApolloProvider>
+  );
+}
+
+
+export default function AppWithProvider() {
+  return (
+    <React.StrictMode>
+      <CssBaseline />
+      <BrowserRouter>
+        <Authenticator.Provider>
+          <App></App>
+        </Authenticator.Provider>
+      </BrowserRouter>
+    </React.StrictMode>
+  );
+}
+
+
