@@ -25,7 +25,7 @@ import {
 } from '../graphql/mutations';
 import {
     bookingsByCheckIn,
-} from '../graphql/queries';
+} from '../graphql/query_bookingsByCheckIn';
 
 import {
     VDSBookingForm,
