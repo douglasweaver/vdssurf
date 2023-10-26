@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 export const bookingsByCheckIn = /* GraphQL */ `
   query BookingsByCheckIn(
     $type: String!

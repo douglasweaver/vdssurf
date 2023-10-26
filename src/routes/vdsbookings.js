@@ -23,7 +23,7 @@ import {
     createVDSBooking,
     updateVDSBooking
 } from '../graphql/mutations';
-import bookingsByCheckIn from '../graphql/query_bookingsByCheckIn.graphql';
+import bookingsByCheckIn from '../graphql/query_bookingsByCheckIn';
 
 import {
     VDSBookingForm,
