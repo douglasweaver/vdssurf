@@ -31,7 +31,7 @@ type VDSBooking @model @auth(rules: [{allow: public}]){
   levels: [LevelsEnum]!
   autos: [AutosEnum]!
   commitment: CommitmentEnum!
-  type: String! @index(name: "bookingsByCheckIn", queryField: "bookingsByCheckIn", sortKeyFields: ["checkIn"])
+  type: String! @index(name: "vDSBookingsByDate", queryField: "vDSBookingsByDate", sortKeyFields: ["checkIn"])
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
 }
