@@ -25,7 +25,10 @@ import {
 } from '../graphql/mutations';
 import {
     bookingsByCheckIn
- } from '../graphql/query_bookingsByCheckIn';
+ } from '../graphql/queries';
+//  import {
+//     bookingsByCheckIn
+//  } from '../graphql/query_bookingsByCheckIn';
 
 import {
     VDSBookingForm,
@@ -38,7 +41,7 @@ import VDSErrorBoundary from '../components/vdserrorboundary';
 
 
 const bookingsByCheckInQueryVariables =  { 
-    type: "Booking", 
+    // type: "Booking", 
     sortDirection: 'ASC',
     limit: 1000,
  }
@@ -117,6 +120,8 @@ export default function VDSBookings() {
         }
     }
 
+    console.log("HERE IN BOOKINGS")
+    console.table(bookingsRet)
     let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.bookingsByCheckIn.items : [];
     // let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.bookingsByCheckIn.items : testBookings();
 
