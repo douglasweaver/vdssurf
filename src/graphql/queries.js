@@ -77,37 +77,3 @@ export const listVDSBookings = /* GraphQL */ `
     }
   }
 `;
-
-export const bookingsByCheckIn = /* GraphQL */ `
-  query BookingsByCheckIn(
-    $checkIn: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelVDSBookingFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    bookingsByCheckIn(
-      checkIn: $checkIn
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        guests
-        description
-        checkIn
-        checkOut
-        levels
-        autos
-        commitment
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
