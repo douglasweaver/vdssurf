@@ -3,10 +3,11 @@ import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormHelperText from '@mui/material/FormHelperText';
 import TextField from '@mui/material/TextField';
-import DateAdapter from '@mui/lab/AdapterDayjs';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import MobileDateRangePicker from '@mui/lab/MobileDateRangePicker';
-import MobileTimePicker from '@mui/lab/MobileTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { TimePicker } from '@mui/x-date-pickers';
+import {DatePicker} from '@mui/x-date-pickers';
+// import {DateRangePicker} from '@mui/x-date-pickers';
 
 const startLabel = 'Check-In'
 const endLabel = 'Check-Out'
@@ -23,6 +24,8 @@ export default function VDSCheckInCheckOut({
     helperText,
 }) {
 
+    console.log("inout")
+    console.log(value[0],value[1])
     const [startDate, setStartDate] = React.useState(value[0]);
     const [endDate, setEndDate] = React.useState(value[1]);
 
@@ -66,14 +69,14 @@ export default function VDSCheckInCheckOut({
             <FormGroup
                 row
                                 >
-                <LocalizationProvider dateAdapter={DateAdapter}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
 
-                    <MobileDateRangePicker
+                    <DatePicker
                         startText={startLabel}
                         endText={endLabel}
                         value={[startDate, endDate]}
                         onChange={handleDateRangeChange}
-                        renderInput={(startProps, endProps) => (
+                        textField={(startProps, endProps) => (
                             <React.Fragment>
                                 <TextField {...startProps} sx={DateTimePicker_sx}
                                 />
@@ -88,8 +91,8 @@ export default function VDSCheckInCheckOut({
             <FormGroup
                 row
             >
-                <LocalizationProvider dateAdapter={DateAdapter}>
-                    <MobileTimePicker
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <TimePicker
                         // label={startLabel}
                         value={startDate}
                         ampm={false}
@@ -98,7 +101,7 @@ export default function VDSCheckInCheckOut({
                         inputFormat='h a'
                         disableMaskedInput={true}
                         onChange={handleStartTimeChange}
-                        renderInput={(params) => {
+                        textField={(params) => {
                             return (<TextField {...params}
                                 sx={DateTimePicker_sx}
                             />
@@ -106,7 +109,7 @@ export default function VDSCheckInCheckOut({
                         }}
                     />
                     {/* <Box sx={{ mx: 2 }}> to </Box> */}
-                    <MobileTimePicker
+                    <TimePicker
                         // label={endLabel}
                         ampm={false}
                         value={endDate}
@@ -115,7 +118,7 @@ export default function VDSCheckInCheckOut({
                         inputFormat='h a'
                         disableMaskedInput={true}
                         onChange={handleEndTimeChange}
-                        renderInput={(params) => <TextField {...params}
+                        textField={(params) => <TextField {...params}
                             sx={DateTimePicker_sx}
                         />}
                     />

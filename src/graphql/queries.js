@@ -46,6 +46,7 @@ export const getVDSBooking = /* GraphQL */ `
       levels
       autos
       commitment
+      type
       createdAt
       updatedAt
       __typename
@@ -68,6 +69,7 @@ export const listVDSBookings = /* GraphQL */ `
         levels
         autos
         commitment
+        type
         createdAt
         updatedAt
         __typename
@@ -77,4 +79,39 @@ export const listVDSBookings = /* GraphQL */ `
     }
   }
 `;
-
+export const vDSBookingsByDate = /* GraphQL */ `
+  query VDSBookingsByDate(
+    $type: String!
+    $checkIn: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelVDSBookingFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    vDSBookingsByDate(
+      type: $type
+      checkIn: $checkIn
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        guests
+        description
+        checkIn
+        checkOut
+        levels
+        autos
+        commitment
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;

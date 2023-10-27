@@ -63,6 +63,7 @@ export const createVDSBooking = /* GraphQL */ `
       levels
       autos
       commitment
+      type
       createdAt
       updatedAt
       __typename
@@ -83,6 +84,7 @@ export const updateVDSBooking = /* GraphQL */ `
       levels
       autos
       commitment
+      type
       createdAt
       updatedAt
       __typename
@@ -103,6 +105,7 @@ export const deleteVDSBooking = /* GraphQL */ `
       levels
       autos
       commitment
+      type
       createdAt
       updatedAt
       __typename

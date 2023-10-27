@@ -24,11 +24,8 @@ import {
     updateVDSBooking
 } from '../graphql/mutations';
 import {
-    listVDSBookings
- } from '../graphql/queries';
-//  import {
-//     bookingsByCheckIn
-//  } from '../graphql/query_bookingsByCheckIn';
+    vDSBookingsByDate
+} from '../graphql/queries';
 
 import {
     VDSBookingForm,
@@ -40,11 +37,11 @@ import VDSBookingsList from './bookings/vdsbookingslistvirtual';
 import VDSErrorBoundary from '../components/vdserrorboundary';
 
 
-const bookingsByCheckInQueryVariables =  { 
-    type: "Booking", 
+const bookingsByCheckInQueryVariables = {
+    type: "Booking",
     sortDirection: 'ASC',
     limit: 1000,
- }
+}
 
 
 export function vdsBookingsFindDate(bookings, targetDate) {
@@ -56,33 +53,14 @@ export default function VDSBookings() {
     const [currentbooking, setCurrentBooking] = React.useState(newBooking());
     const [bookingDialogOpen, setBookingDialogOpen] = React.useState(false);
 
-
-    console.log("HERE IN BOOKINGS")
-
-
-    const bk = query vDSBookingsByDate {
-        vDSBookingsByDate(
-          type: "Booking"
-          sortDirection: ASC
-        ) {
-          items {
-            id
-            title
-            createdAt
-          }
-        }
-      }   
-
-      
-    // console.table(bookingsRet.error)
-    const bookingsRet = useQuery(gql(listVDSBookings),
+    const bookingsRet = useQuery(gql(vDSBookingsByDate),
         { variables: bookingsByCheckInQueryVariables });
 
     const [deleteBooking, deleteRet] =
         useMutation(gql(deleteVDSBooking),
             {
                 refetchQueries: () => [{
-                    query: gql(listVDSBookings),
+                    query: gql(vDSBookingsByDate),
                     variables: bookingsByCheckInQueryVariables,
                 }],
             }
@@ -91,8 +69,8 @@ export default function VDSBookings() {
     const [addBooking, addRet] = useMutation(gql(createVDSBooking),
         {
             refetchQueries: () => [{
-                query: gql(listVDSBookings),
-                variables:  bookingsByCheckInQueryVariables,
+                query: gql(vDSBookingsByDate),
+                variables: bookingsByCheckInQueryVariables,
             }]
         }
     );
@@ -132,15 +110,16 @@ export default function VDSBookings() {
         // importBookings.forEach(bk => {
         //     addBooking({ variables: { input: bk } });
         // });
-    
+
         if (booking) {
             setCurrentBooking(booking);
             handleBookingDialogOpen();
         }
     }
 
-    let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.listVDSBookings.items : [];
-    // let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.bookingsByCheckIn.items : testBookings();
+    console.table("data: ",bookingsRet.data)
+    console.table("error: ",bookingsRet.error)
+    let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.vDSBookingsByDate.items : [];
 
     let msg = ""
     msg += (bookingsRet.loading ? "Bookings...loading" : "")
