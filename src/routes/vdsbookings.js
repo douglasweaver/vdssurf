@@ -41,7 +41,7 @@ import VDSErrorBoundary from '../components/vdserrorboundary';
 
 
 const bookingsByCheckInQueryVariables =  { 
-    // type: "Booking", 
+    type: "Booking", 
     sortDirection: 'ASC',
     limit: 1000,
  }
@@ -58,6 +58,22 @@ export default function VDSBookings() {
 
 
     console.log("HERE IN BOOKINGS")
+
+
+    const bk = query vDSBookingsByDate {
+        vDSBookingsByDate(
+          type: "Booking"
+          sortDirection: ASC
+        ) {
+          items {
+            id
+            title
+            createdAt
+          }
+        }
+      }   
+
+      
     // console.table(bookingsRet.error)
     const bookingsRet = useQuery(gql(listVDSBookings),
         { variables: bookingsByCheckInQueryVariables });

@@ -199,6 +199,7 @@ export default function VDSBookingUpdateForm(props) {
     levels: [],
     autos: [],
     commitment: "",
+    type: "",
     createdAt: "",
     updatedAt: "",
   };
@@ -211,6 +212,7 @@ export default function VDSBookingUpdateForm(props) {
   const [levels, setLevels] = React.useState(initialValues.levels);
   const [autos, setAutos] = React.useState(initialValues.autos);
   const [commitment, setCommitment] = React.useState(initialValues.commitment);
+  const [type, setType] = React.useState(initialValues.type);
   const [createdAt, setCreatedAt] = React.useState(initialValues.createdAt);
   const [updatedAt, setUpdatedAt] = React.useState(initialValues.updatedAt);
   const [errors, setErrors] = React.useState({});
@@ -227,6 +229,7 @@ export default function VDSBookingUpdateForm(props) {
     setAutos(cleanValues.autos ?? []);
     setCurrentAutosValue("");
     setCommitment(cleanValues.commitment);
+    setType(cleanValues.type);
     setCreatedAt(cleanValues.createdAt);
     setUpdatedAt(cleanValues.updatedAt);
     setErrors({});
@@ -277,6 +280,7 @@ export default function VDSBookingUpdateForm(props) {
     levels: [],
     autos: [],
     commitment: [{ type: "Required" }],
+    type: [{ type: "Required" }],
     createdAt: [{ type: "Required" }],
     updatedAt: [{ type: "Required" }],
   };
@@ -330,6 +334,7 @@ export default function VDSBookingUpdateForm(props) {
           levels: levels ?? null,
           autos: autos ?? null,
           commitment,
+          type,
           createdAt,
           updatedAt,
         };
@@ -399,6 +404,7 @@ export default function VDSBookingUpdateForm(props) {
               levels,
               autos,
               commitment,
+              type,
               createdAt,
               updatedAt,
             };
@@ -431,6 +437,7 @@ export default function VDSBookingUpdateForm(props) {
               levels,
               autos,
               commitment,
+              type,
               createdAt,
               updatedAt,
             };
@@ -465,6 +472,7 @@ export default function VDSBookingUpdateForm(props) {
               levels,
               autos,
               commitment,
+              type,
               createdAt,
               updatedAt,
             };
@@ -499,6 +507,7 @@ export default function VDSBookingUpdateForm(props) {
               levels,
               autos,
               commitment,
+              type,
               createdAt,
               updatedAt,
             };
@@ -527,6 +536,7 @@ export default function VDSBookingUpdateForm(props) {
               levels: values,
               autos,
               commitment,
+              type,
               createdAt,
               updatedAt,
             };
@@ -597,6 +607,7 @@ export default function VDSBookingUpdateForm(props) {
               levels,
               autos: values,
               commitment,
+              type,
               createdAt,
               updatedAt,
             };
@@ -666,6 +677,7 @@ export default function VDSBookingUpdateForm(props) {
               levels,
               autos,
               commitment: value,
+              type,
               createdAt,
               updatedAt,
             };
@@ -699,6 +711,39 @@ export default function VDSBookingUpdateForm(props) {
         ></option>
       </SelectField>
       <TextField
+        label="Type"
+        isRequired={true}
+        isReadOnly={false}
+        value={type}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              guests,
+              description,
+              checkIn,
+              checkOut,
+              levels,
+              autos,
+              commitment,
+              type: value,
+              createdAt,
+              updatedAt,
+            };
+            const result = onChange(modelFields);
+            value = result?.type ?? value;
+          }
+          if (errors.type?.hasError) {
+            runValidationTasks("type", value);
+          }
+          setType(value);
+        }}
+        onBlur={() => runValidationTasks("type", type)}
+        errorMessage={errors.type?.errorMessage}
+        hasError={errors.type?.hasError}
+        {...getOverrideProps(overrides, "type")}
+      ></TextField>
+      <TextField
         label="Created at"
         isRequired={true}
         isReadOnly={false}
@@ -716,6 +761,7 @@ export default function VDSBookingUpdateForm(props) {
               levels,
               autos,
               commitment,
+              type,
               createdAt: value,
               updatedAt,
             };
@@ -750,6 +796,7 @@ export default function VDSBookingUpdateForm(props) {
               levels,
               autos,
               commitment,
+              type,
               createdAt,
               updatedAt: value,
             };

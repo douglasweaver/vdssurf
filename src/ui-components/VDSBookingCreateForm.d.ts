@@ -20,6 +20,7 @@ export declare type VDSBookingCreateFormInputValues = {
     levels?: string[];
     autos?: string[];
     commitment?: string;
+    type?: string;
     createdAt?: string;
     updatedAt?: string;
 };
@@ -31,6 +32,7 @@ export declare type VDSBookingCreateFormValidationValues = {
     levels?: ValidationFunction<string>;
     autos?: ValidationFunction<string>;
     commitment?: ValidationFunction<string>;
+    type?: ValidationFunction<string>;
     createdAt?: ValidationFunction<string>;
     updatedAt?: ValidationFunction<string>;
 };
@@ -44,6 +46,7 @@ export declare type VDSBookingCreateFormOverridesProps = {
     levels?: PrimitiveOverrideProps<SelectFieldProps>;
     autos?: PrimitiveOverrideProps<SelectFieldProps>;
     commitment?: PrimitiveOverrideProps<SelectFieldProps>;
+    type?: PrimitiveOverrideProps<TextFieldProps>;
     createdAt?: PrimitiveOverrideProps<TextFieldProps>;
     updatedAt?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
