@@ -24,7 +24,7 @@ import {
     updateVDSBooking
 } from '../graphql/mutations';
 import {
-    bookingsByCheckIn
+    listVDSBookings
  } from '../graphql/queries';
 //  import {
 //     bookingsByCheckIn
@@ -56,14 +56,17 @@ export default function VDSBookings() {
     const [currentbooking, setCurrentBooking] = React.useState(newBooking());
     const [bookingDialogOpen, setBookingDialogOpen] = React.useState(false);
 
-    const bookingsRet = useQuery(gql(bookingsByCheckIn),
+
+    console.log("HERE IN BOOKINGS")
+    // console.table(bookingsRet.error)
+    const bookingsRet = useQuery(gql(listVDSBookings),
         { variables: bookingsByCheckInQueryVariables });
 
     const [deleteBooking, deleteRet] =
         useMutation(gql(deleteVDSBooking),
             {
                 refetchQueries: () => [{
-                    query: gql(bookingsByCheckIn),
+                    query: gql(listVDSBookings),
                     variables: bookingsByCheckInQueryVariables,
                 }],
             }
@@ -72,7 +75,7 @@ export default function VDSBookings() {
     const [addBooking, addRet] = useMutation(gql(createVDSBooking),
         {
             refetchQueries: () => [{
-                query: gql(bookingsByCheckIn),
+                query: gql(listVDSBookings),
                 variables:  bookingsByCheckInQueryVariables,
             }]
         }
@@ -120,9 +123,7 @@ export default function VDSBookings() {
         }
     }
 
-    console.log("HERE IN BOOKINGS")
-    console.table(bookingsRet)
-    let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.bookingsByCheckIn.items : [];
+    let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.listVDSBookings.items : [];
     // let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.bookingsByCheckIn.items : testBookings();
 
     let msg = ""
