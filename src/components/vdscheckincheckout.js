@@ -24,29 +24,38 @@ export default function VDSCheckInCheckOut({
     helperText,
 }) {
 
-    console.log("inout")
-    console.log(value[0],value[1])
     const [startDate, setStartDate] = React.useState(value[0]);
     const [endDate, setEndDate] = React.useState(value[1]);
 
     const handleStartTimeChange = value => {
+
+        console.log("endchange")
+        console.log(value)
+
         setStartDate(value);
         setFieldValue(name, [value, endDate], false)
         return;
     };
 
     const handleEndTimeChange = value => {
+
+        console.log("endchange")
+        console.log(value)
+
         setEndDate(value);
         setFieldValue(name, [startDate, value], false)
         return;
     };
 
 
-    const handleDateRangeChange = dRange => {
+    const handleStartDateChange = dvalue => {
 
-        setStartDate(dRange[0]);
-        setEndDate(dRange[1]);
-        setFieldValue(name, dRange, false)
+        console.log("rangechange")
+        console.log(dvalue)
+    
+        setStartDate(dvalue);
+        // setEndDate(dRange[1]);
+        setFieldValue(name, dvalue, false)
 
         return;
     };
@@ -74,14 +83,14 @@ export default function VDSCheckInCheckOut({
                     <DatePicker
                         startText={startLabel}
                         endText={endLabel}
-                        value={[startDate, endDate]}
-                        onChange={handleDateRangeChange}
-                        textField={(startProps, endProps) => (
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                        textField={(startProps) => (
                             <React.Fragment>
                                 <TextField {...startProps} sx={DateTimePicker_sx}
                                 />
                                 {/* <Box sx={{ mx: 2 }}> to </Box> */}
-                                <TextField {...endProps} sx={DateTimePicker_sx} />
+                                {/* <TextField {...endProps} sx={DateTimePicker_sx} /> */}
                             </React.Fragment>
                         )}
                     />
