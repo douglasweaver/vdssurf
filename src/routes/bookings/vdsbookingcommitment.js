@@ -16,6 +16,13 @@ const commitmentOptions = [
 
 export const commitmentDefault = commitmentOptions[0].value;
 
+
+export function VDSLabelToCommitment(label) {
+    return (
+        commitmentOptions.find(cmt => cmt.label === label).value
+    )
+}
+
 export function vdsCommitmentLabel(commitment) {
     return commitmentOptions.find(co => co.value === commitment).label;
 }

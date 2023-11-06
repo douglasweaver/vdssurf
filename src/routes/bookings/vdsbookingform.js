@@ -20,25 +20,6 @@ dayjs.extend(timezone)
 // dayjs.tz.setDefault("America/Puerto_Rico")
 
 
-export function testBookings() { 
-
-    let bk = [];
-    for (let i = -5; i < 25; i=i+2) {
-        bk.push(
-            {
-                guests: 'testgueststestgueststestgueststestgueststestgueststestgueststestgueststestgueststestgueststestgueststestgueststestgueststestgueststestguests '+i,
-                description: '',
-                levels: ['SANDY', 'STEPS', 'TRESPALMAS'],
-                autos: ['VOLVO', 'JEEP'],
-                commitment: commitmentDefault,
-                checkIn: dayjs().tz().hour(3).minute(0).second(0).add(i*7+1,'day').toISOString(),
-                checkOut: dayjs().tz().hour(3).minute(0).second(0).add((i+1)*7+1, 'day').toISOString(),
-                type: "Booking"
-            }
-        );
-    } 
-    return bk;
-}
 
 export function newBooking() {
     let newBook = {

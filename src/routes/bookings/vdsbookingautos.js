@@ -21,6 +21,13 @@ export function autosString(autos) {
     return text;
 }
 
+export function VDSLabelToAuto(label) {
+    return (
+        autoOptions.find(aut => aut.label === label).value
+    )
+}
+
+
 export function VDSAutoIcon({
     auto
 }) {

@@ -24,6 +24,13 @@ export function levelsString(levels) {
     return text;
 }
 
+export function VDSLabelToLevel(label) {
+    return (
+        levelOptions.find(lvl => lvl.label === label).value
+    )
+}
+
+
 export function VDSLevelIcon({
     level
 }) {

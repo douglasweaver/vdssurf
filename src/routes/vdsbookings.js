@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import ListTwoToneIcon from '@mui/icons-material/ListTwoTone';
 import CalendarViewMonthTwoToneIcon from '@mui/icons-material/CalendarViewMonthTwoTone';
 
@@ -27,7 +28,10 @@ import {
     vDSBookingsByDate
 } from '../graphql/queries';
 
+import { importCSVBookings } from './bookings/vdsbookingIMPORT';
+
 import {
+    testBookings,
     VDSBookingForm,
     newBooking,
 } from './bookings/vdsbookingform';
@@ -105,9 +109,28 @@ export default function VDSBookings() {
         handleBookingDialogClose();
     }
 
+
+    const deleteAllBookings = () => {
+
+
+        console.log("import csv bookings")
+        // importCSVBookings().forEach(item => addBooking({ variables: { input: item } }));
+
+        // console.log("Delete all bookings")
+        // console.log(bookings)
+
+        // bookings.forEach(bk => {
+        //     console.log(bk.id)
+        //     deleteBooking({ variables: { input: { id: bk.id } } });
+        //     // addBooking({ variables: { input: bk } });
+        // });
+
+    }
+
+
     const editBooking = (booking) => {
 
-        // importBookings.forEach(bk => {
+        // testBookings().forEach(bk => {
         //     addBooking({ variables: { input: bk } });
         // });
 
@@ -117,8 +140,6 @@ export default function VDSBookings() {
         }
     }
 
-    console.table("data: ",bookingsRet.data)
-    console.table("error: ",bookingsRet.error)
     let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.vDSBookingsByDate.items : [];
 
     let msg = ""
@@ -187,6 +208,20 @@ export default function VDSBookings() {
 
                     <Box>
                         <Typography variant="h6" sx={{ fontWeight: 'bold', textAlign: 'center', }}>Bookings</Typography>
+                    </Box>
+
+                    <Box>
+                        <Tooltip title="Delete All">
+                            <IconButton
+                                aria-label='account'
+                                variant='contained'
+                                onClick={() => deleteAllBookings()}
+                                float='right'
+                                height='40px'
+                            >
+                                <DeleteSweepIcon />
+                            </IconButton>
+                        </Tooltip>
                     </Box>
 
                     <Box>

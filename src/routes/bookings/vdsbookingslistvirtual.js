@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-import { styled } from '@mui/material/styles';
+// import { styled } from '@mui/material/styles';
 import {
     DataGrid,
 } from '@mui/x-data-grid';
@@ -19,15 +19,15 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 // dayjs.tz.setDefault("America/Puerto_Rico")
 
-const Item = styled(Box)(({ theme }) => ({
-    ...theme.typography.body2,
-    textAlign: 'center',
-    justifyContent: 'center',
-    color: theme.palette.text.secondary,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-}));
+// const Item = styled(Box)(({ theme }) => ({
+//     ...theme.typography.body2,
+//     textAlign: 'center',
+//     justifyContent: 'center',
+//     color: theme.palette.text.secondary,
+//     whiteSpace: 'nowrap',
+//     overflow: 'hidden',
+//     textOverflow: 'ellipsis',
+// }));
 
 export default function VDSBookingsList({
     bookings,
@@ -38,7 +38,7 @@ export default function VDSBookingsList({
     const [scrollToNow, setScrollToNow] = React.useState(true);
     const todayRef = React.useRef();
     let todayRowIndex = rows.findIndex(bk => dayjs().isSameOrBefore(bk.checkOut, 'day'))
-    let rowBuffer = todayRowIndex > 2 ? todayRowIndex + 1 : 4;
+    // let rowBuffer = todayRowIndex > 2 ? todayRowIndex + 1 : 4;
     let todayBookingId = rows[todayRowIndex === -1 ? 0 : todayRowIndex]?.id
 
     let hideFooter = rows.length < 100;
@@ -119,6 +119,15 @@ export default function VDSBookingsList({
             align: 'center', headerAlign: 'center', 
             // width: 65,
             flex: 1,
+
+
+
+            valueGetter: (params) => {
+                if (!params.value) {
+                  return params.value;
+                }
+                return dayjs(params.value).toDate();
+              },
             renderCell: (params) => {
                 let formatDate = (dayjs(params.value).year() !== dayjs().year()) ?  'MM/DD/YY': 'MM/DD'
                 return (
@@ -133,6 +142,12 @@ export default function VDSBookingsList({
             align: 'center', headerAlign: 'center',
             width: 65,
             // flex: 1,
+            valueGetter: (params) => {
+                if (!params.value) {
+                  return params.value;
+                }
+                return dayjs(params.value).toDate();
+              },
             renderCell: (params) => {
                 return (
                     <Tooltip title={dayjs(params.value).format('ddd MMM DD YYYY @ hA')} >
