@@ -5,12 +5,14 @@ import VDSCheckboxList from '../../components/vdscheckboxlist';
 
 import {
     VDSJeepIcon,
+    VDSFordIcon,
     VDSVolvoIcon
 } from '../../svg/svgicon';
 
 const autosTitle = 'Autos'
 const autoOptions = [
     { value: 'JEEP', label: 'Jeep', icon: <VDSJeepIcon /> },
+    { value: 'FORD', label: 'Ford', icon: <VDSFordIcon /> },
     { value: 'VOLVO', label: 'Volvo', icon: <VDSVolvoIcon /> }
 ]
 export function autosString(autos) {

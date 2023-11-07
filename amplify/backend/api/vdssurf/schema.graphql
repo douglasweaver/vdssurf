@@ -1,5 +1,6 @@
 enum AutosEnum {
   JEEP
+  FORD
   VOLVO
 }
 
