@@ -24,9 +24,7 @@ import {
     createVDSBooking,
     updateVDSBooking
 } from '../graphql/mutations';
-import {
-    vDSBookingsByDate
-} from '../graphql/queries';
+import { vDSBookingsByDate } from '../graphql/queries';
 
 import { importCSVBookings } from './bookings/vdsbookingIMPORT';
 
@@ -44,8 +42,8 @@ import VDSErrorBoundary from '../components/vdserrorboundary';
 
 
 const bookingsByCheckInQueryVariables = {
-    sortDirection: 'ASC',
-    limit: 1000,
+    sortDirection: ['ASC','ASC'],
+    limit: 10,
     type: 'Booking'
 }
 
@@ -61,6 +59,8 @@ export default function VDSBookings() {
 
     const bookingsRet = useQuery(gql(vDSBookingsByDate),
         { variables: bookingsByCheckInQueryVariables });
+
+    console.log(bookingsRet)
 
     const [deleteBooking, deleteRet] =
         useMutation(gql(deleteVDSBooking),
@@ -140,8 +140,9 @@ export default function VDSBookings() {
         }
     }
     
-    let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.vDSBookingsByDate.items : [];
-
+    let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.VDSBookingsByDate.items : [];
+    console.log(bookings)
+    
     let msg = ""
     msg += (bookingsRet.loading ? "Bookings...loading" : "")
     msg += (bookingsRet.error ? "Bookings..." + bookingsRet.error.message : "")

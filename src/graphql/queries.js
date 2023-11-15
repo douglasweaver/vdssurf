@@ -48,15 +48,15 @@ export const listVDSBookings = /* GraphQL */ `
 export const vDSBookingsByDate = /* GraphQL */ `
   query VDSBookingsByDate(
     $type: String!
-    $checkIn: ModelStringKeyConditionInput
+    $checkInCheckOut: ModelVDSBookingVDSBookingsByDateCompositeKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelVDSBookingFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    vDSBookingsByDate(
+    VDSBookingsByDate(
       type: $type
-      checkIn: $checkIn
+      checkInCheckOut: $checkInCheckOut
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit

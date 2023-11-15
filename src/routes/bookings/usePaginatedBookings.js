@@ -11,7 +11,7 @@ import { vDSBookingsByDate } from '../../graphql/queries';
 const bookingsByCheckInQueryVariables = {
     sortDirection: 'ASC',
     offset: 0,
-    limit: 1000,
+    limit: 10,
     type: 'Booking'
 }
 
@@ -28,7 +28,7 @@ export default function usePaginatedBookings(
     const bookingsRet = useQuery(gql(vDSBookingsByDate),
         { variables: bookingsByCheckInQueryVariables });
 
-    let tempBookings = (bookingsRet.data !== undefined) ? bookingsRet.data.vDSBookingsByDate.items : [];
+    let tempBookings = (bookingsRet.data !== undefined) ? bookingsRet.data.VDSBookingsByDate.items : [];
     // console.log("bookings: ", tempBookings)
     console.log("Loading:",bookingsRet.loading)
     console.log("Error:",bookingsRet.error)
