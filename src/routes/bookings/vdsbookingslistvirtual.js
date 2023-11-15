@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 // import { styled } from '@mui/material/styles';
@@ -10,7 +10,10 @@ import { vdsCommitmentColor, vdsCommitmentLabel } from './vdsbookingcommitment';
 import { VDSLevelsIcons } from './vdsbookinglevels';
 import { VDSAutosIcons } from './vdsbookingautos';
 
+import useOnScreen from '../useOnScreen'
+
 import dayjs from 'dayjs';
+import { Grid } from '@mui/material';
 // var isBefore = require('dayjs/plugin/isSameOrBefore');
 // dayjs.extend(isBefore);
 var utc = require('dayjs/plugin/utc')
@@ -33,6 +36,9 @@ export default function VDSBookingsList({
     bookings,
     editBooking,
 }) {
+
+    console.log("bookings liust")
+
     const rows = bookings;
 
     const [scrollToNow, setScrollToNow] = React.useState(true);
@@ -60,6 +66,15 @@ export default function VDSBookingsList({
         editBooking(params.row);
     };
 
+
+    // infinite scrolling
+    const [loading, setLoading] = useState(false);
+    const [showLoading, setShowLoading] = useState(false);
+    const bottom = useRef(null);
+    const delay = 10000; // time in ms
+
+    let bottomIsOnScreen = useOnScreen({ref: bottom, defaultValue: false, resetVariable: null});
+    console.log("bottom: ",bottomIsOnScreen)
 
     const VDSGuestCell = ({ params }) => {
         let commitColor = (params.row.commitment === 'CONFIRMED' ||
@@ -119,8 +134,6 @@ export default function VDSBookingsList({
             align: 'center', headerAlign: 'center', 
             // width: 65,
             flex: 1,
-
-
 
             valueGetter: (params) => {
                 if (!params.value) {
@@ -194,7 +207,7 @@ I could get the ref to current active booking
                 onRowClick={rowClick}
                 // rowBuffer={rowBuffer}   // should be at least long enough to reach today
                 // disableVirtualization={true}
-                pagination
+                // pagination
                 hideFooter={hideFooter}
                 // loading  LOADING CAUSES SCROLL TO FAIL FOR SOME REASON
                 // initialState={{
@@ -209,6 +222,16 @@ I could get the ref to current active booking
                     },
                 }}
             />
+            {loading && (
+                <div
+                    className={showLoading ? "loading" : ""}
+                    style={{ opacity: showLoading ? 1 : 0 }}
+                >
+                    Loading...
+                </div>
+            )}
+            <div ref={bottom} />
+
         </Box>
     );
 }

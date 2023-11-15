@@ -38,13 +38,15 @@ import {
 
 import VDSBookingsCalendarWeek from './bookings/vdsbookingscalendarweek';
 import VDSBookingsList from './bookings/vdsbookingslistvirtual';
+import VDSBookingslistdev from './bookings/vdsbookingslistdev';
+import VDSBookingsListInfinite from './bookings/vdsbookingslistinfinte';
 import VDSErrorBoundary from '../components/vdserrorboundary';
 
 
 const bookingsByCheckInQueryVariables = {
-    type: "Booking",
     sortDirection: 'ASC',
     limit: 1000,
+    type: 'Booking'
 }
 
 
@@ -112,8 +114,6 @@ export default function VDSBookings() {
 
     const deleteAllBookings = () => {
 
-
-        console.log("import csv bookings")
         // importCSVBookings().forEach(item => addBooking({ variables: { input: item } }));
 
         // console.log("Delete all bookings")
@@ -139,7 +139,7 @@ export default function VDSBookings() {
             handleBookingDialogOpen();
         }
     }
-
+    
     let bookings = (bookingsRet.data !== undefined) ? bookingsRet.data.vDSBookingsByDate.items : [];
 
     let msg = ""
@@ -256,7 +256,7 @@ export default function VDSBookings() {
                             editBooking={editBooking}
                         />
                         :
-                        <VDSBookingsList
+                        <VDSBookingslistdev
                             bookings={bookings}
                             editBooking={editBooking}
                         />

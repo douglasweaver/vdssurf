@@ -19,8 +19,7 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { fetchByPath, validateField } from "./utils";
+import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
 import { createVDSBooking } from "../graphql/mutations";
 function ArrayField({
@@ -245,6 +244,7 @@ export default function VDSBookingCreateForm(props) {
     autos: (r) => {
       const enumDisplayValueMap = {
         JEEP: "Jeep",
+        FORD: "Ford",
         VOLVO: "Volvo",
       };
       return enumDisplayValueMap[r];
@@ -635,9 +635,14 @@ export default function VDSBookingCreateForm(props) {
             {...getOverrideProps(overrides, "autosoption0")}
           ></option>
           <option
+            children="Ford"
+            value="FORD"
+            {...getOverrideProps(overrides, "autosoption1")}
+          ></option>
+          <option
             children="Volvo"
             value="VOLVO"
-            {...getOverrideProps(overrides, "autosoption1")}
+            {...getOverrideProps(overrides, "autosoption2")}
           ></option>
         </SelectField>
       </ArrayField>
