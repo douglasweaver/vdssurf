@@ -1,22 +1,26 @@
 /* eslint-disable */
-export const listVDSBookingsByCheckIn = /* GraphQL */ `
-  query listVDSBookingsByCheckIn(
+
+export const VDSBookingsByCheckIn = /* GraphQL */ `
+  query VDSBookingsByCheckIn(
+    $type: String!
+    $checkIn: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
     $filter: ModelVDSBookingFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listVDSBookingsByCheckIn(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    VDSBookingsByDate(
+      type: $type
+      checkIn: $checkIn
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
-        guests
-        description
         checkIn
         checkOut
-        levels
-        autos
-        commitment
-        createdAt
-        updatedAt
         __typename
       }
       nextToken
@@ -24,3 +28,17 @@ export const listVDSBookingsByCheckIn = /* GraphQL */ `
     }
   }
 `;
+
+
+// query VDSBookingsByCheckIn {
+//   VDSBookingsByDate(
+//     phoneNumber: { beginsWith: "+1" },
+//      name: "Rene"
+//      ) {
+//     items {
+//       id
+//       name
+//       phoneNumber
+//     }
+//   }
+// }

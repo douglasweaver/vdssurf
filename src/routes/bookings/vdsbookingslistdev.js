@@ -13,10 +13,10 @@ function VDSBooking({
 }
 
 export default function VDSBookingslistdev({
-    books,
+    bookingsCheckInCheckOut,
     editBooking,
 }) {
-    const { bookings, loadMoreButton } = usePaginatedBookings()
+    const { bookings, loadMoreButton } = usePaginatedBookings(bookingsCheckInCheckOut)
 
     return (
         <div style={{ overflowY: 'scroll' }}>

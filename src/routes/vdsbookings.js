@@ -24,7 +24,8 @@ import {
     createVDSBooking,
     updateVDSBooking
 } from '../graphql/mutations';
-import { vDSBookingsByDate } from '../graphql/queries';
+import {VDSBookingsByDate } from '../graphql/queries';
+import {VDSBookingsByCheckIn} from '../graphql/vds_queries';
 
 import { importCSVBookings } from './bookings/vdsbookingIMPORT';
 
@@ -40,13 +41,7 @@ import VDSBookingslistdev from './bookings/vdsbookingslistdev';
 import VDSBookingsListInfinite from './bookings/vdsbookingslistinfinte';
 import VDSErrorBoundary from '../components/vdserrorboundary';
 
-
-const bookingsByCheckInQueryVariables = {
-    sortDirection: ['ASC','ASC'],
-    limit: 10,
-    type: 'Booking'
-}
-
+import dayjs from 'dayjs';
 
 export function vdsBookingsFindDate(bookings, targetDate) {
     bookings.findIndex(bk => targetDate.isSameOrBefore(bk.checkIn, 'day'))
@@ -56,18 +51,30 @@ export default function VDSBookings() {
 
     const [currentbooking, setCurrentBooking] = React.useState(newBooking());
     const [bookingDialogOpen, setBookingDialogOpen] = React.useState(false);
+    const [dateRange, setDateRange] = React.useState([
+        dayjs().add(-60, 'day').toISOString(),
+        dayjs().add(+30, 'day').toISOString()])
 
-    const bookingsRet = useQuery(gql(vDSBookingsByDate),
-        { variables: bookingsByCheckInQueryVariables });
 
+    const bookingsByCheckInRangeQueryVariables = {
+        checkIn: {between: dateRange},
+        // checkIn: {eq: "2015-03-12T04:00:00.000Z"},
+        sortDirection: 'ASC',
+        limit: 1000,
+        type: 'Booking'
+    }    
+    const bookingsRet = useQuery(gql(VDSBookingsByCheckIn),
+        { variables: bookingsByCheckInRangeQueryVariables });
+        // const bookingsRet = useQuery(gql(vDSBookingsByDate),
+        // { variables: bookingsByCheckInQueryVariables });
     console.log(bookingsRet)
 
     const [deleteBooking, deleteRet] =
         useMutation(gql(deleteVDSBooking),
             {
                 refetchQueries: () => [{
-                    query: gql(vDSBookingsByDate),
-                    variables: bookingsByCheckInQueryVariables,
+                    query: gql(VDSBookingsByCheckIn),
+                    variables: bookingsByCheckInRangeQueryVariables,
                 }],
             }
         );
@@ -75,8 +82,8 @@ export default function VDSBookings() {
     const [addBooking, addRet] = useMutation(gql(createVDSBooking),
         {
             refetchQueries: () => [{
-                query: gql(vDSBookingsByDate),
-                variables: bookingsByCheckInQueryVariables,
+                query: gql(VDSBookingsByCheckIn),
+                variables: bookingsByCheckInRangeQueryVariables,
             }]
         }
     );

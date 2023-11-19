@@ -45,10 +45,12 @@ export const listVDSBookings = /* GraphQL */ `
     }
   }
 `;
-export const vDSBookingsByDate = /* GraphQL */ `
+
+
+export const VDSBookingsByDate = /* GraphQL */ `
   query VDSBookingsByDate(
     $type: String!
-    $checkInCheckOut: ModelVDSBookingVDSBookingsByDateCompositeKeyConditionInput
+    $checkIn: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelVDSBookingFilterInput
     $limit: Int
@@ -56,7 +58,7 @@ export const vDSBookingsByDate = /* GraphQL */ `
   ) {
     VDSBookingsByDate(
       type: $type
-      checkInCheckOut: $checkInCheckOut
+      checkIn: $checkIn
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
