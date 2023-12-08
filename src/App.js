@@ -10,6 +10,7 @@ import {
 } from '@apollo/client';
 import client from './apollo/client.js'
 
+
 import {
   Link,
   Routes,
@@ -26,7 +27,7 @@ import Avatar from '@mui/material/Avatar';
 import { deepOrange, deepPurple } from '@mui/material/colors';
 
 import VDSErrorBoundary from './components/vdserrorboundary';
-import VDSBookings from './routes/vdsbookings'
+import VDSBookings from './routes/vdsbookings.js';
 import VDSGallery from './routes/vdsgallery'
 import VDSAppBar from './vdsappbar';
 import { AddBoxOutlined } from '@mui/icons-material';
@@ -92,8 +93,12 @@ function App() {
     };
   };
 
+
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider 
+      client={client}
+      
+          >
       <VDSErrorBoundary>
 
         <Box

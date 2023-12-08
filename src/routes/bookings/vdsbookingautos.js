@@ -11,7 +11,7 @@ import {
 
 const autosTitle = 'Autos'
 const autoOptions = [
-    { value: 'JEEP', label: 'Jeep', icon: <VDSJeepIcon/>, active: true },
+    { value: 'JEEP', label: 'Jeep', icon: <VDSJeepIcon />, active: true },
     { value: 'FORD', label: 'Ford', icon: <VDSFordIcon />, active: true },
     { value: 'VOLVO', label: 'Volvo', icon: <VDSVolvoIcon />, active: false }
 ]
@@ -42,7 +42,6 @@ export function VDSAutosIcons({
     autos
 }) {
     return (
-
         <Grid
             container
             display='flex'
@@ -78,7 +77,7 @@ export function VDSBookingAutos({
         <VDSCheckboxList
             label={autosTitle}
             name={name}
-            checkOptions= {autoOptions.filter((auto, index) => (auto.active))}
+            checkOptions={autoOptions.filter((auto, index) => (auto.active))}
             value={value}
             setFieldValue={setFieldValue}
             error={error}

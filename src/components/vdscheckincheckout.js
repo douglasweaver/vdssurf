@@ -17,7 +17,7 @@ const DateTimePicker_sx = {
 
 const TimePicker_minTime = dayjs().set('hour', 1).set('minute', 0).set('second', 0)
 
-const TimePicker_timeSteps = {minutes:60,}
+const TimePicker_timeSteps = { minutes: 60, }
 
 
 export default function VDSCheckInCheckOut({
@@ -46,21 +46,23 @@ export default function VDSCheckInCheckOut({
     };
 
 
-    const handleStartDateChange = value => {
-    
-        setCheckIn(value);
-        var cOut = (checkOut.isBefore(value, 'date')) ? value.add(1, 'day'): checkOut;
-        setCheckOut(cOut);
-        setFieldValue(name, [value, cOut], false);
+    const handleStartDateChange = (value, context) => {
+
+        if (context.validationError == null) {
+            setCheckIn(value);
+            var cOut = (checkOut.isBefore(value, 'date')) ? value.add(1, 'day') : checkOut;
+            setCheckOut(cOut);
+            setFieldValue(name, [value, cOut], false);
+        }
         return;
     };
 
-    const handleEndDateChange = value => {
+    const handleEndDateChange = (value, context) => {
 
-        setCheckOut(value);
-        var cIn = (checkIn.isAfter(value, 'date')) ? value.add(-1, 'day'): checkIn;
-        setCheckIn(cIn);
-        setFieldValue(name, [cIn, value], false);
+        if (context.validationError == null) {
+            setCheckOut(value);
+            setFieldValue(name, [checkIn, value], false);
+        }
         return;
     };
 
@@ -79,9 +81,10 @@ export default function VDSCheckInCheckOut({
             component="fieldset"
             variant="standard"
         >
+
             <FormGroup
                 row
-                                >
+            >
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
 
                     <DatePicker
@@ -89,7 +92,7 @@ export default function VDSCheckInCheckOut({
                         value={checkIn}
                         onChange={handleStartDateChange}
                         fixedWeekNumber={5}
-                        showDaysOutsideCurrentMonth = {true}
+                        showDaysOutsideCurrentMonth={true}
                     />
 
                     <DatePicker
@@ -97,7 +100,9 @@ export default function VDSCheckInCheckOut({
                         value={checkOut}
                         onChange={handleEndDateChange}
                         fixedWeekNumber={5}
-                        showDaysOutsideCurrentMonth = {true}
+                        showDaysOutsideCurrentMonth={true}
+                        minDate={checkIn}
+
                     />
                 </LocalizationProvider>
             </FormGroup>
@@ -113,12 +118,12 @@ export default function VDSCheckInCheckOut({
                         value={checkIn}
                         ampm={false}
                         openTo="hours"
-                        views={['hours','minutes']}
+                        views={['hours', 'minutes']}
                         inputFormat='h a'
                         onChange={handleStartTimeChange}
                         // minTime={TimePicker_minTime}
-                        timeSteps={TimePicker_timeSteps}                       
-                        // sx={DateTimePicker_sx}
+                        timeSteps={TimePicker_timeSteps}
+                    // sx={DateTimePicker_sx}
                     />
                     {/* <Box sx={{ mx: 2 }}> to </Box> */}
                     <TimePicker
@@ -126,14 +131,14 @@ export default function VDSCheckInCheckOut({
                         ampm={false}
                         value={checkOut}
                         openTo="hours"
-                        views={['hours','minutes']}
+                        views={['hours', 'minutes']}
                         inputFormat='h a'
                         onChange={handleEndTimeChange}
                         // minTime={TimePicker_minTime}
-                        timeSteps={TimePicker_timeSteps}                       
-                        // textField={(params) => <TextField {...params}
-                        // sx={DateTimePicker_sx}
-                        // />}
+                        timeSteps={TimePicker_timeSteps}
+                    // textField={(params) => <TextField {...params}
+                    // sx={DateTimePicker_sx}
+                    // />}
                     />
 
                 </LocalizationProvider>

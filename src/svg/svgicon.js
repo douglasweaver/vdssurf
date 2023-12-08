@@ -9,6 +9,7 @@ import { ReactComponent as VolvoIcon } from './volvo.svg';
 import { ReactComponent as ConfirmedIcon } from './confirmed-svgrepo-com.svg';
 import { ReactComponent as ThinkingIcon } from './thinking-svgrepo-com.svg';
 import { ReactComponent as PrettySureIcon } from './prettysure-svgrepo-com.svg';
+import { ReactComponent as HistoryLogManuscriptIcon } from './history-log-manuscript-svgrepo-com.svg';
 
 // import StairsIcon from '@mui/icons-material/Stairs';
 
@@ -23,6 +24,8 @@ export const VDSTresPalmasIcon = () => (VDSWrapIcon({SvgIcon: PalmTreeIcon}));
 export const VDSConfirmedIcon = () => (VDSWrapIcon({SvgIcon: ConfirmedIcon}));
 export const VDSThinkingIcon = () => (VDSWrapIcon({SvgIcon: ThinkingIcon}));
 export const VDSPrettySureIcon = () => (VDSWrapIcon({SvgIcon: PrettySureIcon}));
+
+export const VDSHistoryLogManuscriptIcon = () => (VDSWrapIcon({SvgIcon: HistoryLogManuscriptIcon}));
 
 export function VDSWrapIcon({
     SvgIcon,

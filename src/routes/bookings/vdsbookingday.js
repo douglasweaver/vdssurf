@@ -1,9 +1,13 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 
 import { vdsCommitmentColor } from './vdsbookingcommitment';
 import { VDSLevelIcon } from './vdsbookinglevels';
+
+import dayjs from 'dayjs';
+var isToday = require('dayjs/plugin/isToday')
+dayjs.extend(isToday)
+
 
 function VDSBookingDayLevel({
     bookings,
@@ -11,7 +15,7 @@ function VDSBookingDayLevel({
     level,
 }) {
 
-    if (bookings.length > 0) {
+    if (bookings?.length > 0) {
         let bookingsForLevel = bookings.filter((booking) => (
             (level !== undefined ? booking.levels.includes(level) : true)
         ));
@@ -25,14 +29,14 @@ function VDSBookingDayLevel({
                 undefined
         )
         return (
-            <Grid
-                item
-                display='flex'
-                alignItems='center'
-                justifyContent='center'
+            <Box
+                onClick={() => onClickBooking(bookingsForLevel)}
                 sx={{
+                    display: "flex",
                     height: '27%',
                     width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     backgroundColor: '#FFFFFF',
                     ...(levelColor !== undefined &&
                     {
@@ -40,26 +44,24 @@ function VDSBookingDayLevel({
                         backgroundColor: levelColor,
                     }),
                 }}
-                onClick={() => onClickBooking(bookingsForLevel)}
             >
                 <VDSLevelIcon level={level} />
-            </Grid>
+            </Box>
         )
     } else {
         return (
-            <Grid
-                item
-                display='flex'
-                alignItems='center'
-                justifyContent='center'
+            <Box
                 sx={{
+                    display: "flex",
                     height: '27%',
                     width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     backgroundColor: '#FFFFFF',
                 }}
             >
                 <VDSLevelIcon level={level} />
-            </Grid>
+            </Box>
         )
     }
 }
@@ -79,29 +81,25 @@ export default function VDSBookingDay({
 
     return (
 
-        <Grid
-            container
-            item
-            spacing='0'
-            display='flex'
-            flexDirection='column'
-            alignItems='center'
-            justifyContent='flex-start'
-            textAlign='center'
-            width='100%'
-            height='100%'
-            padding='0'
+        <Box
             sx={{
-                // border: "1px solid red",
+                mb: 0,
+                display: "flex",
+                flexDirection: "column",
+                height: '100%',
+                width: '100%',
+                justifyContent: 'flex-start',
+                textAlign: 'center',
+                alignItems: 'center',
+                padding: '0',
+                ...(date.isToday() && { border: "2px solid red" })
             }}
         >
 
-            <Grid
-                item
+            <Box
                 sx={{
-                    height: '19%',
+                    height: '100%',
                     width: '100%',
-                    // border: "1px solid red",
                     ...(date.date() === 1 && { backgroundColor: '#1AC1DD', }),
                 }}
             >
@@ -112,32 +110,29 @@ export default function VDSBookingDay({
                 >
                     {date.format((date.date() === 1 ? "MMM YY" : "D"))}
                 </Box>
-            </Grid>
+            </Box>
 
-            {(bookings?.length > 0) &&
-                <React.Fragment>
-                    <VDSBookingDayLevel
-                        bookings={bookings}
-                        onClickBooking={onClickBooking}
-                        level='STEPS'
-                    />
+            <React.Fragment>
+                <VDSBookingDayLevel
+                    bookings={bookings}
+                    onClickBooking={onClickBooking}
+                    level='STEPS'
+                />
 
-                    <VDSBookingDayLevel
-                        bookings={bookings}
-                        onClickBooking={onClickBooking}
-                        level='SANDY'
-                    />
+                <VDSBookingDayLevel
+                    bookings={bookings}
+                    onClickBooking={onClickBooking}
+                    level='SANDY'
+                />
 
-                    <VDSBookingDayLevel
-                        bookings={bookings}
-                        onClickBooking={onClickBooking}
-                        level='TRESPALMAS'
-                    />
-                </React.Fragment>
+                <VDSBookingDayLevel
+                    bookings={bookings}
+                    onClickBooking={onClickBooking}
+                    level='TRESPALMAS'
+                />
+            </React.Fragment>
 
-            }
-
-        </Grid >
+        </Box >
     )
 }
 

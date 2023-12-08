@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // When useOnScreen runs the first time it will set up the observer callback
 // and the state variable “isIntersecting” and return that.
@@ -10,28 +10,27 @@ import { useState, useEffect } from 'react';
 // callback.  This triggers the hook to re-render, which will trigger whatever 
 // component it’s used in to rerender
 
-
 export default function useOnScreen(
     ref,
     defaultValue = false,
 ) {
     const [isIntersecting, setIntersecting] = useState(defaultValue);
-
-    const observer =
-        !!ref &&
-        new IntersectionObserver(([entry]) => {
-            console.log("setting intersecting",entry.isIntersecting)
-            setIntersecting(entry.isIntersecting)
-        });
-
+    const observerRef = useRef(null);
 
     useEffect(() => {
-        if (!ref || !ref?.current) return;
-        observer.observe(ref.current);
+        observerRef.current = new IntersectionObserver(([entry]) =>
+            setIntersecting(entry.isIntersecting)
+        );
+    }, []);
+
+    useEffect(() => {
+        observerRef.current.observe(ref.current);
+
         return () => {
-            observer.disconnect();
+            observerRef.current.disconnect();
         };
     }, [ref]);
 
-    return isIntersecting;
+    return isIntersecting
+
 }

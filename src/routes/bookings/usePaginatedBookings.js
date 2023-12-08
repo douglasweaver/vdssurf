@@ -1,4 +1,8 @@
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
+import InventoryIcon from '@mui/icons-material/Inventory';
+
 import { useState, useEffect, useRef } from 'react';
 import useOnScreen from '../useOnScreen';
 
@@ -7,63 +11,114 @@ import {
     useQuery,
 } from '@apollo/client';
 import { VDSBookingsByDate } from '../../graphql/queries';
+import dayjs from 'dayjs';
 
-const bookingsByCheckInQueryVariables = {
-    sortDirection: 'ASC',
-    offset: 0,
-    limit: 1000,
-    type: 'Booking'
-}
+const initDate = dayjs('2015-03-01')
+const currentDate = dayjs().add(-14, "day")
 
-let passengerCounter = 0;
-
-export default function usePaginatedBookings(
-    bookingsCheckInCheckOut,
-    defaultValue = false
-) {
-
-    const [bookings, setBookings] = useState([]);
-    const [cursor, setCursor] = useState(0);
+export default function usePaginatedBookings() {
 
     const loadMoreRef = useRef();
     const isIntersecting = useOnScreen(loadMoreRef)
 
-    // const bookingsRet = useQuery(gql(VDSBookingsByDate),
-    //     { variables: bookingsByCheckInQueryVariables });
+    const [startDate, setStartDate] = useState(currentDate)
 
-    // let tempBookings = (bookingsRet.data !== undefined) ? bookingsRet.data.VDSBookingsByDate.items : [];
-    // // console.log("bookings: ", tempBookings)
-    // console.log("Loading:",bookingsRet.loading)
-    // console.log("Error:",bookingsRet.error)
-    // console.log("ret", bookingsRet)
+    const { data, loading, error, fetchMore, refetch } =
+        useQuery(gql(VDSBookingsByDate),
+            {
+                notifyOnNetworkStatusChange: true,
+                nextFetchPolicy: 'cache-first',
+                variables: {
+                    nextToken: null,
+                    checkOut: { ge: currentDate },
+                    sortDirection: 'ASC',
+                    limit: 10,
+                    type: 'Booking',
+                }
+            }
+        )
 
-    // let loading = bookingsRet.loading
+    let bookings = (data !== undefined) ? data.VDSBookingsByDate.items : []
 
-    async function fetchMoreBookings() {
+    useEffect(() => {
+        if (isIntersecting && !loading) {
+            fetchMoreBookings();
+        }
+    }, [isIntersecting, loading]);
 
-        const data = [...tempBookings]
-        setBookings((prevState) => [...prevState, ...data]);
+    const errorDiv = (() => {
+
+        return (
+            error && (
+                <div>
+                    <p>{error.message}</p>
+                </div>
+            )
+        )
+    })
+
+    const toggleAllOrCurrentButton = (() => {
+        return <Tooltip 
+            title={startDate.isSame(initDate) ? "Goto Today" : "Goto Beginning Of Time"}>
+            <IconButton
+                aria-label='account'
+                variant='contained'
+                onClick={toggleAllOrCurrent}
+                float='right'
+                height='40px'
+            >
+                <InventoryIcon />
+            </IconButton>
+        </Tooltip>
+
+    })
+
+    function toggleAllOrCurrent() {
+
+        if (startDate.isSame(initDate)) {
+            setStartDate(currentDate)
+            refetch({
+                nextToken: null,
+                checkOut: { ge: currentDate },
+            })
+        } else {
+            setStartDate(initDate)
+            refetch({
+                nextToken: null,
+                checkOut: { ge: initDate },
+            })
+        }
     }
 
+
     const loadMoreButton = (() => {
-        return <Button onClick={() => { fetchMorePosts() }}
+        return <Button onClick={fetchMoreBookings}
             disabled={loading}
             ref={loadMoreRef}
         >
-            {loading ? "Loading..." : "Load More"}
+            {loading ? "Loading..." :
+                (data.VDSBookingsByDate.nextToken ? "Load More" : "End of Bookings")}
         </Button>
     })
 
-    useEffect(() => {
-        if (isIntersecting) {
-            console.log("FETCH")
-            fetchMorePosts();
+    function fetchMoreBookings() {
+        if (data.VDSBookingsByDate.nextToken !== null) {
+            fetchMore({
+                variables: {
+                    nextToken: data.VDSBookingsByDate.nextToken,
+                },
+            })
         }
-    }, [isIntersecting]);
+    }
 
-
-    return { bookings: bookings, loadMoreButton: loadMoreButton }
+    return {
+        bookings: bookings,
+        loadMoreButton: loadMoreButton,
+        toggleAllOrCurrentButton: toggleAllOrCurrentButton,
+        errorDiv: errorDiv
+    }
 }
+
 
 
 
