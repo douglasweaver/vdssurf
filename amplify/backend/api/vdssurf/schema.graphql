@@ -16,7 +16,7 @@ enum CommitmentEnum {
   CONFIRMED
 }
 
-type VDSBooking @model @auth(rules: [{ allow: public }]){
+type VDSBooking @model @auth(rules: [{ allow: private }]){
   id: ID!
   guests: String!
   description: String

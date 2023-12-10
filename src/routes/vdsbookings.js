@@ -16,20 +16,6 @@ import CalendarViewMonthTwoToneIcon from '@mui/icons-material/CalendarViewMonthT
 
 import { newBooking } from './bookings/vdsbookingform';
 
-import { Auth } from 'aws-amplify';
-
-async function currentAuthenticatedUser() {
-    try {
-      const { username, userId, signInDetails } = await Auth.currentAuthenticatedUser();
-      console.log(`The username: ${username}`);
-      console.log(`The userId: ${userId}`);
-      console.log(`The signInDetails: ${signInDetails}`);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  
-
   export function vdsBookingsFindDate(bookings, targetDate) {
     bookings.findIndex(bk => targetDate.isSameOrBefore(bk.checkIn, 'day'))
 }
@@ -63,12 +49,7 @@ export default function VDSBookings() {
         setViewMode(newViewMode);
     };
 
-
-    useEffect(() => {
-        currentAuthenticatedUser()
-    }, []);
-
-    
+   
     return (
 
         <Box
