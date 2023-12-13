@@ -18,6 +18,7 @@ export const createVDSBooking = /* GraphQL */ `
       type
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -39,6 +40,7 @@ export const updateVDSBooking = /* GraphQL */ `
       type
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -60,6 +62,7 @@ export const deleteVDSBooking = /* GraphQL */ `
       type
       createdAt
       updatedAt
+      owner
       __typename
     }
   }

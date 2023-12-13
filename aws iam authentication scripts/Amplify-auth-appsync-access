@@ -1,0 +1,15 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "appsync:GraphQL",
+            "Resource": [
+                "arn:aws:appsync:{REGION}:{ACCOUNT_NUMBER}:apis/{APPSYNC_API_ID}/types/Query/fields/listSongs",
+                "arn:aws:appsync:{REGION}:{ACCOUNT_NUMBER}:apis/{APPSYNC_API_ID}/types/Mutation/fields/createSong",
+                "arn:aws:appsync:{REGION}:{ACCOUNT_NUMBER}:apis/{APPSYNC_API_ID}/types/Mutation/fields/updateSong"
+            ]
+        }
+    ]
+}

@@ -16,7 +16,41 @@ import CalendarViewMonthTwoToneIcon from '@mui/icons-material/CalendarViewMonthT
 
 import { newBooking } from './bookings/vdsbookingform';
 
-  export function vdsBookingsFindDate(bookings, targetDate) {
+export function vdsBookingsTypePolicies() {
+
+    let vdsTypePolicies = {
+        Query: {
+            fields: {
+                VDSBookingsByDate: {
+                    keyArgs: false,
+                    merge(existing, incoming, { readField }) {
+                        if (existing === undefined) return incoming
+                        const items = (existing ? existing.items : []).concat(incoming.items)
+                        return {
+                            ...existing,
+                            items: items,
+                            nextToken: incoming.nextToken,
+                        };
+                    },
+                    // read(existing) {
+                    //     if (existing) {
+                    //         return {
+                    //             nextToken: existing.nextToken,
+                    //             items: existing.items,
+                    //             // items: Object.values(existing.items),
+                    //         };
+                    //     }
+                    // },
+                },
+            },
+        },
+    }
+    return vdsTypePolicies
+}
+
+
+
+export function vdsBookingsFindDate(bookings, targetDate) {
     bookings.findIndex(bk => targetDate.isSameOrBefore(bk.checkIn, 'day'))
 }
 
@@ -35,7 +69,7 @@ const deleteAllBookings = () => {
 
 }
 
-export default function VDSBookings() {
+export function VDSBookings() {
 
     const { bookingDialog, editBooking } = useBookingManager()
 
@@ -49,7 +83,6 @@ export default function VDSBookings() {
         setViewMode(newViewMode);
     };
 
-   
     return (
 
         <Box

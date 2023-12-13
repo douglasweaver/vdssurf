@@ -16,7 +16,18 @@ enum CommitmentEnum {
   CONFIRMED
 }
 
-type VDSBooking @model @auth(rules: [{ allow: private }]){
+type VDSBooking 
+  @model 
+  @auth(
+    rules: [
+      # allow owners ability to update and delete their these messages (user pools)
+      { allow: owner },
+      # allow all authenticated users to access this data
+      { allow: private, provider: userPools },
+      # allow all guest users (not authenticated) to access this data
+      #{ allow: public, provider: iam }
+    ])
+  {
   id: ID!
   guests: String!
   description: String

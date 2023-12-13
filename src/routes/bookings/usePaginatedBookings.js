@@ -23,7 +23,7 @@ export default function usePaginatedBookings() {
 
     const [startDate, setStartDate] = useState(currentDate)
 
-    const { data, loading, error, fetchMore, refetch } =
+    const { client, data, loading, error, fetchMore, refetch } =
         useQuery(gql(VDSBookingsByDate),
             {
                 notifyOnNetworkStatusChange: true,
@@ -38,6 +38,7 @@ export default function usePaginatedBookings() {
             }
         )
 
+    console.log(error)
     let bookings = (data !== undefined) ? data.VDSBookingsByDate.items : []
 
     useEffect(() => {
@@ -58,7 +59,7 @@ export default function usePaginatedBookings() {
     })
 
     const toggleAllOrCurrentButton = (() => {
-        return <Tooltip 
+        return <Tooltip
             title={startDate.isSame(initDate) ? "Goto Today" : "Goto Beginning Of Time"}>
             <IconButton
                 aria-label='account'
@@ -97,17 +98,19 @@ export default function usePaginatedBookings() {
             ref={loadMoreRef}
         >
             {loading ? "Loading..." :
-                (data.VDSBookingsByDate.nextToken ? "Load More" : "End of Bookings")}
+                (data?.VDSBookingsByDate.nextToken ? "Load More" : "End of Bookings")}
         </Button>
     })
 
     function fetchMoreBookings() {
-        if (data.VDSBookingsByDate.nextToken !== null) {
-            fetchMore({
-                variables: {
-                    nextToken: data.VDSBookingsByDate.nextToken,
-                },
-            })
+        if (data !== undefined) {
+            if (data?.VDSBookingsByDate.nextToken !== null) {
+                fetchMore({
+                    variables: {
+                        nextToken: data.VDSBookingsByDate.nextToken,
+                    },
+                })
+            }
         }
     }
 

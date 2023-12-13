@@ -16,10 +16,17 @@
         "vdssurfeed6ea65": {}
       },
       "api": {
-        "vdssurf": {}
+        "vdssurf": {},
+        "AdminQueries": {}
       },
       "storage": {
         "imagestorage": {}
+      },
+      "function": {
+        "AdminQueriesbae648e0": {
+          "deploymentBucketName": "amplify-amplify8d1ce3b59b9f4-staging-175533-deployment",
+          "s3Key": "amplify-builds/AdminQueriesbae648e0-54474d382b48794c397a-build.zip"
+        }
       }
     }
   }
