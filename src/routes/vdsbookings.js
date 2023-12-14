@@ -1,3 +1,5 @@
+import { useAuthenticator } from '@aws-amplify/ui-react';
+
 import { useState, useEffect } from 'react';
 import useBookingManager from './bookings/vdsbookingmanager';
 import usePaginatedBookings from './bookings/usePaginatedBookings';
@@ -13,39 +15,37 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import ListTwoToneIcon from '@mui/icons-material/ListTwoTone';
 import CalendarViewMonthTwoToneIcon from '@mui/icons-material/CalendarViewMonthTwoTone';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 import { newBooking } from './bookings/vdsbookingform';
 
-export function vdsBookingsTypePolicies() {
-
-    let vdsTypePolicies = {
-        Query: {
-            fields: {
-                VDSBookingsByDate: {
-                    keyArgs: false,
-                    merge(existing, incoming, { readField }) {
-                        if (existing === undefined) return incoming
-                        const items = (existing ? existing.items : []).concat(incoming.items)
-                        return {
-                            ...existing,
-                            items: items,
-                            nextToken: incoming.nextToken,
-                        };
-                    },
-                    // read(existing) {
-                    //     if (existing) {
-                    //         return {
-                    //             nextToken: existing.nextToken,
-                    //             items: existing.items,
-                    //             // items: Object.values(existing.items),
-                    //         };
-                    //     }
-                    // },
+export const vdsBookingsTypePolicies =
+{
+    Query: {
+        fields: {
+            VDSBookingsByDate: {
+                keyArgs: false,
+                merge(existing, incoming, { readField }) {
+                    if (existing === undefined) return incoming
+                    const items = (existing ? existing.items : []).concat(incoming.items)
+                    return {
+                        ...existing,
+                        items: items,
+                        nextToken: incoming.nextToken,
+                    };
                 },
+                // read(existing) {
+                //     if (existing) {
+                //         return {
+                //             nextToken: existing.nextToken,
+                //             items: existing.items,
+                //             // items: Object.values(existing.items),
+                //         };
+                //     }
+                // },
             },
         },
-    }
-    return vdsTypePolicies
+    },
 }
 
 
@@ -75,7 +75,7 @@ export function VDSBookings() {
 
     const { bookings,
         loadMoreButton,
-        toggleAllOrCurrentButton,
+        changeBookingsStartDate,
         errorDiv } = usePaginatedBookings()
 
     const [viewMode, setViewMode] = useState('Calendar');
@@ -160,7 +160,19 @@ export function VDSBookings() {
                     alignItems='center'
                 >
                     <Box>
-                        {toggleAllOrCurrentButton()}
+                        <Tooltip
+                            // title={startDate.isSame(initDate) ? "Goto Today" : "Goto Beginning Of Time"}>
+                            title="Toggle Date">
+                            <IconButton
+                                aria-label='account'
+                                variant='contained'
+                                onClick={()=>{changeBookingsStartDate()}}
+                                float='right'
+                                height='40px'
+                            >
+                                <InventoryIcon />
+                            </IconButton>
+                        </Tooltip>
                     </Box>
                     <Box>
                         <Tooltip title="Add to Line-Up">

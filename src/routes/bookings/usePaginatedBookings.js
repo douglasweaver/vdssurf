@@ -1,7 +1,4 @@
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
-import InventoryIcon from '@mui/icons-material/Inventory';
 
 import { useState, useEffect, useRef } from 'react';
 import useOnScreen from '../useOnScreen';
@@ -38,7 +35,6 @@ export default function usePaginatedBookings() {
             }
         )
 
-    console.log(error)
     let bookings = (data !== undefined) ? data.VDSBookingsByDate.items : []
 
     useEffect(() => {
@@ -58,39 +54,19 @@ export default function usePaginatedBookings() {
         )
     })
 
-    const toggleAllOrCurrentButton = (() => {
-        return <Tooltip
-            title={startDate.isSame(initDate) ? "Goto Today" : "Goto Beginning Of Time"}>
-            <IconButton
-                aria-label='account'
-                variant='contained'
-                onClick={toggleAllOrCurrent}
-                float='right'
-                height='40px'
-            >
-                <InventoryIcon />
-            </IconButton>
-        </Tooltip>
+    function changeBookingsStartDate(toDate) {
 
-    })
-
-    function toggleAllOrCurrent() {
-
-        if (startDate.isSame(initDate)) {
-            setStartDate(currentDate)
-            refetch({
-                nextToken: null,
-                checkOut: { ge: currentDate },
-            })
-        } else {
-            setStartDate(initDate)
-            refetch({
-                nextToken: null,
-                checkOut: { ge: initDate },
-            })
-        }
+        console.log(toDate)
+        let newDate = (toDate !== undefined) ? toDate :
+            (startDate.isSame(initDate) ? currentDate : initDate)
+        console.log(newDate)
+        setStartDate(newDate)
+        client.resetStore()
+        refetch({
+            nextToken: null,
+            checkOut: { ge: newDate },
+        })
     }
-
 
     const loadMoreButton = (() => {
         return <Button onClick={fetchMoreBookings}
@@ -117,7 +93,7 @@ export default function usePaginatedBookings() {
     return {
         bookings: bookings,
         loadMoreButton: loadMoreButton,
-        toggleAllOrCurrentButton: toggleAllOrCurrentButton,
+        changeBookingsStartDate: changeBookingsStartDate,
         errorDiv: errorDiv
     }
 }

@@ -5,10 +5,6 @@ import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { I18n } from 'aws-amplify';
 
-import {
-  ApolloProvider,
-} from '@apollo/client';
-import client from './apollo/client.js'
 
 import {
   Link,
@@ -30,14 +26,17 @@ import {VDSBookings, vdsBookingsTypePolicies} from './routes/vdsbookings.js';
 import VDSGallery from './routes/vdsgallery'
 import VDSAppBar from './vdsappbar';
 import { AddBoxOutlined } from '@mui/icons-material';
-import react from 'react';
 import { CssBaseline } from '@mui/material';
+
+import {
+  ApolloProvider,
+} from '@apollo/client';
+import client from './apollo/client.js'
+
 
 const appTitle = 'VDS ✌🏄';
 
-const apolloClient = client({typePolicies:vdsBookingsTypePolicies});
-
-
+const apolloClient = client(vdsBookingsTypePolicies);
 
 const pages = [
   { label: 'Gallery', link: '/gallery', },
@@ -96,6 +95,11 @@ function App() {
     };
   };
 
+    //   React.useEffect(() => {
+    //     console.log("user change",user)
+    //     // changeBookingsStartDate()
+    // }, [user]);
+
   return (
     <ApolloProvider client={apolloClient} >
       <VDSErrorBoundary>
@@ -146,7 +150,7 @@ function App() {
                 element={
                   <React.Fragment>
                     <Authenticator variation="modal" hideSignUp={true} />
-                    <VDSBookings />
+                    {user !== undefined && ( <VDSBookings />)}
                   </React.Fragment>
                 }
               />
