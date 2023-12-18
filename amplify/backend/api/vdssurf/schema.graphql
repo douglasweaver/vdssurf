@@ -26,7 +26,7 @@ type VDSBooking
       #{ allow: private, provider: iam },
       { allow: private, provider: userPools },
       # allow all guest users (not authenticated) to access this data
-      { allow: public, operations: [read], provider: iam }
+      #{ allow: public, operations: [read], provider: iam }
     ])
   {
   id: ID!
@@ -42,3 +42,22 @@ type VDSBooking
   updatedAt: AWSDateTime!
 }
  
+
+ type VDSNote 
+  @model 
+  @auth(
+    rules: [
+      # allow owners ability to update and delete their these messages (user pools)
+      { allow: owner },
+      # allow all authenticated users to access this data
+      #{ allow: private, provider: iam },
+      { allow: private, provider: userPools },
+      # allow all guest users (not authenticated) to access this data
+      #{ allow: public, operations: [read], provider: iam }
+    ]
+  )
+{
+  id: ID!
+  name: String!
+  description: String
+}

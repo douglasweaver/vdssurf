@@ -67,3 +67,51 @@ export const onDeleteVDSBooking = /* GraphQL */ `
     }
   }
 `;
+export const onCreateVDSNote = /* GraphQL */ `
+  subscription OnCreateVDSNote(
+    $filter: ModelSubscriptionVDSNoteFilterInput
+    $owner: String
+  ) {
+    onCreateVDSNote(filter: $filter, owner: $owner) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onUpdateVDSNote = /* GraphQL */ `
+  subscription OnUpdateVDSNote(
+    $filter: ModelSubscriptionVDSNoteFilterInput
+    $owner: String
+  ) {
+    onUpdateVDSNote(filter: $filter, owner: $owner) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onDeleteVDSNote = /* GraphQL */ `
+  subscription OnDeleteVDSNote(
+    $filter: ModelSubscriptionVDSNoteFilterInput
+    $owner: String
+  ) {
+    onDeleteVDSNote(filter: $filter, owner: $owner) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;

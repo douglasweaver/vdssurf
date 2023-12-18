@@ -67,3 +67,51 @@ export const deleteVDSBooking = /* GraphQL */ `
     }
   }
 `;
+export const createVDSNote = /* GraphQL */ `
+  mutation CreateVDSNote(
+    $input: CreateVDSNoteInput!
+    $condition: ModelVDSNoteConditionInput
+  ) {
+    createVDSNote(input: $input, condition: $condition) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateVDSNote = /* GraphQL */ `
+  mutation UpdateVDSNote(
+    $input: UpdateVDSNoteInput!
+    $condition: ModelVDSNoteConditionInput
+  ) {
+    updateVDSNote(input: $input, condition: $condition) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteVDSNote = /* GraphQL */ `
+  mutation DeleteVDSNote(
+    $input: DeleteVDSNoteInput!
+    $condition: ModelVDSNoteConditionInput
+  ) {
+    deleteVDSNote(input: $input, condition: $condition) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;

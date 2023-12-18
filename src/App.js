@@ -22,7 +22,8 @@ import Avatar from '@mui/material/Avatar';
 import { deepOrange, deepPurple } from '@mui/material/colors';
 
 import VDSErrorBoundary from './components/vdserrorboundary';
-import {VDSBookings, vdsBookingsTypePolicies} from './routes/vdsbookings.js';
+import { VDSBookings, vdsBookingsTypePolicies } from './routes/vdsbookings.js';
+import { VDSNotes, vdsNotesTypePolicies } from './routes/vdsnotes.js';
 import VDSGallery from './routes/vdsgallery'
 import VDSAppBar from './vdsappbar';
 import { AddBoxOutlined } from '@mui/icons-material';
@@ -36,11 +37,23 @@ import client from './apollo/client.js'
 
 const appTitle = 'VDS ✌🏄';
 
-const apolloClient = client(vdsBookingsTypePolicies);
+
+const apolloTypePolicies =
+{
+  Query: {
+    fields: {
+      ...vdsBookingsTypePolicies,
+      ...vdsNotesTypePolicies,
+    }
+  }
+}
+
+const apolloClient = client(apolloTypePolicies);
 
 const pages = [
   { label: 'Gallery', link: '/gallery', },
   { label: 'Bookings', link: '/bookings', },
+  { label: 'Notes', link: '/notes', },
 ]
 
 
@@ -95,11 +108,6 @@ function App() {
     };
   };
 
-    //   React.useEffect(() => {
-    //     console.log("user change",user)
-    //     // changeBookingsStartDate()
-    // }, [user]);
-
   return (
     <ApolloProvider client={apolloClient} >
       <VDSErrorBoundary>
@@ -150,10 +158,20 @@ function App() {
                 element={
                   <React.Fragment>
                     <Authenticator variation="modal" hideSignUp={true} />
-                    {user !== undefined && ( <VDSBookings />)}
+                    {user !== undefined && (<VDSBookings />)}
                   </React.Fragment>
                 }
               />
+              <Route
+                path="/notes"
+                element={
+                  <React.Fragment>
+                    <Authenticator variation="modal" hideSignUp={true} />
+                    {user !== undefined && (<VDSNotes />)}
+                  </React.Fragment>
+                }
+              />
+
             </Routes>
           </Box>
         </Box>

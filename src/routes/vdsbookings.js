@@ -1,10 +1,8 @@
-import { useAuthenticator } from '@aws-amplify/ui-react';
+import { useState } from 'react';
 
-import { useState, useEffect } from 'react';
-import useBookingManager from './bookings/vdsbookingmanager';
-import usePaginatedBookings from './bookings/usePaginatedBookings';
-import VDSBookingsList from './bookings/vdsbookinglist';
-import VDSBookingsCalendar from './bookings/vdsbookingscalendar';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -12,76 +10,245 @@ import ToggleButton from '@mui/material/ToggleButton';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+// import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import ListTwoToneIcon from '@mui/icons-material/ListTwoTone';
 import CalendarViewMonthTwoToneIcon from '@mui/icons-material/CalendarViewMonthTwoTone';
 import InventoryIcon from '@mui/icons-material/Inventory';
 
-import { newBooking } from './bookings/vdsbookingform';
+import {
+    gql,
+    useMutation,
+} from '@apollo/client';
+import {
+    deleteVDSBooking,
+    createVDSBooking,
+    updateVDSBooking
+} from '../graphql/mutations';
+import { VDSBookingsByDate } from '../graphql/queries';
+
+// import { importCSVBookings } from './vdsbookingIMPORT';
+
+import {
+    VDSBookingForm,
+    newBooking,
+} from './bookings/vdsbookingform';
+
+import VDSErrorBoundary from '../components/vdserrorboundary';
+import usePaginatedItems from './usePaginatedItems';
+import VDSBookingsList from './bookings/vdsbookinglist';
+import VDSBookingsCalendar from './bookings/vdsbookingscalendar';
+
+import dayjs from 'dayjs';
+
+const initDate = dayjs('2015-03-01')
+const currentDate = dayjs().add(-14, "day")
 
 export const vdsBookingsTypePolicies =
 {
-    Query: {
-        fields: {
-            VDSBookingsByDate: {
-                keyArgs: false,
-                merge(existing, incoming, { readField }) {
-                    if (existing === undefined) return incoming
-                    const items = (existing ? existing.items : []).concat(incoming.items)
-                    return {
-                        ...existing,
-                        items: items,
-                        nextToken: incoming.nextToken,
-                    };
-                },
-                // read(existing) {
-                //     if (existing) {
-                //         return {
-                //             nextToken: existing.nextToken,
-                //             items: existing.items,
-                //             // items: Object.values(existing.items),
-                //         };
-                //     }
-                // },
-            },
+    VDSBookingsByDate: {
+        keyArgs: false,
+        merge(existing, incoming, { readField }) {
+            if (existing === undefined) return incoming
+            const items = (existing ? existing.items : []).concat(incoming.items)
+            return {
+                ...existing,
+                items: items,
+                nextToken: incoming.nextToken,
+            };
         },
+        // read(existing) {
+        //     if (existing) {
+        //         return {
+        //             nextToken: existing.nextToken,
+        //             items: existing.items,
+        //             // items: Object.values(existing.items),
+        //         };
+        //     }
+        // },
     },
 }
 
+// const deleteAllBookings = () => {
 
+//     importCSVBookings().forEach(item => addBooking({ variables: { input: item } }));
 
-export function vdsBookingsFindDate(bookings, targetDate) {
-    bookings.findIndex(bk => targetDate.isSameOrBefore(bk.checkIn, 'day'))
-}
+//     console.log("Delete all bookings")
+//     console.log(bookings)
 
-const deleteAllBookings = () => {
+//     bookings.forEach(bk => {
+//         console.log(bk.id)
+//         deleteBooking({ variables: { input: { id: bk.id } } });
+//         // addBooking({ variables: { input: bk } });
+//     });
 
-    // importCSVBookings().forEach(item => addBooking({ variables: { input: item } }));
-
-    // console.log("Delete all bookings")
-    // console.log(bookings)
-
-    // bookings.forEach(bk => {
-    //     console.log(bk.id)
-    //     deleteBooking({ variables: { input: { id: bk.id } } });
-    //     // addBooking({ variables: { input: bk } });
-    // });
-
-}
+// }
 
 export function VDSBookings() {
+    
+        const [currentbooking, setCurrentBooking] = useState(newBooking());
+        const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
+    
+        const [deleteBooking] = useMutation(gql(deleteVDSBooking), {
+            update(cache, { data: { deleteVDSBooking } }) {
+                cache.modify({
+                    fields: {
+                        VDSBookingsByDate(previous) {
+                            let final = previous.items.filter((e) => (
+                                cache.data.data[e.__ref].id !== deleteVDSBooking.id
+                            ));
+                            return {
+                                ...previous,
+                                items: final,
+                            }
+                        }
+                    }
+                })
+            }
+        })
+    
+        const [addBooking] = useMutation(gql(createVDSBooking), {
+    
+            update(cache, { data: { createVDSBooking } }) {
+                cache.modify({
+                    fields: {
+                        VDSBookingsByDate(previous) {
+                            const newBookingRef = cache.writeFragment({
+                                data: createVDSBooking,
+                                fragment: gql`
+                                    fragment NewBooking on VDSBooking {
+                                        id
+                                        guests
+                                        description
+                                        checkIn
+                                        checkOut
+                                        levels
+                                        autos
+                                        commitment
+                                        type
+                                    }
+                                    `
+                            });
+    
+                            let existingBookings = previous.items
+                            let start = existingBookings.findIndex((e) => {
+                                return cache.data.data[e.__ref].checkOut > createVDSBooking.checkOut
+                            });
+                            start = start < 0 ? existingBookings.length : start
+                            let final = {
+                                ...previous,
+                                items: existingBookings.toSpliced(start, 0, newBookingRef)
+                            }
+                            return final
+                        }
+                    }
+                })
+            }
+        });
+    
+        const [updateBooking] = useMutation(gql(updateVDSBooking));
+    
+        const handleCreateBooking = (booking) => {
+            setBookingDialogOpen(false);
+            if ('id' in booking) {
+                updateBooking({ variables: { input: booking } });
+            } else {
+                addBooking({ variables: { input: booking } });
+            }
+        }
+    
+        const handleBookingDialogClose = (event, reason) => {
+            if (reason !== 'backdropClick') {
+                setBookingDialogOpen(false);
+            }
+        }
+    
+        const handleBookingDialogOpen = () => {
+            setBookingDialogOpen(true);
+        }
+    
+        const handleDeleteBooking = (id) => {
+            deleteBooking({ variables: { input: { id: id } } });
+            handleBookingDialogClose();
+        }
+    
+    
+        // const deleteAllBookings = () => {
+    
+        //     importCSVBookings().forEach(item => addBooking({ variables: { input: item } }));
+    
+        //     console.log("Delete all bookings")
+        //     console.log(bookings)
+    
+        //     bookings.forEach(bk => {
+        //         console.log(bk.id)
+        //         deleteBooking({ variables: { input: { id: bk.id } } });
+        //         // addBooking({ variables: { input: bk } });
+        //     });
+    
+        // }
+    
+        const editBooking = (booking) => {
+    
+            // testBookings().forEach(bk => {
+            //     addBooking({ variables: { input: bk } });
+            // });
+    
+            if (booking) {
+                setCurrentBooking(booking);
+                handleBookingDialogOpen();
+            }
+        }
+    
+    
+        const bookingDialog = (() => {
+            return < Dialog open={bookingDialogOpen} onClose={handleBookingDialogClose}>
+                <DialogTitle>Vista Del Surf ✌🏄</DialogTitle>
+                <DialogContent>
+                    <VDSErrorBoundary>
+                        <VDSBookingForm
+                            booking={currentbooking}
+                            handleCreateBooking={handleCreateBooking}
+                            handleDeleteBooking={handleDeleteBooking}
+                            handleBookingDialogClose={handleBookingDialogClose}
+                        >
+                        </VDSBookingForm>
+                    </VDSErrorBoundary>
+                </DialogContent>
+            </Dialog>
+        })
 
-    const { bookingDialog, editBooking } = useBookingManager()
+    const [startDate, setStartDate] = useState(currentDate)
 
-    const { bookings,
+    const {
+        items: bookings,
         loadMoreButton,
-        changeBookingsStartDate,
-        errorDiv } = usePaginatedBookings()
+        resetQuery,
+        errorDiv } = usePaginatedItems({
+            gqlQuery: gql(VDSBookingsByDate),
+            queryName : "VDSBookingsByDate",
+            queryVariables: {
+                checkOut: { ge: currentDate },
+                sortDirection: 'ASC',
+                limit: 10,
+                type: 'Booking',
+            }
+        })
 
     const [viewMode, setViewMode] = useState('Calendar');
     const handleViewModeChange = (event, newViewMode) => {
         setViewMode(newViewMode);
     };
+
+    const changeBookingsStartDate = (toDate) => {
+
+        let newDate = (toDate !== undefined) ? toDate :
+            (startDate.isSame(initDate) ? currentDate : initDate)
+        setStartDate(newDate)
+        resetQuery({
+            nextToken: null,
+            checkOut: { ge: newDate },
+        })
+    }
 
     return (
 
@@ -166,7 +333,7 @@ export function VDSBookings() {
                             <IconButton
                                 aria-label='account'
                                 variant='contained'
-                                onClick={()=>{changeBookingsStartDate()}}
+                                onClick={() => { changeBookingsStartDate() }}
                                 float='right'
                                 height='40px'
                             >

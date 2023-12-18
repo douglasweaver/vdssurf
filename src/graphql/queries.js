@@ -84,3 +84,37 @@ export const VDSBookingsByDate = /* GraphQL */ `
     }
   }
 `;
+export const getVDSNote = /* GraphQL */ `
+  query GetVDSNote($id: ID!) {
+    getVDSNote(id: $id) {
+      id
+      name
+      description
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const listVDSNotes = /* GraphQL */ `
+  query ListVDSNotes(
+    $filter: ModelVDSNoteFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listVDSNotes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        description
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
