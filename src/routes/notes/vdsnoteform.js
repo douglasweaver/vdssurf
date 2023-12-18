@@ -7,15 +7,6 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-import dayjs from 'dayjs';
-var utc = require('dayjs/plugin/utc')
-var timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
-dayjs.extend(utc)
-dayjs.extend(timezone)
-// dayjs.tz.setDefault("America/Puerto_Rico")
-
-
-
 export function newNote() {
     let newNote = {
         name: '',
@@ -104,7 +95,10 @@ export function VDSNoteForm({
 
                         <TextField
                             variant="outlined"
+                            multiline
                             fullWidth
+                            // rows={10}
+                            maxRows={10}
                             margin="dense"
                             id="description"
                             name="description"
