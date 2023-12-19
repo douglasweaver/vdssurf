@@ -1,5 +1,5 @@
 import React from 'react';
-import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
 import VDSCheckboxList from '../../components/vdscheckboxlist';
 
@@ -41,26 +41,26 @@ export function VDSAutoIcon({
 export function VDSAutosIcons({
     autos
 }) {
+
     return (
-        <Grid
-            container
+        <Box
             display='flex'
-            direction="row"
-            alignItems="center"
-            justifyContent='center'
+            flexDirection='row'
+            // justifyContent='space-between'
+            alignItems='center'
+            width='100%'
+            sx={{
+                // border: "1px solid green",
+            }}
         >
-            {autoOptions.map((auto, index) => (
-                <Grid
-                    item
-                    key={index}
-                    display='flex'
-                    alignItems="center"
-                    justifyContent='center'
-                >
-                    {autos.includes(auto.value) && auto.icon}
-                </Grid>
-            ))}
-        </Grid>
+            {autoOptions.filter((auto) => { return autos.includes(auto.value) })
+                .map((auto, index) => (
+                    <Box key={index} flexGrow={1}>
+                        {auto.icon}
+                    </Box>
+                )
+                )}
+        </Box>
     );
 }
 

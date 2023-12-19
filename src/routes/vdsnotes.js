@@ -24,11 +24,15 @@ import { listVDSNotes } from '../graphql/queries';
 
 import usePaginatedItems from './usePaginatedItems';
 import VDSNotesList from './notes/vdsnotelist';
-import {
-    VDSNoteForm,
-    newNote,
-} from './notes/vdsnoteform';
+import { VDSNoteForm } from './notes/vdsnoteform';
 
+function newNote() {
+    let newNote = {
+        name: '',
+        fileName: ''
+    };
+    return newNote;
+}
 
 export const vdsNotesTypePolicies =
 {
@@ -91,7 +95,7 @@ export function VDSNotes() {
                                     fragment NewNote on VDSNote {
                                         id
                                         name
-                                        description
+                                        fileName
                                     }
                                     `
                         });

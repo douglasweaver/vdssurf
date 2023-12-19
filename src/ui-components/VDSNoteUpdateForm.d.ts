@@ -23,17 +23,17 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type VDSNoteUpdateFormInputValues = {
     name?: string;
-    description?: string;
+    fileName?: string;
 };
 export declare type VDSNoteUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
-    description?: ValidationFunction<string>;
+    fileName?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type VDSNoteUpdateFormOverridesProps = {
     VDSNoteUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
-    description?: PrimitiveOverrideProps<TextFieldProps>;
+    fileName?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type VDSNoteUpdateFormProps = React.PropsWithChildren<{
     overrides?: VDSNoteUpdateFormOverridesProps | undefined | null;

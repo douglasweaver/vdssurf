@@ -89,7 +89,7 @@ export const getVDSNote = /* GraphQL */ `
     getVDSNote(id: $id) {
       id
       name
-      description
+      fileName
       createdAt
       updatedAt
       owner
@@ -107,7 +107,7 @@ export const listVDSNotes = /* GraphQL */ `
       items {
         id
         name
-        description
+        fileName
         createdAt
         updatedAt
         owner

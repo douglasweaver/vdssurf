@@ -75,7 +75,7 @@ export const onCreateVDSNote = /* GraphQL */ `
     onCreateVDSNote(filter: $filter, owner: $owner) {
       id
       name
-      description
+      fileName
       createdAt
       updatedAt
       owner
@@ -91,7 +91,7 @@ export const onUpdateVDSNote = /* GraphQL */ `
     onUpdateVDSNote(filter: $filter, owner: $owner) {
       id
       name
-      description
+      fileName
       createdAt
       updatedAt
       owner
@@ -107,7 +107,7 @@ export const onDeleteVDSNote = /* GraphQL */ `
     onDeleteVDSNote(filter: $filter, owner: $owner) {
       id
       name
-      description
+      fileName
       createdAt
       updatedAt
       owner

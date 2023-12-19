@@ -1,6 +1,10 @@
+import { useEffect, useState } from 'react';
+import ReactPlayer from 'react-player'
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 // import { styled } from '@mui/material/styles';
+
+import { Storage } from 'aws-amplify';
 
 import dayjs from 'dayjs';
 // var isBefore = require('dayjs/plugin/isSameOrBefore');
@@ -11,42 +15,41 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 // dayjs.tz.setDefault("America/Puerto_Rico")
 
+const ImagePath = 'vdsNotes/'
 
-{/* <View style={{flexDirection:'row'}}> 
-   <Text style={{flex: 1, flexWrap: 'wrap'}}> You miss fdddddd dddddddd 
-     You miss fdd
-   </Text>
-</View> */}
+const VDSNoteVideo = ({ fileName }) => {
 
-const VDSTextCell = ({ row, field }) => {
+    const [mediaRef, setMediaRef] = useState("");
 
-    return (
-        <Box ml='15px'
-            sx={{
-                m: 2, flex:1, flexWrap: 'wrap',
-            }}
-        >
-            {row[field]}
-        </Box>
+    useEffect(() => {
+        const mediaUrl = async (fileName) => {
+            const url = await Storage.get(ImagePath + fileName, { expires: 60, })
+            setMediaRef({ result: url });
+        };
+        mediaUrl(fileName);
+    }, []);
+
+    return ((mediaRef === undefined) ?
+        <p>LOADING...</p>
+        :
+        // <Box
+        //     sx={{
+        //         // aspectRatio: '16/9',
+        //         width: '100%',
+        //         height: '100%',
+        //     }}
+        // >
+            <ReactPlayer
+                url={mediaRef.result}
+                controls
+                height='100%'
+                width='auto'
+                // light={true}
+            // playing
+            />
+        // </Box>
     )
 }
-
-
-const columns = [
-    {
-        field: "name", headerName: "Note",
-        flex: 1,
-        sxParams: {align: 'center', textAlign: 'center', },
-        renderCell: VDSTextCell,
-    },
-    {
-        field: 'description', headerName: 'Details',
-        flex: 2,
-        sxParams: {align: 'center', textAlign: 'justify', },
-        renderCell: VDSTextCell,
-    },
-];
-
 
 export default function VDSNoteList({
     notes,
@@ -70,6 +73,8 @@ export default function VDSNoteList({
             }}
         >
 
+            {/* <VDSNoteVideo note={notes[0]} /> */}
+
             <Box
                 sx={{
                     mb: 2,
@@ -77,23 +82,21 @@ export default function VDSNoteList({
                     flexDirection: "row",
                 }}
             >
-                {
-                    columns.map((col, idx) => {
-                        return (
-                            <Box sx={{ fontWeight: 'bold', flex: col.flex, align: 'center', textAlign: 'center' }} key={idx} >
-                                <p>{col.headerName} </p>
-                            </Box>
-                        )
-                    })
-                }
+                <Box sx={{ m: 1, fontWeight: 'bold', flex: 1, align: 'center', textAlign: 'center' }}>
+                    <p>Note</p>
+                </Box>
+
+                <Box sx={{ m: 1, fontWeight: 'bold', flex: 2, align: 'center', textAlign: 'center' }}>
+                    <p>Media</p>
+                </Box>
             </Box>
 
             <Box
                 sx={{
-                    mb: 2,
+                    m: 1,
                     display: "flex",
                     flexDirection: "column",
-                    flexGrow: 1,
+                    // flexGrow: 1,
                     overflow: "hidden",
                     overflowY: "scroll",
                 }}
@@ -104,26 +107,30 @@ export default function VDSNoteList({
 
                             <Box
                                 key={idx}
-                                onClick={(event) => { rowClick(event, note) }}
+                                // onClick={(event) => { rowClick(event, note) }}
                                 sx={{
-                                    mb: 2,
+                                    m: 1,
                                     display: "flex",
                                     flexDirection: "row",
-                                    height: '100%',
+                                    height: '30%',
+                                    // alignContent: 'center'
                                     // overflow: "hidden",
                                     // overflowY: "scroll",
                                 }}
                             >
-                                {
-                                    columns.map((col, cidx) => {
-                                        return (
-                                            <Box sx={{flex: col.flex, ...col.sxParams}} key={cidx}>
-                                                {col.renderCell({ row: note, field: col.field })}
-                                            </Box>
-                                        )
-                                    })
-                                }
+                                <Box
+                                    onClick={(event) => { rowClick(event, note) }}
+                                    sx={{ m: 1, flex: 1, align: 'center', textAlign: 'center', }}
+                                >
+                                    <p>{note.name}</p>
+                                </Box>
 
+
+                                <Box sx={{ m: 1, flex: 2, 
+                                    width: '100%', height: '100%',
+                                    align: 'center', textAlign: 'center', }}>
+                                    <VDSNoteVideo fileName={note.fileName} />
+                                </Box>
                             </Box>
                         )
                     })

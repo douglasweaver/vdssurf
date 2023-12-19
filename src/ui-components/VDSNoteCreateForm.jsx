@@ -23,21 +23,19 @@ export default function VDSNoteCreateForm(props) {
   } = props;
   const initialValues = {
     name: "",
-    description: "",
+    fileName: "",
   };
   const [name, setName] = React.useState(initialValues.name);
-  const [description, setDescription] = React.useState(
-    initialValues.description
-  );
+  const [fileName, setFileName] = React.useState(initialValues.fileName);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
-    setDescription(initialValues.description);
+    setFileName(initialValues.fileName);
     setErrors({});
   };
   const validations = {
     name: [{ type: "Required" }],
-    description: [],
+    fileName: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -66,7 +64,7 @@ export default function VDSNoteCreateForm(props) {
         event.preventDefault();
         let modelFields = {
           name,
-          description,
+          fileName,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -130,7 +128,7 @@ export default function VDSNoteCreateForm(props) {
           if (onChange) {
             const modelFields = {
               name: value,
-              description,
+              fileName,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -146,29 +144,29 @@ export default function VDSNoteCreateForm(props) {
         {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
-        label="Description"
+        label="File name"
         isRequired={false}
         isReadOnly={false}
-        value={description}
+        value={fileName}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
-              description: value,
+              fileName: value,
             };
             const result = onChange(modelFields);
-            value = result?.description ?? value;
+            value = result?.fileName ?? value;
           }
-          if (errors.description?.hasError) {
-            runValidationTasks("description", value);
+          if (errors.fileName?.hasError) {
+            runValidationTasks("fileName", value);
           }
-          setDescription(value);
+          setFileName(value);
         }}
-        onBlur={() => runValidationTasks("description", description)}
-        errorMessage={errors.description?.errorMessage}
-        hasError={errors.description?.hasError}
-        {...getOverrideProps(overrides, "description")}
+        onBlur={() => runValidationTasks("fileName", fileName)}
+        errorMessage={errors.fileName?.errorMessage}
+        hasError={errors.fileName?.hasError}
+        {...getOverrideProps(overrides, "fileName")}
       ></TextField>
       <Flex
         justifyContent="space-between"
