@@ -25,9 +25,11 @@ export default function VDSNoteUpdateForm(props) {
   } = props;
   const initialValues = {
     name: "",
+    comments: "",
     fileName: "",
   };
   const [name, setName] = React.useState(initialValues.name);
+  const [comments, setComments] = React.useState(initialValues.comments);
   const [fileName, setFileName] = React.useState(initialValues.fileName);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -35,6 +37,7 @@ export default function VDSNoteUpdateForm(props) {
       ? { ...initialValues, ...vDSNoteRecord }
       : initialValues;
     setName(cleanValues.name);
+    setComments(cleanValues.comments);
     setFileName(cleanValues.fileName);
     setErrors({});
   };
@@ -56,6 +59,7 @@ export default function VDSNoteUpdateForm(props) {
   React.useEffect(resetStateValues, [vDSNoteRecord]);
   const validations = {
     name: [{ type: "Required" }],
+    comments: [],
     fileName: [],
   };
   const runValidationTasks = async (
@@ -85,6 +89,7 @@ export default function VDSNoteUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           name,
+          comments: comments ?? null,
           fileName: fileName ?? null,
         };
         const validationResponses = await Promise.all(
@@ -147,6 +152,7 @@ export default function VDSNoteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               name: value,
+              comments,
               fileName,
             };
             const result = onChange(modelFields);
@@ -163,6 +169,32 @@ export default function VDSNoteUpdateForm(props) {
         {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
+        label="Comments"
+        isRequired={false}
+        isReadOnly={false}
+        value={comments}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              comments: value,
+              fileName,
+            };
+            const result = onChange(modelFields);
+            value = result?.comments ?? value;
+          }
+          if (errors.comments?.hasError) {
+            runValidationTasks("comments", value);
+          }
+          setComments(value);
+        }}
+        onBlur={() => runValidationTasks("comments", comments)}
+        errorMessage={errors.comments?.errorMessage}
+        hasError={errors.comments?.hasError}
+        {...getOverrideProps(overrides, "comments")}
+      ></TextField>
+      <TextField
         label="File name"
         isRequired={false}
         isReadOnly={false}
@@ -172,6 +204,7 @@ export default function VDSNoteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               name,
+              comments,
               fileName: value,
             };
             const result = onChange(modelFields);

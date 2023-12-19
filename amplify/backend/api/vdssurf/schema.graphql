@@ -59,5 +59,6 @@ type VDSBooking
 {
   id: ID!
   name: String!
+  comments: String
   fileName: String
 }

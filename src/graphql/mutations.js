@@ -75,6 +75,7 @@ export const createVDSNote = /* GraphQL */ `
     createVDSNote(input: $input, condition: $condition) {
       id
       name
+      comments
       fileName
       createdAt
       updatedAt
@@ -91,6 +92,7 @@ export const updateVDSNote = /* GraphQL */ `
     updateVDSNote(input: $input, condition: $condition) {
       id
       name
+      comments
       fileName
       createdAt
       updatedAt
@@ -107,6 +109,7 @@ export const deleteVDSNote = /* GraphQL */ `
     deleteVDSNote(input: $input, condition: $condition) {
       id
       name
+      comments
       fileName
       createdAt
       updatedAt

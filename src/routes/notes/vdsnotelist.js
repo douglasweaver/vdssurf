@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player'
 import Box from '@mui/material/Box';
-import Tooltip from '@mui/material/Tooltip';
 // import { styled } from '@mui/material/styles';
 
 import { Storage } from 'aws-amplify';
@@ -39,14 +38,14 @@ const VDSNoteVideo = ({ fileName }) => {
         //         height: '100%',
         //     }}
         // >
-            <ReactPlayer
-                url={mediaRef.result}
-                controls
-                height='100%'
-                width='auto'
-                // light={true}
-            // playing
-            />
+        <ReactPlayer
+            url={mediaRef.result}
+            controls
+            height='100%'
+            width='auto'
+        // light={true}
+        // playing
+        />
         // </Box>
     )
 }
@@ -64,7 +63,7 @@ export default function VDSNoteList({
     return (
         <Box
             sx={{
-                mb: 2,
+                mb: 1,
                 display: "flex",
                 flexDirection: "column",
                 height: '100%',
@@ -77,13 +76,17 @@ export default function VDSNoteList({
 
             <Box
                 sx={{
-                    mb: 2,
+                    mb: 1,
                     display: "flex",
                     flexDirection: "row",
                 }}
             >
                 <Box sx={{ m: 1, fontWeight: 'bold', flex: 1, align: 'center', textAlign: 'center' }}>
                     <p>Note</p>
+                </Box>
+
+                <Box sx={{ m: 1, fontWeight: 'bold', flex: 1, align: 'center', textAlign: 'center' }}>
+                    <p>Comments</p>
                 </Box>
 
                 <Box sx={{ m: 1, fontWeight: 'bold', flex: 2, align: 'center', textAlign: 'center' }}>
@@ -96,7 +99,7 @@ export default function VDSNoteList({
                     m: 1,
                     display: "flex",
                     flexDirection: "column",
-                    // flexGrow: 1,
+                    height: "100%",
                     overflow: "hidden",
                     overflowY: "scroll",
                 }}
@@ -112,7 +115,7 @@ export default function VDSNoteList({
                                     m: 1,
                                     display: "flex",
                                     flexDirection: "row",
-                                    height: '30%',
+                                    height: '45%',
                                     // alignContent: 'center'
                                     // overflow: "hidden",
                                     // overflowY: "scroll",
@@ -120,15 +123,30 @@ export default function VDSNoteList({
                             >
                                 <Box
                                     onClick={(event) => { rowClick(event, note) }}
-                                    sx={{ m: 1, flex: 1, align: 'center', textAlign: 'center', }}
+                                    sx={{
+                                        m: 1, flex: 2,
+                                        align: 'center', textAlign: 'center',
+                                        // overflowY: "scroll",
+                                    }}
                                 >
                                     <p>{note.name}</p>
                                 </Box>
 
+                                <Box
+                                    // onClick={(event) => { rowClick(event, note) }}
+                                    sx={{ m: 1, flex: 6, 
+                                        align: 'center', textAlign: 'center',
+                                        overflowY: "scroll",
+                                    }}
+                                >
+                                    <p>{note.comments}</p>
+                                </Box>
 
-                                <Box sx={{ m: 1, flex: 2, 
+                                <Box sx={{
+                                    m: 1, flex: 6,
                                     width: '100%', height: '100%',
-                                    align: 'center', textAlign: 'center', }}>
+                                    align: 'center', textAlign: 'center',
+                                }}>
                                     <VDSNoteVideo fileName={note.fileName} />
                                 </Box>
                             </Box>

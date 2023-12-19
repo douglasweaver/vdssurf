@@ -95,6 +95,7 @@ export function VDSNotes() {
                                     fragment NewNote on VDSNote {
                                         id
                                         name
+                                        comments
                                         fileName
                                     }
                                     `

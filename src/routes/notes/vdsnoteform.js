@@ -62,6 +62,21 @@ export function VDSNoteForm({
                 />
             </Box>
             <Box
+                sx={{
+                    width: '100%',
+                    m: 2,
+                    display: "flex",
+                }}
+            >
+                <TextField
+                    variant="outlined"
+                    fullWidth
+                    label="Comments"
+                    value={noteData.comments}
+                    onChange={e => setNoteData({ ...noteData, comments: e.target.value })}
+                />
+            </Box>
+            <Box
                 component="span"
                 sx={{
                     display: "flex",
