@@ -37,7 +37,7 @@ export default function VDSCheckboxList({
             margin='dense'
             error={Boolean(error)}
             sx={{
-                mt: 2,
+                mt: 1,
             }}
             variant="outlined"
         >
@@ -48,7 +48,7 @@ export default function VDSCheckboxList({
                     "& .MuiOutlinedInput": {notched : true},
                     display: "flex",
                     border: "1px solid",
-                    px: 2,
+                    px: 1,
                     justifyContent: "space-around",
                     alignItems: "center",
                 }}

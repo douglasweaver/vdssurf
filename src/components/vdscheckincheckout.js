@@ -67,87 +67,123 @@ export default function VDSCheckInCheckOut({
     };
 
     return (
+
+
         <FormControl
+            fullWidth
+            margin='dense'
+            component="fieldset"
+            variant="outlined"
             sx={{
                 display: "flex",
-                border: "1px solid blue",
-                pt: 2,
-                pb: 1,
+                border: "1px solid",
+                pt: 1,
+                // pb: 1,
                 px: 1,
                 justifyContent: "space-between",
                 alignItems: "center",
                 boxSizing: 'border-box',
             }}
-            component="fieldset"
-            variant="standard"
         >
 
             <FormGroup
                 row
+                // variant='outlined'
+                sx={{
+                    display: "flex",
+                    flex: 1,
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                }}
             >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <FormGroup
+                    sx={{
+                        display: "flex",
+                        flex: 1,
+                        alignItems: "center",
+                    }}
+                >
 
-                    <DatePicker
-                        label={startLabel}
-                        value={checkIn}
-                        onChange={handleStartDateChange}
-                        fixedWeekNumber={5}
-                        showDaysOutsideCurrentMonth={true}
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
 
-                    <DatePicker
-                        label={endLabel}
-                        value={checkOut}
-                        onChange={handleEndDateChange}
-                        fixedWeekNumber={5}
-                        showDaysOutsideCurrentMonth={true}
-                        minDate={checkIn}
+                        <DatePicker
+                            label={startLabel}
+                            value={checkIn}
+                            onChange={handleStartDateChange}
+                            fixedWeekNumber={5}
+                            showDaysOutsideCurrentMonth={true}
+                            // sx={{
+                            //     '& .MuiOutlinedInput-root': {
+                            //       '& fieldset': {
+                            //         borderColor: 'red',
+                            //       },
+                            //       '&:hover fieldset': {
+                            //         borderColor: 'green',
+                            //       },
+                            //       '&.Mui-focused fieldset': {
+                            //         borderColor: 'purple',
+                            //       },
+                            //     },
+                            //   }}
+                        />
 
-                    />
-                </LocalizationProvider>
+                        <TimePicker
+                            // label={startLabel}
+                            value={checkIn}
+                            ampm={false}
+                            openTo="hours"
+                            views={['hours', 'minutes']}
+                            inputFormat='h a'
+                            onChange={handleStartTimeChange}
+                            // minTime={TimePicker_minTime}
+                            timeSteps={TimePicker_timeSteps}
+                        // sx={DateTimePicker_sx}
+                        />
+                    </LocalizationProvider>
+                </FormGroup>
+
+                <FormGroup
+                    sx={{
+                        display: "flex",
+                        flex: 1,
+                        alignItems: "center",
+                    }}
+                >
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+                        <DatePicker
+                            label={endLabel}
+                            value={checkOut}
+                            onChange={handleEndDateChange}
+                            fixedWeekNumber={5}
+                            showDaysOutsideCurrentMonth={true}
+                            minDate={checkIn}
+
+                        />
+
+                        {/* <Box sx={{ mx: 2 }}> to </Box> */}
+                        <TimePicker
+                            // label={endLabel}
+                            ampm={false}
+                            value={checkOut}
+                            openTo="hours"
+                            views={['hours', 'minutes']}
+                            inputFormat='h a'
+                            onChange={handleEndTimeChange}
+                            // minTime={TimePicker_minTime}
+                            timeSteps={TimePicker_timeSteps}
+                        // textField={(params) => <TextField {...params}
+                        // sx={DateTimePicker_sx}
+                        // />}
+                        />
+
+                    </LocalizationProvider>
+                </FormGroup>
+
             </FormGroup>
 
-            <FormGroup
-                row
-            >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-
-                    <TimePicker
-
-                        // label={startLabel}
-                        value={checkIn}
-                        ampm={false}
-                        openTo="hours"
-                        views={['hours', 'minutes']}
-                        inputFormat='h a'
-                        onChange={handleStartTimeChange}
-                        // minTime={TimePicker_minTime}
-                        timeSteps={TimePicker_timeSteps}
-                    // sx={DateTimePicker_sx}
-                    />
-                    {/* <Box sx={{ mx: 2 }}> to </Box> */}
-                    <TimePicker
-                        // label={endLabel}
-                        ampm={false}
-                        value={checkOut}
-                        openTo="hours"
-                        views={['hours', 'minutes']}
-                        inputFormat='h a'
-                        onChange={handleEndTimeChange}
-                        // minTime={TimePicker_minTime}
-                        timeSteps={TimePicker_timeSteps}
-                    // textField={(params) => <TextField {...params}
-                    // sx={DateTimePicker_sx}
-                    // />}
-                    />
-
-                </LocalizationProvider>
-
-            </FormGroup>
-
-
-            <FormHelperText>{helperText}</FormHelperText>
-        </FormControl>
+            < FormHelperText > {helperText}</FormHelperText >
+        </FormControl >
 
 
     );

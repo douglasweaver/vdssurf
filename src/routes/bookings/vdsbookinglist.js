@@ -51,31 +51,58 @@ const VDSDateCell = ({ row, field }) => {
     )
 }
 
+const VDSDateRangeCell = ({ row, field }) => {
+
+    let checkInDate = dayjs(row.checkIn).toDate()
+    let checkOutDate = dayjs(row.checkOut).toDate()
+    let formatDate = (dayjs(checkOutDate).year() !== dayjs().year()) ? 'MM/DD/YY' : 'MM/DD'
+    return (
+        <Tooltip title={dayjs(checkInDate).format('ddd MMM DD YYYY @ hA')+' - '+dayjs(checkOutDate).format('ddd MMM DD YYYY @ hA')} >
+            <Box>
+            {dayjs(checkInDate).format('MM/DD')+'-'+dayjs(checkOutDate).format(formatDate)}
+            </Box>
+        </Tooltip>
+    )
+}
 
 const columns = [
     {
         field: "guests", headerName: "Guests",
-        sxParams: { flex: 1, align: 'center', textAlign: 'center',},
+        sxParams: {
+            flex: 6,
+            align: 'center', textAlign: 'left',
+            overflow: "hidden",
+        },
         renderCell: VDSGuestCell,
     },
     {
-        field: 'checkIn', headerName: '\u2713-In', type: 'date',
+        field: 'checkIn-checkOut', headerName: '\u2713-In - \u2713-Out',
         headerAlign: 'center',
-        sxParams: { width: 100, align: 'center' ,textAlign: 'center',},
-        // flex: 1,
-        renderCell: VDSDateCell,
+        sxParams: { 
+            flex: 6,
+            width: 200, 
+            align: 'center', textAlign: 'center', 
+        },
+        renderCell: VDSDateRangeCell,
     },
-    {
-        field: 'checkOut', headerName: '\u2713-Out', type: 'date',
-        headerAlign: 'center',
-        sxParams: { width: 100, align: 'center' ,textAlign: 'center',},
-        // flex: 1,
-        renderCell: VDSDateCell,
-    },
+    // {
+    //     field: 'checkOut', headerName: '\u2713-Out', type: 'date',
+    //     headerAlign: 'center',
+    //     sxParams: { 
+    //         flex: 3,
+    //         width: 100, 
+    //         align: 'center', textAlign: 'center', 
+    //     },
+    //     renderCell: VDSDateCell,
+    // },
     {
         field: "levels", headerName: "Levels",
         headerAlign: 'center',
-        sxParams: { width: 90, align: 'center' ,textAlign: 'center',},
+        sxParams: { 
+            flex: 4,
+            width: 90, 
+            align: 'center', textAlign: 'center', 
+        },
         renderCell: ({ row, field }) => {
             return <VDSLevelsIcons levels={row[field]} />
         },
@@ -83,7 +110,11 @@ const columns = [
     {
         field: "autos", headerName: "Car",
         headerAlign: 'center',
-        sxParams: { width: 90, align: 'center' ,textAlign: 'center',},
+        sxParams: { 
+            flex: 2,
+            width: 90, 
+            align: 'center', textAlign: 'center', 
+        },
         renderCell: ({ row, field }) => {
             return <VDSAutosIcons autos={row[field]} />
         },
@@ -124,7 +155,7 @@ export default function VDSBookingList({
                 {
                     columns.map((col, idx) => {
                         return (
-                            <Box sx={{fontWeight: 'bold', ...col.sxParams}} key={idx} >
+                            <Box sx={{ fontWeight: 'bold', ...col.sxParams }} key={idx} >
                                 <p>{col.headerName} </p>
                             </Box>
                         )

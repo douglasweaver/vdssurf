@@ -199,10 +199,9 @@ export function VDSBookings() {
             }
         }
     
-    
         const bookingDialog = (() => {
             return < Dialog open={bookingDialogOpen} onClose={handleBookingDialogClose}>
-                <DialogTitle>Vista Del Surf ✌🏄</DialogTitle>
+                <DialogTitle fontSize={18}>Vista Del Surf ✌🏄</DialogTitle>
                 <DialogContent>
                     <VDSErrorBoundary>
                         <VDSBookingForm
