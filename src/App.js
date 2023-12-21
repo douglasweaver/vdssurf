@@ -72,7 +72,7 @@ function SettingsMenuIcon(user) {
 
   return ((user === undefined ?
     <AccountCircleIcon />
-    : <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.attributes.email.substring(0, 2).toUpperCase()}</Avatar>
+    : <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.username?.substring(0, 2).toUpperCase()}</Avatar>
   ));
 
 };
@@ -82,8 +82,8 @@ function Login() {
   const { user, signOut } = useAuthenticator((context) => [context.user]);
   return (
     (user === undefined ?
-      <Authenticator variation="modal" hideSignUp={true} />
-      : <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.attributes.email.substring(0, 2).toUpperCase()}</Avatar>
+      <Authenticator loginMechanisms={['email']} variation="modal" hideSignUp={true} />
+      : <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.username?.substring(0, 2).toUpperCase()}</Avatar>
     )
   )
 };
@@ -91,7 +91,7 @@ function Login() {
 
 function App() {
 
-  const { user, signOut } = useAuthenticator((context) => [context.user]);
+  const { user, signOut } = useAuthenticator((context) => [context.user, context.signOut]);
   const navigate = useNavigate()
 
   const handleNavigate = (selection) => {
@@ -108,6 +108,7 @@ function App() {
     };
   };
 
+  console.log("render", user)
   return (
     <ApolloProvider client={apolloClient} >
       <VDSErrorBoundary>
@@ -148,7 +149,7 @@ function App() {
                 path="/login"
                 element={
                   <React.Fragment>
-                    <Authenticator variation="modal" hideSignUp={true} />
+                    <Authenticator loginMechanisms={['email']} variation="modal" hideSignUp={true} />
                     <VDSGallery />
                   </React.Fragment>
                 }
@@ -157,7 +158,7 @@ function App() {
                 path="/bookings"
                 element={
                   <React.Fragment>
-                    <Authenticator variation="modal" hideSignUp={true} />
+                    <Authenticator loginMechanisms={['email']} variation="modal" hideSignUp={true} />
                     {user !== undefined && (<VDSBookings />)}
                   </React.Fragment>
                 }
@@ -166,7 +167,7 @@ function App() {
                 path="/notes"
                 element={
                   <React.Fragment>
-                    <Authenticator variation="modal" hideSignUp={true} />
+                    <Authenticator loginMechanisms={['email']} variation="modal" hideSignUp={true} />
                     {user !== undefined && (<VDSNotes />)}
                   </React.Fragment>
                 }

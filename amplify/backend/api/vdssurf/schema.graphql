@@ -51,7 +51,7 @@ type VDSBooking
       { allow: owner },
       # allow all authenticated users to access this data
       #{ allow: private, provider: iam },
-      { allow: private, provider: userPools },
+      { allow: private },
       # allow all guest users (not authenticated) to access this data
       #{ allow: public, operations: [read], provider: iam }
     ]

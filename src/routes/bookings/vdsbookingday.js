@@ -1,12 +1,38 @@
 import React from 'react';
 import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
 
-import { vdsCommitmentColor } from './vdsbookingcommitment';
+import { vdsCommitmentColor, vdsCommitmentLabel } from './vdsbookingcommitment';
 import { VDSLevelIcon } from './vdsbookinglevels';
 
 import dayjs from 'dayjs';
 var isToday = require('dayjs/plugin/isToday')
 dayjs.extend(isToday)
+
+
+const VDSGuestCell = ({ row, field }) => {
+    let commitColor = (row.commitment === 'CONFIRMED' ||
+        !dayjs().isSameOrBefore(row.checkOut, 'day'))
+        ? {}
+        : { backgroundColor: vdsCommitmentColor(row.commitment) }
+    let tt = vdsCommitmentLabel(row.commitment) + ": " + row.guests +
+        (row.description !== "" ? " NOTE: " + row.description : "")
+
+    return (
+        <Tooltip title={tt} >
+            <Box ml='15px'
+                sx={{
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                    ...commitColor,
+                }}
+            >
+                {row[field]}
+            </Box>
+        </Tooltip>
+    )
+}
+
+
 
 
 function VDSBookingDayLevel({
@@ -28,25 +54,37 @@ function VDSBookingDayLevel({
                 :
                 undefined
         )
+
+        let tt = bookingsForLevel?.length > 0 ?
+            vdsCommitmentLabel(bookingsForLevel[0].commitment) + ": " + bookingsForLevel[0].guests +
+            (bookingsForLevel[0].description !== "" ? " NOTE: " + bookingsForLevel[0].description : "")
+            :
+            undefined
+
         return (
-            <Box
-                onClick={() => onClickBooking(bookingsForLevel)}
-                sx={{
-                    display: "flex",
-                    height: '27%',
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#FFFFFF',
-                    ...(levelColor !== undefined &&
-                    {
-                        '&:hover': { cursor: "pointer" },
-                        backgroundColor: levelColor,
-                    }),
-                }}
-            >
-                <VDSLevelIcon level={level} />
-            </Box>
+            <Tooltip title={tt} >
+
+                <Box
+                    onClick={() => onClickBooking(bookingsForLevel)}
+                    sx={{
+                        display: "flex",
+                        height: '27%',
+                        width: '100%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#FFFFFF',
+                        ...(levelColor !== undefined &&
+                        {
+                            '&:hover': { cursor: "pointer" },
+                            backgroundColor: levelColor,
+                        }),
+                    }}
+                >
+
+                    <VDSLevelIcon level={level} />
+                </Box>
+            </Tooltip>
+
         )
     } else {
         return (

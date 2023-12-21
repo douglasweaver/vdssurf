@@ -37,7 +37,9 @@
     "resourceName": "vdssurfeed6ea65",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
-    "userPoolGroupList": [],
+    "userPoolGroupList": [
+      "VDSSurfOwnersUserPool"
+    ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,

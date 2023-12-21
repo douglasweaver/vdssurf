@@ -12,6 +12,9 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "auth": {
+    "userPoolGroups": {
+      "VDSSurfOwnersUserPoolGroupRole": "string"
+    },
     "vdssurfeed6ea65": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",

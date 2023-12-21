@@ -60,6 +60,22 @@
     }
   },
   "auth": {
+    "userPoolGroups": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "vdssurfeed6ea65"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito-UserPool-Groups"
+    },
     "vdssurfeed6ea65": {
       "customAuth": false,
       "dependsOn": [],

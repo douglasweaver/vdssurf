@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "vdssurfeed6ea65": {}
+        "vdssurfeed6ea65": {},
+        "userPoolGroups": {}
       },
       "api": {
         "vdssurf": {},
