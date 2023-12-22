@@ -1,0 +1,16 @@
+{
+  "resourceName": "vdss3",
+  "policyUUID": "c5d2da20",
+  "bucketName": "vdsbucket",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

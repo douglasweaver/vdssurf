@@ -1,27 +1,5 @@
 {
   "api": {
-    "AdminQueries": {
-      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "vdssurfeed6ea65"
-        },
-        {
-          "attributes": [
-            "Arn",
-            "Name"
-          ],
-          "category": "function",
-          "resourceName": "AdminQueriesbae648e0"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
-    },
     "vdssurf": {
       "dependsOn": [
         {
@@ -29,28 +7,16 @@
             "UserPoolId"
           ],
           "category": "auth",
-          "resourceName": "vdssurfeed6ea65"
+          "resourceName": "vdssurf9b481fab"
         }
       ],
       "output": {
         "authConfig": {
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AWS_IAM"
-            },
-            {
-              "apiKeyConfig": {
-                "apiKeyExpirationDate": "2023-12-22T18:08:01.440Z",
-                "apiKeyExpirationDays": 7,
-                "description": ""
-              },
-              "authenticationType": "API_KEY"
-            }
-          ],
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authvdssurfeed6ea65"
+              "userPoolId": "authvdssurf9b481fab"
             }
           }
         }
@@ -60,83 +26,106 @@
     }
   },
   "auth": {
-    "userPoolGroups": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId",
-            "AppClientIDWeb",
-            "AppClientID",
-            "IdentityPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "vdssurfeed6ea65"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Cognito-UserPool-Groups"
-    },
-    "vdssurfeed6ea65": {
+    "vdssurf9b481fab": {
       "customAuth": false,
       "dependsOn": [],
-      "frontendAuthConfig": {
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [],
-          "passwordPolicyMinLength": 8
-        },
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "socialProviders": [],
-        "usernameAttributes": [],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      },
       "providerPlugin": "awscloudformation",
-      "service": "Cognito"
-    }
-  },
-  "function": {
-    "AdminQueriesbae648e0": {
-      "build": true,
-      "dependsOn": [
-        {
-          "attributes": [
-            "UserPoolId"
-          ],
-          "category": "auth",
-          "resourceName": "vdssurfeed6ea65"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
+      "service": "Cognito",
+      "serviceType": "imported"
     }
   },
   "parameters": {
-    "AMPLIFY_function_AdminQueriesbae648e0_deploymentBucketName": {
+    "AMPLIFY_auth_vdssurf9b481fab_allowUnauthenticatedIdentities": {
       "usedBy": [
         {
-          "category": "function",
-          "resourceName": "AdminQueriesbae648e0"
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
         }
       ]
     },
-    "AMPLIFY_function_AdminQueriesbae648e0_s3Key": {
+    "AMPLIFY_auth_vdssurf9b481fab_authRoleArn": {
       "usedBy": [
         {
-          "category": "function",
-          "resourceName": "AdminQueriesbae648e0"
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
+        }
+      ]
+    },
+    "AMPLIFY_auth_vdssurf9b481fab_authRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
+        }
+      ]
+    },
+    "AMPLIFY_auth_vdssurf9b481fab_identityPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
+        }
+      ]
+    },
+    "AMPLIFY_auth_vdssurf9b481fab_identityPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
+        }
+      ]
+    },
+    "AMPLIFY_auth_vdssurf9b481fab_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
+        }
+      ]
+    },
+    "AMPLIFY_auth_vdssurf9b481fab_unauthRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
+        }
+      ]
+    },
+    "AMPLIFY_auth_vdssurf9b481fab_unauthRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
+        }
+      ]
+    },
+    "AMPLIFY_auth_vdssurf9b481fab_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
+        }
+      ]
+    },
+    "AMPLIFY_auth_vdssurf9b481fab_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
+        }
+      ]
+    },
+    "AMPLIFY_auth_vdssurf9b481fab_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "vdssurf9b481fab"
         }
       ]
     }
   },
   "storage": {
-    "imagestorage": {
+    "vdss3": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"
