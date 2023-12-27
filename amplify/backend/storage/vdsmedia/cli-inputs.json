@@ -1,7 +1,7 @@
 {
-  "resourceName": "vdss3",
-  "policyUUID": "c5d2da20",
-  "bucketName": "vdsbucket",
+  "resourceName": "vdsmedia",
+  "policyUUID": "f0b77e04",
+  "bucketName": "vdsmediabucket",
   "storageAccess": "authAndGuest",
   "guestAccess": [
     "READ"

@@ -5,6 +5,9 @@ import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { I18n } from 'aws-amplify';
 
+import {
+  Text,
+} from "@aws-amplify/ui-react";
 
 import {
   Link,
@@ -68,11 +71,24 @@ I18n.putVocabulariesForLanguage('en', {
   'Forgot your password?': 'Rewax Password',
 });
 
+
+const accountInitials = (user) => {
+
+  return (user === undefined ? "UNK" :
+     (user.attributes === undefined ? "???" :
+     (user.attributes["custom:initials"] === undefined ? "???" : 
+     user.attributes["custom:initials"])))
+}
+
 function SettingsMenuIcon(user) {
 
   return ((user === undefined ?
     <AccountCircleIcon />
-    : <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.username?.substring(0, 2).toUpperCase()}</Avatar>
+    : <Avatar sx={{ bgcolor: deepOrange[500] }}>
+    <Text fontSize={16}>
+      {accountInitials(user)}
+  </Text>
+      </Avatar>
   ));
 
 };
@@ -83,7 +99,7 @@ function Login() {
   return (
     (user === undefined ?
       <Authenticator loginMechanisms={['email']} variation="modal" hideSignUp={true} />
-      : <Avatar sx={{ bgcolor: deepOrange[500] }}>{user.username?.substring(0, 2).toUpperCase()}</Avatar>
+      : <Avatar sx={{ bgcolor: deepOrange[500] }}>{accountInitials(user)}</Avatar>
     )
   )
 };
@@ -108,7 +124,7 @@ function App() {
     };
   };
 
-  console.log("render", user)
+  console.log(user)
   return (
     <ApolloProvider client={apolloClient} >
       <VDSErrorBoundary>

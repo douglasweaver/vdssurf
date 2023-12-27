@@ -29,6 +29,7 @@ import { VDSNoteForm } from './notes/vdsnoteform';
 function newNote() {
     let newNote = {
         name: '',
+        comments: '',
         fileName: ''
     };
     return newNote;

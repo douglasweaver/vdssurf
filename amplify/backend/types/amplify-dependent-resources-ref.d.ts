@@ -6,7 +6,7 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "storage": {
-    "vdss3": {
+    "vdsmedia": {
       "BucketName": "string",
       "Region": "string"
     }

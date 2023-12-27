@@ -10,7 +10,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-// import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import ListTwoToneIcon from '@mui/icons-material/ListTwoTone';
 import CalendarViewMonthTwoToneIcon from '@mui/icons-material/CalendarViewMonthTwoTone';
 import InventoryIcon from '@mui/icons-material/Inventory';
@@ -26,7 +26,7 @@ import {
 } from '../graphql/mutations';
 import { VDSBookingsByDate } from '../graphql/queries';
 
-// import { importCSVBookings } from './vdsbookingIMPORT';
+// import { importCSVBookings } from './bookings/vdsbookingIMPORT';
 
 import {
     VDSBookingForm,
@@ -68,20 +68,6 @@ export const vdsBookingsTypePolicies =
     },
 }
 
-// const deleteAllBookings = () => {
-
-//     importCSVBookings().forEach(item => addBooking({ variables: { input: item } }));
-
-//     console.log("Delete all bookings")
-//     console.log(bookings)
-
-//     bookings.forEach(bk => {
-//         console.log(bk.id)
-//         deleteBooking({ variables: { input: { id: bk.id } } });
-//         // addBooking({ variables: { input: bk } });
-//     });
-
-// }
 
 export function VDSBookings() {
     
@@ -179,11 +165,11 @@ export function VDSBookings() {
         //     console.log("Delete all bookings")
         //     console.log(bookings)
     
-        //     bookings.forEach(bk => {
-        //         console.log(bk.id)
-        //         deleteBooking({ variables: { input: { id: bk.id } } });
-        //         // addBooking({ variables: { input: bk } });
-        //     });
+        //     // bookings.forEach(bk => {
+        //     //     console.log(bk.id)
+        //     //     deleteBooking({ variables: { input: { id: bk.id } } });
+        //     //     // addBooking({ variables: { input: bk } });
+        //     // });
     
         // }
     

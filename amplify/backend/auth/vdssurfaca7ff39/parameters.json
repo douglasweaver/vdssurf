@@ -1,6 +1,6 @@
 {
   "authSelections": "identityPoolAndUserPool",
-  "resourceName": "vdssurf9b481fab",
+  "resourceName": "vdssurfaca7ff39",
   "serviceType": "imported",
   "region": "us-east-1",
   "usernameAttributes": [
@@ -10,11 +10,7 @@
     "email"
   ],
   "passwordPolicyMinLength": 8,
-  "passwordPolicyCharacters": [
-    "Requires Lowercase",
-    "Requires Uppercase",
-    "Requires Numbers"
-  ],
+  "passwordPolicyCharacters": [],
   "mfaConfiguration": "OFF",
   "autoVerifiedAttributes": [
     "email"
