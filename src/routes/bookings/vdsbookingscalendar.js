@@ -80,6 +80,8 @@ export default function VDSBookingCalendar({
                 height: '100%',
                 overflow: "hidden",
                 overflowY: "scroll",
+                borderTop: 1,
+                borderLeft: 1,
             }}
         >
             <Box
@@ -87,7 +89,7 @@ export default function VDSBookingCalendar({
                     // mb: 2,
                     display: "flex",
                     flexDirection: "row",
-                    // border: 1,
+                    borderBottom: 1,
                     // height: '100%',
                     // overflow: "hidden",
                     // overflowY: "scroll",
@@ -101,7 +103,7 @@ export default function VDSBookingCalendar({
                                 sx={{fontWeight: 'bold',
                                     flexBasis: 0, flexGrow: 1,
                                     textAlign: 'center',margin: 'auto',
-                                    border: 1,
+                                    borderRight : 1,
                                 }}>
                                 <p>{col.headerName} </p>
                             </Box>
@@ -142,7 +144,9 @@ export default function VDSBookingCalendar({
                                             <Box key={cidx}
                                                 sx={{
                                                     flexBasis: 0, flexGrow: 1,
-                                                    align: 'center', border: 1
+                                                    align: 'center',
+                                                    borderRight: 1,
+                                                    borderBottom: 1,
                                                 }}>
                                                 <VDSBookingDay
                                                     date={day.date}

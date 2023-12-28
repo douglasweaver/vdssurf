@@ -70,37 +70,37 @@ export const vdsBookingsTypePolicies =
 
 
 export function VDSBookings() {
-    
-        const [currentbooking, setCurrentBooking] = useState(newBooking());
-        const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
-    
-        const [deleteBooking] = useMutation(gql(deleteVDSBooking), {
-            update(cache, { data: { deleteVDSBooking } }) {
-                cache.modify({
-                    fields: {
-                        VDSBookingsByDate(previous) {
-                            let final = previous.items.filter((e) => (
-                                cache.data.data[e.__ref].id !== deleteVDSBooking.id
-                            ));
-                            return {
-                                ...previous,
-                                items: final,
-                            }
+
+    const [currentbooking, setCurrentBooking] = useState(newBooking());
+    const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
+
+    const [deleteBooking] = useMutation(gql(deleteVDSBooking), {
+        update(cache, { data: { deleteVDSBooking } }) {
+            cache.modify({
+                fields: {
+                    VDSBookingsByDate(previous) {
+                        let final = previous.items.filter((e) => (
+                            cache.data.data[e.__ref].id !== deleteVDSBooking.id
+                        ));
+                        return {
+                            ...previous,
+                            items: final,
                         }
                     }
-                })
-            }
-        })
-    
-        const [addBooking] = useMutation(gql(createVDSBooking), {
-    
-            update(cache, { data: { createVDSBooking } }) {
-                cache.modify({
-                    fields: {
-                        VDSBookingsByDate(previous) {
-                            const newBookingRef = cache.writeFragment({
-                                data: createVDSBooking,
-                                fragment: gql`
+                }
+            })
+        }
+    })
+
+    const [addBooking] = useMutation(gql(createVDSBooking), {
+
+        update(cache, { data: { createVDSBooking } }) {
+            cache.modify({
+                fields: {
+                    VDSBookingsByDate(previous) {
+                        const newBookingRef = cache.writeFragment({
+                            data: createVDSBooking,
+                            fragment: gql`
                                     fragment NewBooking on VDSBooking {
                                         id
                                         guests
@@ -113,94 +113,94 @@ export function VDSBookings() {
                                         type
                                     }
                                     `
-                            });
-    
-                            let existingBookings = previous.items
-                            let start = existingBookings.findIndex((e) => {
-                                return cache.data.data[e.__ref].checkOut > createVDSBooking.checkOut
-                            });
-                            start = start < 0 ? existingBookings.length : start
-                            let final = {
-                                ...previous,
-                                items: existingBookings.toSpliced(start, 0, newBookingRef)
-                            }
-                            return final
+                        });
+
+                        let existingBookings = previous.items
+                        let start = existingBookings.findIndex((e) => {
+                            return cache.data.data[e.__ref].checkOut > createVDSBooking.checkOut
+                        });
+                        start = start < 0 ? existingBookings.length : start
+                        let final = {
+                            ...previous,
+                            items: existingBookings.toSpliced(start, 0, newBookingRef)
                         }
+                        return final
                     }
-                })
-            }
-        });
-    
-        const [updateBooking] = useMutation(gql(updateVDSBooking));
-    
-        const handleCreateBooking = (booking) => {
+                }
+            })
+        }
+    });
+
+    const [updateBooking] = useMutation(gql(updateVDSBooking));
+
+    const handleCreateBooking = (booking) => {
+        setBookingDialogOpen(false);
+        if ('id' in booking) {
+            updateBooking({ variables: { input: booking } });
+        } else {
+            addBooking({ variables: { input: booking } });
+        }
+    }
+
+    const handleBookingDialogClose = (event, reason) => {
+        if (reason !== 'backdropClick') {
             setBookingDialogOpen(false);
-            if ('id' in booking) {
-                updateBooking({ variables: { input: booking } });
-            } else {
-                addBooking({ variables: { input: booking } });
-            }
         }
-    
-        const handleBookingDialogClose = (event, reason) => {
-            if (reason !== 'backdropClick') {
-                setBookingDialogOpen(false);
-            }
+    }
+
+    const handleBookingDialogOpen = () => {
+        setBookingDialogOpen(true);
+    }
+
+    const handleDeleteBooking = (id) => {
+        deleteBooking({ variables: { input: { id: id } } });
+        handleBookingDialogClose();
+    }
+
+
+    // const deleteAllBookings = () => {
+
+    //     importCSVBookings().forEach(item => addBooking({ variables: { input: item } }));
+
+    //     console.log("Delete all bookings")
+    //     console.log(bookings)
+
+    //     // bookings.forEach(bk => {
+    //     //     console.log(bk.id)
+    //     //     deleteBooking({ variables: { input: { id: bk.id } } });
+    //     //     // addBooking({ variables: { input: bk } });
+    //     // });
+
+    // }
+
+    const editBooking = (booking) => {
+
+        // testBookings().forEach(bk => {
+        //     addBooking({ variables: { input: bk } });
+        // });
+
+        if (booking) {
+            setCurrentBooking(booking);
+            handleBookingDialogOpen();
         }
-    
-        const handleBookingDialogOpen = () => {
-            setBookingDialogOpen(true);
-        }
-    
-        const handleDeleteBooking = (id) => {
-            deleteBooking({ variables: { input: { id: id } } });
-            handleBookingDialogClose();
-        }
-    
-    
-        // const deleteAllBookings = () => {
-    
-        //     importCSVBookings().forEach(item => addBooking({ variables: { input: item } }));
-    
-        //     console.log("Delete all bookings")
-        //     console.log(bookings)
-    
-        //     // bookings.forEach(bk => {
-        //     //     console.log(bk.id)
-        //     //     deleteBooking({ variables: { input: { id: bk.id } } });
-        //     //     // addBooking({ variables: { input: bk } });
-        //     // });
-    
-        // }
-    
-        const editBooking = (booking) => {
-    
-            // testBookings().forEach(bk => {
-            //     addBooking({ variables: { input: bk } });
-            // });
-    
-            if (booking) {
-                setCurrentBooking(booking);
-                handleBookingDialogOpen();
-            }
-        }
-    
-        const bookingDialog = (() => {
-            return < Dialog open={bookingDialogOpen} onClose={handleBookingDialogClose}>
-                <DialogTitle fontSize={18}>Vista Del Surf ✌🏄</DialogTitle>
-                <DialogContent>
-                    <VDSErrorBoundary>
-                        <VDSBookingForm
-                            booking={currentbooking}
-                            handleCreateBooking={handleCreateBooking}
-                            handleDeleteBooking={handleDeleteBooking}
-                            handleBookingDialogClose={handleBookingDialogClose}
-                        >
-                        </VDSBookingForm>
-                    </VDSErrorBoundary>
-                </DialogContent>
-            </Dialog>
-        })
+    }
+
+    const bookingDialog = (() => {
+        return < Dialog open={bookingDialogOpen} onClose={handleBookingDialogClose}>
+            <DialogTitle fontSize={18}>Vista Del Surf ✌🏄</DialogTitle>
+            <DialogContent>
+                <VDSErrorBoundary>
+                    <VDSBookingForm
+                        booking={currentbooking}
+                        handleCreateBooking={handleCreateBooking}
+                        handleDeleteBooking={handleDeleteBooking}
+                        handleBookingDialogClose={handleBookingDialogClose}
+                    >
+                    </VDSBookingForm>
+                </VDSErrorBoundary>
+            </DialogContent>
+        </Dialog>
+    })
 
     const [startDate, setStartDate] = useState(currentDate)
 
@@ -210,7 +210,7 @@ export function VDSBookings() {
         resetQuery,
         errorDiv } = usePaginatedItems({
             gqlQuery: gql(VDSBookingsByDate),
-            queryName : "VDSBookingsByDate",
+            queryName: "VDSBookingsByDate",
             queryVariables: {
                 checkOut: { ge: currentDate },
                 sortDirection: 'ASC',
@@ -239,8 +239,8 @@ export function VDSBookings() {
 
         <Box
             sx={{
-                mt: 2,
-                mb: 0,
+                paddingTop: 0,
+                paddingBottom: 0,
                 display: "flex",
                 flexDirection: "column",
                 width: '100%',
@@ -252,13 +252,15 @@ export function VDSBookings() {
         >
 
             <Box
-                display='flex'
-                flexDirection='row'
                 justifyContent='space-between'
                 alignItems='center'
-                width='100%'
                 sx={{
-                    // border: "1px solid green",
+                    paddingTop: 1,
+                    paddingBottom: 1,
+                    display: "flex",
+                    flexDirection: "row",
+                    width: '100%',
+                    // border: "13px solid green",
                 }}
             >
                 <Box>
@@ -306,15 +308,22 @@ export function VDSBookings() {
                 </Box> */}
 
                 <Box
-                    display='flex'
-                    flexDirection='row'
-                    justifyContent='space-between'
-                    alignItems='center'
+                    sx={{
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                        display: "flex",
+                        flexDirection: "row",
+                        // width: '100%',
+                        // justifyContent: 'space-between',
+                        // alignItems: 'center'
+                        // border: "1px solid green",
+                    }}
+
                 >
                     <Box>
                         <Tooltip
-                            // title={startDate.isSame(initDate) ? "Goto Today" : "Goto Beginning Of Time"}>
-                            title="Toggle Date">
+                            title={startDate.isSame(initDate) ? "Goto Today" : "Goto Beginning Of Time"}>
+                            {/* title="Toggle Date"> */}
                             <IconButton
                                 aria-label='account'
                                 variant='contained'

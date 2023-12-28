@@ -4,6 +4,8 @@ import Tooltip from '@mui/material/Tooltip';
 
 import { vdsCommitmentColor, vdsCommitmentLabel } from './vdsbookingcommitment';
 import { VDSLevelIcon } from './vdsbookinglevels';
+import { blue } from '@mui/material/colors';
+
 
 import dayjs from 'dayjs';
 var isToday = require('dayjs/plugin/isToday')
@@ -55,11 +57,12 @@ function VDSBookingDayLevel({
                 undefined
         )
 
-        let tt = bookingsForLevel?.length > 0 ?
-            vdsCommitmentLabel(bookingsForLevel[0].commitment) + ": " + bookingsForLevel[0].guests +
-            (bookingsForLevel[0].description !== "" ? " NOTE: " + bookingsForLevel[0].description : "")
-            :
-            undefined
+        let tt = level +
+            (bookingsForLevel?.length > 0 ?
+                " " + vdsCommitmentLabel(bookingsForLevel[0].commitment) + ": " + bookingsForLevel[0].guests +
+                (bookingsForLevel[0].description !== "" ? " NOTE: " + bookingsForLevel[0].description : "")
+                :
+                " VACANT")
 
         return (
             <Tooltip title={tt} >
@@ -87,19 +90,24 @@ function VDSBookingDayLevel({
 
         )
     } else {
+        let tt = level + " VACANT"
         return (
-            <Box
-                sx={{
-                    display: "flex",
-                    height: '27%',
-                    width: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#FFFFFF',
-                }}
-            >
-                <VDSLevelIcon level={level} />
-            </Box>
+            <Tooltip title={tt} >
+
+                <Box
+                    sx={{
+                        display: "flex",
+                        height: '27%',
+                        width: '100%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#FFFFFF',
+                    }}
+                >
+                    <VDSLevelIcon level={level} />
+                </Box>
+            </Tooltip>
+
         )
     }
 }
@@ -130,26 +138,23 @@ export default function VDSBookingDay({
                 textAlign: 'center',
                 alignItems: 'center',
                 padding: '0',
-                ...(date.isToday() && { border: "2px solid red" })
+                ...(date.isToday() && { border: "2px solid red" }),
+                ...((date.month() % 2 === 0) && { bgcolor: blue[50] }),
             }}
         >
 
-            <Box
-                sx={{
-                    height: '100%',
-                    width: '100%',
-                    ...(date.date() === 1 && { backgroundColor: '#1AC1DD', }),
-                }}
-            >
+            <Tooltip title={date.format('ddd MMM DD YYYY')} >
                 <Box
                     sx={{
+                        height: '100%',
+                        width: '100%',
                         fontWeight: 'bold',
+                        ...(date.date() === 1 && { backgroundColor: '#1AC1DD', }),
                     }}
                 >
                     {date.format((date.date() === 1 ? "MMM YY" : "D"))}
                 </Box>
-            </Box>
-
+            </Tooltip>
             <React.Fragment>
                 <VDSBookingDayLevel
                     bookings={bookings}

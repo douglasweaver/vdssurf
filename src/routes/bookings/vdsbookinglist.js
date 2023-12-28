@@ -57,9 +57,9 @@ const VDSDateRangeCell = ({ row, field }) => {
     let checkOutDate = dayjs(row.checkOut).toDate()
     let formatDate = (dayjs(checkOutDate).year() !== dayjs().year()) ? 'MM/DD/YY' : 'MM/DD'
     return (
-        <Tooltip title={dayjs(checkInDate).format('ddd MMM DD YYYY @ hA')+' - '+dayjs(checkOutDate).format('ddd MMM DD YYYY @ hA')} >
+        <Tooltip title={dayjs(checkInDate).format('ddd MMM DD YYYY @ hA') + ' - ' + dayjs(checkOutDate).format('ddd MMM DD YYYY @ hA')} >
             <Box>
-            {dayjs(checkInDate).format('MM/DD')+'-'+dayjs(checkOutDate).format(formatDate)}
+                {dayjs(checkInDate).format('MM/DD') + '-' + dayjs(checkOutDate).format(formatDate)}
             </Box>
         </Tooltip>
     )
@@ -68,41 +68,24 @@ const VDSDateRangeCell = ({ row, field }) => {
 const columns = [
     {
         field: "guests", headerName: "Guests",
-        sxParams: {
-            flex: 6,
-            align: 'center', textAlign: 'left',
-            overflow: "hidden",
-        },
+        flex: 6,
+        textAlign: 'left',
         renderCell: VDSGuestCell,
     },
     {
         field: 'checkIn-checkOut', headerName: '\u2713-In - \u2713-Out',
         headerAlign: 'center',
-        sxParams: { 
-            flex: 6,
-            width: 200, 
-            align: 'center', textAlign: 'center', 
-        },
+        flex: 6,
+        width: 200,
+        textAlign: 'center',
         renderCell: VDSDateRangeCell,
     },
-    // {
-    //     field: 'checkOut', headerName: '\u2713-Out', type: 'date',
-    //     headerAlign: 'center',
-    //     sxParams: { 
-    //         flex: 3,
-    //         width: 100, 
-    //         align: 'center', textAlign: 'center', 
-    //     },
-    //     renderCell: VDSDateCell,
-    // },
     {
         field: "levels", headerName: "Levels",
         headerAlign: 'center',
-        sxParams: { 
-            flex: 4,
-            width: 90, 
-            align: 'center', textAlign: 'center', 
-        },
+        flex: 4,
+        width: 90,
+        textAlign: 'center',
         renderCell: ({ row, field }) => {
             return <VDSLevelsIcons levels={row[field]} />
         },
@@ -110,11 +93,9 @@ const columns = [
     {
         field: "autos", headerName: "Car",
         headerAlign: 'center',
-        sxParams: { 
-            flex: 2,
-            width: 90, 
-            align: 'center', textAlign: 'center', 
-        },
+        flex: 2,
+        width: 90,
+        textAlign: 'center',
         renderCell: ({ row, field }) => {
             return <VDSAutosIcons autos={row[field]} />
         },
@@ -136,7 +117,7 @@ export default function VDSBookingList({
     return (
         <Box
             sx={{
-                mb: 2,
+                paddingBottom: 0,
                 display: "flex",
                 flexDirection: "column",
                 height: '100%',
@@ -147,7 +128,7 @@ export default function VDSBookingList({
 
             <Box
                 sx={{
-                    mb: 2,
+                    paddingBottom: 0,
                     display: "flex",
                     flexDirection: "row",
                 }}
@@ -155,8 +136,19 @@ export default function VDSBookingList({
                 {
                     columns.map((col, idx) => {
                         return (
-                            <Box sx={{ fontWeight: 'bold', ...col.sxParams }} key={idx} >
-                                <p>{col.headerName} </p>
+                            <Box key={idx}
+                                sx={{
+                                    width: col.width,
+                                    flex: col.flex,
+                                    textAlign: 'center',
+                                    height: '40px',
+                                    lineHeight: '40px',
+                                    fontWeight: 'bold',
+                                    borderTop: 1,
+                                    // border: "1px solid red",
+                                }}
+                            >
+                                {col.headerName}
                             </Box>
                         )
                     })
@@ -165,12 +157,15 @@ export default function VDSBookingList({
 
             <Box
                 sx={{
-                    mb: 2,
+                    paddingBottom: 1,
                     display: "flex",
                     flexDirection: "column",
                     flexGrow: 1,
                     overflow: "hidden",
                     overflowY: "scroll",
+                    borderTop: 1,
+                    borderLeft: 1,
+                    borderRight: 1,
                 }}
             >
                 {
@@ -181,10 +176,12 @@ export default function VDSBookingList({
                                 key={idx}
                                 onClick={(event) => { rowClick(event, booking) }}
                                 sx={{
-                                    mb: 2,
+                                    paddingTop: 1,
+                                    paddingBottom: 1,
                                     display: "flex",
                                     flexDirection: "row",
                                     height: '100%',
+                                    borderBottom: 1,
                                     // overflow: "hidden",
                                     // overflowY: "scroll",
                                 }}
@@ -192,7 +189,15 @@ export default function VDSBookingList({
                                 {
                                     columns.map((col, cidx) => {
                                         return (
-                                            <Box sx={col.sxParams} key={cidx}>
+                                            <Box key={cidx}
+                                            sx={{
+                                                width: col.width,
+                                                flex: col.flex,
+                                                textAlign: col.textAlign,
+                                                align: 'center',
+                                                overflow: 'hidden',
+                                            }}
+                                            >
                                                 {col.renderCell({ row: booking, field: col.field })}
                                             </Box>
                                         )

@@ -124,7 +124,6 @@ function App() {
     };
   };
 
-  console.log(user)
   return (
     <ApolloProvider client={apolloClient} >
       <VDSErrorBoundary>
