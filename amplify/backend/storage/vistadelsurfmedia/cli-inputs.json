@@ -1,7 +1,7 @@
 {
-  "resourceName": "vdsmedia",
-  "policyUUID": "f0b77e04",
-  "bucketName": "vdsmediabucket",
+  "resourceName": "vistadelsurfmedia",
+  "policyUUID": "8edbe204",
+  "bucketName": "vistadelsurfmedia",
   "storageAccess": "authAndGuest",
   "guestAccess": [
     "READ"

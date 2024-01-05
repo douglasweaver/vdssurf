@@ -7,7 +7,7 @@
             "UserPoolId"
           ],
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ],
       "output": {
@@ -16,7 +16,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authvdssurfaca7ff39"
+              "userPoolId": "authvdssurf0b26fe81"
             }
           }
         }
@@ -26,7 +26,7 @@
     }
   },
   "auth": {
-    "vdssurfaca7ff39": {
+    "vdssurf0b26fe81": {
       "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
@@ -35,97 +35,97 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_vdssurfaca7ff39_allowUnauthenticatedIdentities": {
+    "AMPLIFY_auth_vdssurf0b26fe81_allowUnauthenticatedIdentities": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     },
-    "AMPLIFY_auth_vdssurfaca7ff39_authRoleArn": {
+    "AMPLIFY_auth_vdssurf0b26fe81_authRoleArn": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     },
-    "AMPLIFY_auth_vdssurfaca7ff39_authRoleName": {
+    "AMPLIFY_auth_vdssurf0b26fe81_authRoleName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     },
-    "AMPLIFY_auth_vdssurfaca7ff39_identityPoolId": {
+    "AMPLIFY_auth_vdssurf0b26fe81_identityPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     },
-    "AMPLIFY_auth_vdssurfaca7ff39_identityPoolName": {
+    "AMPLIFY_auth_vdssurf0b26fe81_identityPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     },
-    "AMPLIFY_auth_vdssurfaca7ff39_nativeClientId": {
+    "AMPLIFY_auth_vdssurf0b26fe81_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     },
-    "AMPLIFY_auth_vdssurfaca7ff39_unauthRoleArn": {
+    "AMPLIFY_auth_vdssurf0b26fe81_unauthRoleArn": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     },
-    "AMPLIFY_auth_vdssurfaca7ff39_unauthRoleName": {
+    "AMPLIFY_auth_vdssurf0b26fe81_unauthRoleName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     },
-    "AMPLIFY_auth_vdssurfaca7ff39_userPoolId": {
+    "AMPLIFY_auth_vdssurf0b26fe81_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     },
-    "AMPLIFY_auth_vdssurfaca7ff39_userPoolName": {
+    "AMPLIFY_auth_vdssurf0b26fe81_userPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     },
-    "AMPLIFY_auth_vdssurfaca7ff39_webClientId": {
+    "AMPLIFY_auth_vdssurf0b26fe81_webClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "vdssurfaca7ff39"
+          "resourceName": "vdssurf0b26fe81"
         }
       ]
     }
   },
   "storage": {
-    "vdsmedia": {
+    "vistadelsurfmedia": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"

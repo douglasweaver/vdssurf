@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-import { Storage } from 'aws-amplify';
+import { uploadData } from 'aws-amplify/storage';
 
 export function VDSNoteForm({
     note,
@@ -28,10 +28,21 @@ export function VDSNoteForm({
     const ImagePath = 'vdsNotes/'
 
     const uploadMedia = async () => {
-        const { key } = await Storage.put(
-            ImagePath + mediaFile.name,
-            mediaFile,
-            { contentType: mediaFile.type })
+        // eslint-disable-next-line no-unused-vars
+        // const { result } = await uploadData({
+        await uploadData({
+                key: ImagePath + mediaFile.name,
+        data: mediaFile,
+        // options: {
+        //   accessLevel: 'guest', // defaults to `guest` but can be 'private' | 'protected' | 'guest'
+        //   onProgress // Optional progress callback.
+        // }
+      })
+    // const uploadMedia = async () => {
+    //     const { key } = await put(
+    //         ImagePath + mediaFile.name,
+    //         mediaFile,
+    //         { contentType: mediaFile.type })
         handleCreateNote(noteData)
     }
 

@@ -34,6 +34,7 @@ export default function usePaginatedItems({
         if (isIntersecting && !loading) {
             fetchMoreItems();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isIntersecting, loading]);
 
     const errorDiv = (() => {

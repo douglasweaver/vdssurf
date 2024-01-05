@@ -10,7 +10,9 @@ import ToggleButton from '@mui/material/ToggleButton';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+
 import ListTwoToneIcon from '@mui/icons-material/ListTwoTone';
 import CalendarViewMonthTwoToneIcon from '@mui/icons-material/CalendarViewMonthTwoTone';
 import InventoryIcon from '@mui/icons-material/Inventory';
@@ -26,7 +28,7 @@ import {
 } from '../graphql/mutations';
 import { VDSBookingsByDate } from '../graphql/queries';
 
-// import { importCSVBookings } from './bookings/vdsbookingIMPORT';
+import { importCSVBookings } from './bookings/vdsbookingIMPORT';
 
 import {
     VDSBookingForm,
@@ -42,6 +44,9 @@ import dayjs from 'dayjs';
 
 const initDate = dayjs('2015-03-01')
 const currentDate = dayjs().add(-14, "day")
+
+
+const debugIcon = false
 
 export const vdsBookingsTypePolicies =
 {
@@ -158,9 +163,9 @@ export function VDSBookings() {
     }
 
 
-    // const deleteAllBookings = () => {
+    const deleteAllBookings = () => {
 
-    //     importCSVBookings().forEach(item => addBooking({ variables: { input: item } }));
+        importCSVBookings().forEach(item => addBooking({ variables: { input: item } }));
 
     //     console.log("Delete all bookings")
     //     console.log(bookings)
@@ -171,7 +176,7 @@ export function VDSBookings() {
     //     //     // addBooking({ variables: { input: bk } });
     //     // });
 
-    // }
+    }
 
     const editBooking = (booking) => {
 
@@ -293,7 +298,9 @@ export function VDSBookings() {
                     <Typography variant="h6" sx={{ fontWeight: 'bold', textAlign: 'center', }}>Bookings</Typography>
                 </Box>
 
-                {/* <Box>
+
+                {debugIcon &&
+                <Box>
                     <Tooltip title="Delete All">
                         <IconButton
                             aria-label='account'
@@ -305,7 +312,8 @@ export function VDSBookings() {
                             <DeleteSweepIcon />
                         </IconButton>
                     </Tooltip>
-                </Box> */}
+                </Box>
+                }
 
                 <Box
                     sx={{
@@ -313,10 +321,6 @@ export function VDSBookings() {
                         paddingBottom: 0,
                         display: "flex",
                         flexDirection: "row",
-                        // width: '100%',
-                        // justifyContent: 'space-between',
-                        // alignItems: 'center'
-                        // border: "1px solid green",
                     }}
 
                 >

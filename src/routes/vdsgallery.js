@@ -1,5 +1,6 @@
-import * as React from 'react';
-import { Storage } from 'aws-amplify';
+import { useState, useEffect } from 'react';
+
+import { getUrl } from 'aws-amplify/storage';
 // import { AmplifyS3Image, AmplifyS3Album, AmplifyS3ImagePicker } from "@aws-amplify/ui-react/legacy";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -8,30 +9,34 @@ import Box from '@mui/material/Box';
 
 const ImagePath = 'assets/photos/'
 
-function srcset(image, size, rows = 1, cols = 1) {
-    let tmp = {
-        src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-        // srcSet: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format&dpr=2 2x`,
-    };
-    return tmp;
-}
+// function srcset(image, size, rows = 1, cols = 1) {
+//     let tmp = {
+//         src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
+//         // srcSet: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format&dpr=2 2x`,
+//     };
+//     return tmp;
+// }
 
 //     // image name should be relative to the public folder
 //     // example: public/images/test.png => Storage.get('images/test.png' ...
-function VDSImage({
-    imageSpec
-}) {
+const VDSImage = ({ imageSpec }) => {
 
-    const [imageRef, setImageRef] = React.useState("");
+    const [imageRef, setImageRef] = useState("");
 
-    React.useEffect(() => {
+    useEffect(() => {
         const imageUrl = async (imageName) => {
-            const picUrl = await Storage.get(ImagePath + imageName, { level: 'public', })
-            setImageRef({ result: picUrl });
+            const picUrl = await getUrl({
+                key: (ImagePath + imageName),
+                options: {
+                    accessLevel: 'guest', // can be 'private', 'protected', or 'guest' but defaults to `guest`
+                    expiresIn: 20 // validity of the URL, in seconds. defaults to 900 (15 minutes) and maxes at 3600 (1 hour)
+                },
+            })
+            setImageRef({ result: picUrl.url });
         };
         imageUrl(imageSpec.img);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
     return ((imageRef === undefined) ?
         <p>LOADING...</p>
         :
@@ -51,8 +56,6 @@ function VDSImage({
 }
 
 export default function VDSGallery() {
-
-    const item = itemData[0];
 
     return (
         <div>

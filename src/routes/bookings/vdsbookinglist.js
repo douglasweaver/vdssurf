@@ -38,18 +38,18 @@ const VDSGuestCell = ({ row, field }) => {
     )
 }
 
-const VDSDateCell = ({ row, field }) => {
+// const VDSDateCell = ({ row, field }) => {
 
-    let date = dayjs(row[field]).toDate()
-    let formatDate = (dayjs(date).year() !== dayjs().year()) ? 'MM/DD/YY' : 'MM/DD'
-    return (
-        <Tooltip title={dayjs(date).format('ddd MMM DD YYYY @ hA')} >
-            <Box>
-                {dayjs(date).format(formatDate)}
-            </Box>
-        </Tooltip>
-    )
-}
+//     let date = dayjs(row[field]).toDate()
+//     let formatDate = (dayjs(date).year() !== dayjs().year()) ? 'MM/DD/YY' : 'MM/DD'
+//     return (
+//         <Tooltip title={dayjs(date).format('ddd MMM DD YYYY @ hA')} >
+//             <Box>
+//                 {dayjs(date).format(formatDate)}
+//             </Box>
+//         </Tooltip>
+//     )
+// }
 
 const VDSDateRangeCell = ({ row, field }) => {
 

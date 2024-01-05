@@ -8,9 +8,10 @@
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { API } from "aws-amplify";
+import { generateClient } from "aws-amplify/api";
 import { getVDSNote } from "../graphql/queries";
 import { updateVDSNote } from "../graphql/mutations";
+const client = generateClient();
 export default function VDSNoteUpdateForm(props) {
   const {
     id: idProp,
@@ -46,7 +47,7 @@ export default function VDSNoteUpdateForm(props) {
     const queryData = async () => {
       const record = idProp
         ? (
-            await API.graphql({
+            await client.graphql({
               query: getVDSNote.replaceAll("__typename", ""),
               variables: { id: idProp },
             })
@@ -120,7 +121,7 @@ export default function VDSNoteUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          await API.graphql({
+          await client.graphql({
             query: updateVDSNote.replaceAll("__typename", ""),
             variables: {
               input: {

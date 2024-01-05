@@ -2,20 +2,12 @@ import React from 'react';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormHelperText from '@mui/material/FormHelperText';
-import TextField from '@mui/material/TextField';
 import { TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
 
 const startLabel = 'Check-In'
 const endLabel = 'Check-Out'
-
-const DateTimePicker_sx = {
-    width: '125px',
-}
-
-const TimePicker_minTime = dayjs().set('hour', 1).set('minute', 0).set('second', 0)
 
 const TimePicker_timeSteps = { minutes: 60, }
 

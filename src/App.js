@@ -1,45 +1,40 @@
 /* src/App.js */
-import React from 'react';
+import { useState, useEffect, Fragment } from 'react';
 
-import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import {
+  Authenticator,
+  useAuthenticator
+} from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
-import { I18n } from 'aws-amplify';
+import { I18n } from 'aws-amplify/utils';
 
 import {
   Text,
 } from "@aws-amplify/ui-react";
 
 import {
-  Link,
   Routes,
   Route,
-  Navigate,
-  useLocation,
   useNavigate,
   BrowserRouter,
 } from "react-router-dom";
 
 import Box from '@mui/material/Box';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Avatar from '@mui/material/Avatar';
-import { deepOrange, deepPurple } from '@mui/material/colors';
+import { deepOrange } from '@mui/material/colors';
 
 import VDSErrorBoundary from './components/vdserrorboundary';
 import { VDSBookings, vdsBookingsTypePolicies } from './routes/vdsbookings.js';
 import { VDSNotes, vdsNotesTypePolicies } from './routes/vdsnotes.js';
 import VDSGallery from './routes/vdsgallery'
 import VDSAppBar from './vdsappbar';
-import { AddBoxOutlined } from '@mui/icons-material';
-import { CssBaseline } from '@mui/material';
 
-import {
-  ApolloProvider,
-} from '@apollo/client';
+import { ApolloProvider, } from '@apollo/client';
 import client from './apollo/client.js'
 
+import { fetchUserAttributes, } from 'aws-amplify/auth'
 
 const appTitle = 'VDS ✌🏄';
-
 
 const apolloTypePolicies =
 {
@@ -50,7 +45,6 @@ const apolloTypePolicies =
     }
   }
 }
-
 const apolloClient = client(apolloTypePolicies);
 
 const pages = [
@@ -58,7 +52,6 @@ const pages = [
   { label: 'Bookings', link: '/bookings', },
   { label: 'Notes', link: '/notes', },
 ]
-
 
 const SignInText = 'Drop-In';
 const SignOutText = 'Bail';
@@ -72,43 +65,41 @@ I18n.putVocabulariesForLanguage('en', {
 });
 
 
-const accountInitials = (user) => {
-
-  return (user === undefined ? "UNK" :
-     (user.attributes === undefined ? "???" :
-     (user.attributes["custom:initials"] === undefined ? "???" : 
-     user.attributes["custom:initials"])))
+function accountInitials(attributes) {
+  return (attributes === undefined ? "UNK" :
+    (attributes["custom:initials"] ?? "???"))
 }
 
-function SettingsMenuIcon(user) {
+// function Login() {
 
-  return ((user === undefined ?
-    <AccountCircleIcon />
-    : <Avatar sx={{ bgcolor: deepOrange[500] }}>
-    <Text fontSize={16}>
-      {accountInitials(user)}
-  </Text>
-      </Avatar>
-  ));
+//   const { user, signOut } = useAuthenticator((context) => [context.user]);
+//   return (
+//     (user === undefined ?
+//       <Authenticator loginMechanisms={['email']} variation="modal" hideSignUp={true} />
+//       : <Avatar sx={{ bgcolor: deepOrange[500] }}>{accountInitials(user)}</Avatar>
+//     )
+//   )
+// };
 
-};
-
-function Login() {
-
-  const { user, signOut } = useAuthenticator((context) => [context.user]);
-  return (
-    (user === undefined ?
-      <Authenticator loginMechanisms={['email']} variation="modal" hideSignUp={true} />
-      : <Avatar sx={{ bgcolor: deepOrange[500] }}>{accountInitials(user)}</Avatar>
-    )
-  )
-};
-
-
+// function App({ signOut, user }) {
 function App() {
 
-  const { user, signOut } = useAuthenticator((context) => [context.user, context.signOut]);
+  const [userAttributes, setUserAttributes] = useState()
+  const { user, signOut } = useAuthenticator((context) => [context.user]);
   const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchAtt = async () => {
+      try {
+        const attributes = await fetchUserAttributes();
+        setUserAttributes(attributes)
+      } catch {
+        setUserAttributes(undefined)
+      }
+    }
+    fetchAtt()
+  }, [user]);
+
 
   const handleNavigate = (selection) => {
     navigate(selection.link)
@@ -118,6 +109,7 @@ function App() {
 
     if (selection === SignOutText) {
       signOut();
+      setUserAttributes(undefined)
       navigate('/gallery')
     } else if (selection === SignInText) {
       navigate('/login')
@@ -143,7 +135,13 @@ function App() {
             pages={pages}
             setPage={handleNavigate}
             rightMenu={(user !== undefined ? [SignOutText] : [SignInText])}
-            rightMenuIcon={SettingsMenuIcon(user)}
+            rightMenuIcon={
+              <Avatar sx={{ bgcolor: deepOrange[500] }}>
+                <Text fontSize={16}>
+                  {accountInitials(userAttributes)}
+                </Text>
+              </Avatar>
+            }
             selectRightMenu={handleSettingsClick}
           />
 
@@ -163,28 +161,28 @@ function App() {
               <Route
                 path="/login"
                 element={
-                  <React.Fragment>
-                    <Authenticator loginMechanisms={['email']} variation="modal" hideSignUp={true} />
+                  <Fragment>
+                    <Authenticator variation="modal" hideSignUp={true} />
                     <VDSGallery />
-                  </React.Fragment>
+                  </Fragment>
                 }
               />
               <Route
                 path="/bookings"
                 element={
-                  <React.Fragment>
-                    <Authenticator loginMechanisms={['email']} variation="modal" hideSignUp={true} />
+                  <Fragment>
+                    <Authenticator variation="modal" hideSignUp={true} />
                     {user !== undefined && (<VDSBookings />)}
-                  </React.Fragment>
+                  </Fragment>
                 }
               />
               <Route
                 path="/notes"
                 element={
-                  <React.Fragment>
-                    <Authenticator loginMechanisms={['email']} variation="modal" hideSignUp={true} />
+                  <Fragment>
+                    <Authenticator variation="modal" hideSignUp={true} />
                     {user !== undefined && (<VDSNotes />)}
-                  </React.Fragment>
+                  </Fragment>
                 }
               />
 
@@ -196,18 +194,35 @@ function App() {
   );
 }
 
+function AppWithProvider() {
 
-export default function AppWithProvider() {
   return (
-    <React.StrictMode>
-      <CssBaseline />
+
+    // <Authenticator loginMechanisms={['email']}
+    //   variation="modal"
+    //   hideSignUp={true} >
+
+    <Authenticator.Provider>
       <BrowserRouter>
-        <Authenticator.Provider>
-          <App></App>
-        </Authenticator.Provider>
+        <App />
       </BrowserRouter>
-    </React.StrictMode>
-  );
+    </Authenticator.Provider>
+
+    // </ Authenticator >
+  )
+
 }
 
+export default AppWithProvider;
 
+// function AppWithProvider({ signOut, user }) {
+
+//   return (
+//     <BrowserRouter>
+//       <App />
+//     </BrowserRouter>
+//   )
+
+// }
+
+// export default withAuthenticator(AppWithProvider);

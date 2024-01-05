@@ -7,11 +7,15 @@ import {
     VDSConfirmedIcon
 } from '../../svg/svgicon';
 
+// const stoplightGreen = '#57E964'
+const stopLightRed = '#cc3232'
+const stopLightYellow = '#f7B500'
+
 const commitmentLabel = 'Commitment'
 const commitmentOptions = [
-    { value: 'THINKINGABOUTIT', label: 'Thinking About It', short: 'Thinking', icon: <VDSThinkingIcon />, color: '#ff8a80' },
-    { value: 'PRETTYSURE', label: 'Pretty Sure', short: 'Likely', icon: <VDSPrettySureIcon />, color: '#eeff41' },
-    { value: 'CONFIRMED', label: 'Confirmed', short: 'Confirmed', icon: <VDSConfirmedIcon />, color: '#76ff03' },
+    { value: 'THINKINGABOUTIT', label: 'Thinking About It', short: 'Thinking', icon: <VDSThinkingIcon />, color: stopLightYellow},
+    { value: 'PRETTYSURE', label: 'Pretty Sure', short: 'Likely', icon: <VDSPrettySureIcon />, color: stopLightRed },
+    { value: 'CONFIRMED', label: 'Confirmed', short: 'Confirmed', icon: <VDSConfirmedIcon />, color: undefined },
 ]
 
 export const commitmentDefault = commitmentOptions[0].value;

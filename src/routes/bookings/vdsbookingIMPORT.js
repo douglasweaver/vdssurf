@@ -519,7 +519,7 @@ function CSVToArray(CSV_string, delimiter) {
     // array to hold our individual pattern matching groups:
     var matches = false; // false if we don't find any matches
     // Loop until we no longer find a regular expression match
-    while (matches = pattern.exec(CSV_string)) {
+    while ((matches = pattern.exec(CSV_string))) {
         var matched_delimiter = matches[1]; // Get the matched delimiter
         // Check if the delimiter has a length (and is not the start of string)
         // and if it matches field delimiter. If not, it is a row delimiter.
@@ -570,7 +570,7 @@ export function importCSVBookings() {
     var rows = CSVToArray(csv, ',');
 
     // The first row will be the header
-    let header = rows[0];
+    // let header = rows[0];
     // The rest is the data
     let data = rows.slice(2);
 

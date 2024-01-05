@@ -3,7 +3,7 @@ import ReactPlayer from 'react-player'
 import Box from '@mui/material/Box';
 // import { styled } from '@mui/material/styles';
 
-import { Storage } from 'aws-amplify';
+import { getUrl } from 'aws-amplify/storage';
 
 import dayjs from 'dayjs';
 // var isBefore = require('dayjs/plugin/isSameOrBefore');
@@ -22,10 +22,19 @@ const VDSNoteVideo = ({ fileName }) => {
 
     useEffect(() => {
         const mediaUrl = async (fileName) => {
-            const url = await Storage.get(ImagePath + fileName, { expires: 60, })
-            setMediaRef({ result: url });
+            const url = await getUrl({
+                key: (ImagePath + fileName), 
+                options: {
+                    accessLevel: 'guest' , // can be 'private', 'protected', or 'guest' but defaults to `guest`
+                    // validateObjectExistence: false,  // defaults to false
+                    expiresIn: 20 // validity of the URL, in seconds. defaults to 900 (15 minutes) and maxes at 3600 (1 hour)
+                    // useAccelerateEndpoint: true; // Whether to use accelerate endpoint.
+                  },
+                })
+            setMediaRef({ result: url.url });
         };
         mediaUrl(fileName);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return ((mediaRef === undefined) ?

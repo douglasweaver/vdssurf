@@ -21,7 +21,8 @@ dayjs.extend(timezone)
 
 
 
-export function newBooking() {
+export function newBooking(inBook) 
+ {
     let newBook = {
         guests: '',
         description: '',
@@ -32,6 +33,7 @@ export function newBooking() {
         checkOut: dayjs().tz().hour(3).minute(0).second(0).add(7, 'day').toISOString(),
         type: "Booking"
     };
+    Object.assign(newBook, inBook ?? {})
     return newBook;
 }
 
