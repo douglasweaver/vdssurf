@@ -7,13 +7,10 @@ import { VDSLevelsIcons } from './vdsbookinglevels';
 import { VDSAutosIcons } from './vdsbookingautos';
 
 import dayjs from 'dayjs';
-// var isBefore = require('dayjs/plugin/isSameOrBefore');
-// dayjs.extend(isBefore);
 var utc = require('dayjs/plugin/utc')
 var timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
 dayjs.extend(utc)
 dayjs.extend(timezone)
-// dayjs.tz.setDefault("America/Puerto_Rico")
 
 
 const VDSGuestCell = ({ row, field }) => {
@@ -53,13 +50,13 @@ const VDSGuestCell = ({ row, field }) => {
 
 const VDSDateRangeCell = ({ row, field }) => {
 
-    let checkInDate = dayjs(row.checkIn).toDate()
-    let checkOutDate = dayjs(row.checkOut).toDate()
-    let formatDate = (dayjs(checkOutDate).year() !== dayjs().year()) ? 'MM/DD/YY' : 'MM/DD'
+    let checkInDate = dayjs(row.checkIn).tz("America/Puerto_Rico")
+    let checkOutDate = dayjs(row.checkOut).tz("America/Puerto_Rico")
+    let formatDate = (checkOutDate.year() !== dayjs().year()) ? 'MM/DD/YY' : 'MM/DD'
     return (
-        <Tooltip title={dayjs(checkInDate).format('ddd MMM DD YYYY @ hA') + ' - ' + dayjs(checkOutDate).format('ddd MMM DD YYYY @ hA')} >
+        <Tooltip title={checkInDate.format('ddd MMM DD YYYY @ hA') + ' - ' + checkOutDate.format('ddd MMM DD YYYY @ hA')} >
             <Box>
-                {dayjs(checkInDate).format('MM/DD') + '-' + dayjs(checkOutDate).format(formatDate)}
+                {checkInDate.format('MM/DD') + '-' + checkOutDate.format(formatDate)}
             </Box>
         </Tooltip>
     )
@@ -170,6 +167,7 @@ export default function VDSBookingList({
             >
                 {
                     bookings.map((booking, idx) => {
+
                         return (
 
                             <Box

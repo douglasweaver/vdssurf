@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 // import { styled } from '@mui/material/styles';
 
-import VDSBookingDay from './vdsbookingday';
+import VDSBookingsCalendarDay from './vdsbookingscalendarday';
 
 import dayjs from 'dayjs';
 var isBefore = require('dayjs/plugin/isSameOrBefore');
@@ -13,25 +13,25 @@ var utc = require('dayjs/plugin/utc')
 var timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
 dayjs.extend(utc)
 dayjs.extend(timezone)
-// dayjs.tz.setDefault("America/Puerto_Rico")
 
 function createDates(bookings) {
     const dates = [];
-    var startDate = bookings.length > 0 ? dayjs.min(bookings[0].checkOut, dayjs()) : dayjs()
-    startDate = dayjs(startDate).tz("America/Puerto_Rico").date(1).hour(12).minute(0).second(0);
+    var startDate = dayjs().tz("America/Puerto_Rico").startOf("d")
+    if (bookings.length > 0 && dayjs(bookings[0].checkOut).tz("America/Puerto_Rico").isBefore(startDate, "d")) {
+        startDate = dayjs(bookings[0].checkOut).tz("America/Puerto_Rico").startOf("d")
+    }
     startDate = startDate.day(0)
-    var endDate = bookings.length > 1 ? dayjs(bookings.slice(-1)[0].checkOut).tz("America/Puerto_Rico").hour(12).minute(0).second(0) : startDate
+    var endDate = bookings.length > 1 ? dayjs(bookings.slice(-1)[0].checkOut).tz("America/Puerto_Rico").startOf("d") : startDate
     endDate = endDate.day(6)
 
-    for (let q = startDate; q.isSameOrBefore(endDate, 'day'); q = q.add(1, 'day')) {
+    for (let q = startDate; q.isSameOrBefore(endDate, 'd'); q = q.add(1, 'd')) {
         dates.push({ date: q });
     }
 
     bookings.forEach(bk => {
-        let dateIdx = (dates.findIndex(d => d.date.isSame(bk.checkIn, 'day')))
+        let dateIdx = (dates.findIndex(d => d.date.isSame(dayjs(bk.checkIn).tz("America/Puerto_Rico"), 'day')))
         if (dateIdx !== -1) {
-            const bkLength = dayjs(bk.checkOut).diff(bk.checkIn, 'day')
-
+            const bkLength = dayjs(bk.checkOut).tz("America/Puerto_Rico").startOf("d").diff(dayjs(bk.checkIn).tz("America/Puerto_Rico").startOf("d"), 'day') + 1
             for (let dIdx = dateIdx; dIdx < (dateIdx + bkLength); dIdx += 1) {
                 if (dates[dIdx].bookings) {
                     dates[dIdx].bookings.push(bk)
@@ -47,6 +47,7 @@ function createDates(bookings) {
         let week = dates.slice(iSun, iSun + 7)
         weeks.push(week);
     };
+
 
     return weeks;
 };
@@ -148,7 +149,7 @@ export default function VDSBookingCalendar({
                                                     borderRight: 1,
                                                     borderBottom: 1,
                                                 }}>
-                                                <VDSBookingDay
+                                                <VDSBookingsCalendarDay
                                                     date={day.date}
                                                     bookings={day.bookings}
                                                     editBooking={editBooking}

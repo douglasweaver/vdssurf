@@ -17,9 +17,6 @@ var utc = require('dayjs/plugin/utc')
 var timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
 dayjs.extend(utc)
 dayjs.extend(timezone)
-// dayjs.tz.setDefault("America/Puerto_Rico")
-
-
 
 export function newBooking(inBook) 
  {
@@ -29,8 +26,8 @@ export function newBooking(inBook)
         levels: [],
         autos: [],
         commitment: commitmentDefault,
-        checkIn: dayjs().tz().hour(3).minute(0).second(0).toISOString(),
-        checkOut: dayjs().tz().hour(3).minute(0).second(0).add(7, 'day').toISOString(),
+        checkIn: dayjs().tz("America/Puerto_Rico").hour(3).minute(0).second(0).millisecond(0).toISOString(),
+        checkOut: dayjs().tz("America/Puerto_Rico").hour(3).minute(0).second(0).millisecond(0).add(7, 'day').toISOString(),
         type: "Booking"
     };
     Object.assign(newBook, inBook ?? {})
@@ -49,8 +46,8 @@ function vdsBookingToFormInitialValues(
             levels: booking.levels || [],
             autos: booking.autos || [],
             commitment: booking.commitment || commitmentDefault,
-            dateRange: [dayjs(booking.checkIn) || dayjs(),
-            dayjs(booking.checkOut) || dayjs().add(7, 'day')
+            dateRange: [dayjs(booking.checkIn).tz("America/Puerto_Rico") || dayjs(),
+            dayjs(booking.checkOut).tz("America/Puerto_Rico") || dayjs().add(7, 'day')
             ],
             type: booking.type
         });

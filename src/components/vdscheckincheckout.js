@@ -6,6 +6,12 @@ import { TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers';
 
+import dayjs from 'dayjs';
+var utc = require('dayjs/plugin/utc')
+var timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
 const startLabel = 'Check-In'
 const endLabel = 'Check-Out'
 
@@ -57,7 +63,6 @@ export default function VDSCheckInCheckOut({
         }
         return;
     };
-
     return (
 
 

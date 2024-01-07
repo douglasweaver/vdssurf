@@ -11,6 +11,8 @@ import dayjs from 'dayjs';
 var isToday = require('dayjs/plugin/isToday')
 dayjs.extend(isToday)
 
+const conflictGray = '#abb7c2'
+
 function VDSBookingDayLevel({
     bookings,
     onClickBooking,
@@ -25,11 +27,15 @@ function VDSBookingDayLevel({
     )) ?? []
 
     if (bookingsForLevel?.length > 0) {
-        levelColor = bookingsForLevel?.length > 1 ? '#FFA500' :
+        levelColor = bookingsForLevel?.length > 1 ? conflictGray :
             vdsCommitmentColor(bookingsForLevel[0].commitment)
 
-        tt = level + " " + vdsCommitmentLabel(bookingsForLevel[0].commitment) + ": " + bookingsForLevel[0].guests +
-            (bookingsForLevel[0].description !== "" ? " NOTE: " + bookingsForLevel[0].description : "")
+        tt = bookingsForLevel?.length > 1 ? "CONFLICT: "  : ""
+
+        bookingsForLevel.forEach(bk => {
+            tt = tt + level + " " + vdsCommitmentLabel(bk.commitment) + ": " + bk.guests +
+                (bk.description !== "" ? " NOTE: " + bk.description : "")+ " "
+        })
     }
 
     return (
