@@ -18,11 +18,16 @@ const VDSGuestCell = ({ row, field }) => {
         !dayjs().isSameOrBefore(row.checkOut, 'day'))
         ? {}
         : { backgroundColor: vdsCommitmentColor(row.commitment) }
-    let tt = vdsCommitmentLabel(row.commitment) + ": " + row.guests +
-        (row.description !== "" ? " NOTE: " + row.description : "")
+
+    const toolTip = (bk) => {
+
+        let tt = vdsCommitmentLabel(bk.commitment) + ": " + bk.guests +
+            (bk.description !== "" ? " NOTE: " + bk.description : "")
+        return tt
+    }
 
     return (
-        <Tooltip title={tt} >
+        <Tooltip title={toolTip(row)} >
             <Box ml='15px'
                 sx={{
                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
@@ -188,13 +193,13 @@ export default function VDSBookingList({
                                     columns.map((col, cidx) => {
                                         return (
                                             <Box key={cidx}
-                                            sx={{
-                                                width: col.width,
-                                                flex: col.flex,
-                                                textAlign: col.textAlign,
-                                                align: 'center',
-                                                overflow: 'hidden',
-                                            }}
+                                                sx={{
+                                                    width: col.width,
+                                                    flex: col.flex,
+                                                    textAlign: col.textAlign,
+                                                    align: 'center',
+                                                    overflow: 'hidden',
+                                                }}
                                             >
                                                 {col.renderCell({ row: booking, field: col.field })}
                                             </Box>

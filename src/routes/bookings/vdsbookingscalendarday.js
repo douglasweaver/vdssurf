@@ -20,26 +20,31 @@ function VDSBookingDayLevel({
     date
 }) {
 
-    let tt = level + " VACANT"
     let levelColor = undefined
     let bookingsForLevel = bookings?.filter((booking) => (
         (level !== undefined ? booking.levels.includes(level) : true)
     )) ?? []
 
-    if (bookingsForLevel?.length > 0) {
-        levelColor = bookingsForLevel?.length > 1 ? conflictGray :
-            vdsCommitmentColor(bookingsForLevel[0].commitment)
+    const toolTipDay = (bksForLevel) => {
 
-        tt = bookingsForLevel?.length > 1 ? "CONFLICT: "  : ""
+        let tt = level + " VACANT"
 
-        bookingsForLevel.forEach(bk => {
-            tt = tt + level + " " + vdsCommitmentLabel(bk.commitment) + ": " + bk.guests +
-                (bk.description !== "" ? " NOTE: " + bk.description : "")+ " "
-        })
+        if (bksForLevel?.length > 0) {
+            levelColor = bksForLevel?.length > 1 ? conflictGray :
+                vdsCommitmentColor(bksForLevel[0].commitment)
+
+            tt = bksForLevel?.length > 1 ? "CONFLICT: " : ""
+
+            bksForLevel.forEach(bk => {
+                tt = tt + level + " " + vdsCommitmentLabel(bk.commitment) + ": " + bk.guests +
+                    (bk.description !== "" ? " NOTE: " + bk.description : "") + " "
+            })
+        }
+        return tt
     }
 
     return (
-        <Tooltip title={tt} >
+        <Tooltip title={toolTipDay(bookingsForLevel)} >
             <Box
                 onClick={() => onClickBooking(
                     (bookingsForLevel?.length > 0 ?
