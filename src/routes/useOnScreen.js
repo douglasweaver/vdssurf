@@ -13,14 +13,25 @@ import { useState, useEffect, useRef } from 'react';
 export default function useOnScreen(
     ref,
     defaultValue = false,
+    root=null,
 ) {
     const [isIntersecting, setIntersecting] = useState(defaultValue);
     const observerRef = useRef(null);
 
+    let options = {
+        root: root,
+        rootMargin: "0px",
+        threshold: 1.0,
+      };
+    
+
     useEffect(() => {
-        observerRef.current = new IntersectionObserver(([entry]) =>
+        observerRef.current = new IntersectionObserver(([entry]) => {
             setIntersecting(entry.isIntersecting)
+        },
+        options
         );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

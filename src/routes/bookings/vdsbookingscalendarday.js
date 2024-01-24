@@ -1,5 +1,4 @@
 import React from 'react';
-import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 
 import { vdsCommitmentColor, vdsCommitmentLabel } from './vdsbookingcommitment';
@@ -45,7 +44,7 @@ function VDSBookingDayLevel({
 
     return (
         <Tooltip title={toolTipDay(bookingsForLevel)} >
-            <Box
+            <div
                 onClick={() => onClickBooking(
                     (bookingsForLevel?.length > 0 ?
                         { booking: bookingsForLevel[0] } :
@@ -58,12 +57,14 @@ function VDSBookingDayLevel({
                         })
                 )
                 }
-                sx={{
+                style={{
                     height: '24px',
                     width: '100%',
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: levelColor,
+                    // overflowX: "auto",
+                    // overflowY: "hidden",
                     ...((bookingsForLevel?.length > 0) &&
                     {
                         '&:hover': { cursor: "pointer" },
@@ -74,14 +75,14 @@ function VDSBookingDayLevel({
                 {(bookingsForLevel?.length > 0) &&
                     <VDSLevelIcon level={level} />
                 }
-            </Box>
+            </div>
         </Tooltip>
 
     )
 }
 
 
-export default function VDSBookingDay({
+export default function VDSBookingsCalendarDay({
     date,
     bookings,
     editBooking,
@@ -98,34 +99,37 @@ export default function VDSBookingDay({
 
     return (
 
-        <Box
-            sx={{
+        <div
+            style={{
                 mb: 0,
                 display: "flex",
                 flexDirection: "column",
                 width: '100%',
-                justifyContent: 'flex-start',
                 textAlign: 'center',
                 alignItems: 'center',
                 padding: '0',
+                // overflowX: "auto",
+                // overflowY: "hidden",
                 ...(date.isToday() && { color: 'red' }),
-                // ...((date.month() % 2 === 0) && { bgcolor: blue[50] }),
             }}
         >
 
-            <Tooltip title={date.format('ddd MMM DD YYYY')} >
-                <Box
-                    sx={{
+            {/* <Tooltip title={date.format('ddd MMM DD YYYY')} > */}
+                <div
+                    style={{
                         height: '24px',
                         width: '100%',
-                        textAlign: 'center',
+                        textAlign: 'right',
                         fontWeight: 'bold',
-                        ...(date.date() === 1 && { backgroundColor: '#1AC1DD', }),
+                        paddingRight: '5px',
+                        // overflowX: "auto",
+                        // overflowY: "hidden",                        
+                        // ...(date.date() === 1 && { backgroundColor: '#1AC1DD', }),
                     }}
                 >
-                    {date.format((date.date() === 1 ? "MMM YY" : "D"))}
-                </Box>
-            </Tooltip>
+                    {date.format((date.date() === 1 ? "MMM D" : "D"))}
+                </div>
+            {/* </Tooltip> */}
 
             <VDSBookingDayLevel
                 bookings={bookings}
@@ -147,7 +151,9 @@ export default function VDSBookingDay({
                 level='TRESPALMAS'
                 date={date}
             />
-        </Box >
+
+            {/* {movingOffScreenButton} */}
+        </div >
     )
 }
 

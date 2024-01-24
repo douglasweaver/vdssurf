@@ -26,6 +26,7 @@ import { deepOrange } from '@mui/material/colors';
 import VDSErrorBoundary from './components/vdserrorboundary';
 import { VDSBookings, vdsBookingsTypePolicies } from './routes/vdsbookings.js';
 import { VDSNotes, vdsNotesTypePolicies } from './routes/vdsnotes.js';
+
 import VDSGallery from './routes/vdsgallery'
 import VDSAppBar from './vdsappbar';
 

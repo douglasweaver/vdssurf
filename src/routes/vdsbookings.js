@@ -223,7 +223,6 @@ export function VDSBookings() {
                 type: 'Booking',
             }
         })
-
     const [viewMode, setViewMode] = useState('Calendar');
     const handleViewModeChange = (event, newViewMode) => {
         setViewMode(newViewMode);
@@ -250,7 +249,8 @@ export function VDSBookings() {
                 flexDirection: "column",
                 width: '100%',
                 height: '100%',
-                overflow: "hidden",
+                overflowX: "auto",
+                overflowY: "hidden",
                 // overflowY: "scroll",
                 // justifyContent="flex-end" # DO NOT USE THIS WITH 'scroll'
             }}
@@ -295,7 +295,9 @@ export function VDSBookings() {
                 </Box>
 
                 <Box>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold', textAlign: 'center', }}>Bookings</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold', textAlign: 'center', }}>
+                        Bookings
+                    </Typography>
                 </Box>
 
 
@@ -378,3 +380,7 @@ export function VDSBookings() {
         </Box >
     )
 };
+
+
+
+

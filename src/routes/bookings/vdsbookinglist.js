@@ -20,7 +20,6 @@ const VDSGuestCell = ({ row, field }) => {
         : { backgroundColor: vdsCommitmentColor(row.commitment) }
 
     const toolTip = (bk) => {
-
         let tt = vdsCommitmentLabel(bk.commitment) + ": " + bk.guests +
             (bk.description !== "" ? " NOTE: " + bk.description : "")
         return tt
