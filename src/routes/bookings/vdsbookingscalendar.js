@@ -32,18 +32,18 @@ function createDates(bookings) {
     }
 
     bookings.forEach(bk => {
-        let dateIdx = (dates.findIndex(d => d.date.isSame(dayjs(bk.checkIn).tz("America/Puerto_Rico"), 'day')))
-        if (dateIdx !== -1) {
-            const bkLength = dayjs(bk.checkOut).tz("America/Puerto_Rico").startOf("d").diff(dayjs(bk.checkIn).tz("America/Puerto_Rico").startOf("d"), 'day') + 1
-            for (let dIdx = dateIdx; dIdx < (dateIdx + bkLength); dIdx += 1) {
-                if (dates[dIdx].bookings) {
-                    dates[dIdx].bookings.push(bk)
-                } else {
-                    dates[dIdx].bookings = [bk]
-                }
+        // '[]' includes start and end date
+        const datesInBooking = dates.filter((d) =>
+            d.date.isBetween(dayjs(bk.checkIn).tz("America/Puerto_Rico"),
+                dayjs(bk.checkOut).tz("America/Puerto_Rico"), 'day', '[]'))
+        datesInBooking.forEach(dt => {
+            if (dt.bookings) {
+                dt.bookings.push(bk)
+            } else {
+                dt.bookings = [bk]
             }
-        }
-    });
+        })
+    })
 
     const months = [];
     let currentMonth = -1
@@ -182,9 +182,9 @@ export default function VDSBookingsCalendar({
                                     Size="p"
                                     inDelay={1000}
                                     outDelay={2000}
-                                    // ref={((node) => {
-                                    //     if (node) monthObserverRef.current?.observe(node);
-                                    // })}
+                                // ref={((node) => {
+                                //     if (node) monthObserverRef.current?.observe(node);
+                                // })}
                                 />
                                 {
                                     month.weeks.map((week, idx) => {

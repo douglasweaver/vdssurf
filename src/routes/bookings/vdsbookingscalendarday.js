@@ -26,7 +26,8 @@ function VDSBookingDayLevel({
 
     const toolTipDay = (bksForLevel) => {
 
-        let tt = level + " VACANT"
+        // let tt = level + " VACANT"
+        let tt = ""
 
         if (bksForLevel?.length > 0) {
             levelColor = bksForLevel?.length > 1 ? conflictGray :

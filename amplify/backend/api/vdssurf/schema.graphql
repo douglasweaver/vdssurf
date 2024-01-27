@@ -22,9 +22,10 @@ type VDSBooking
     rules: [
       # allow owners ability to update and delete their these messages (user pools)
       { allow: owner },
+      { allow: groups, groups: ["Admin"], operations: [create, update, delete, read]},
+      { allow: private, provider: userPools, operations: [read] },
       # allow all authenticated users to access this data
       #{ allow: private, provider: iam },
-      { allow: private, provider: userPools },
       # allow all guest users (not authenticated) to access this data
       #{ allow: public, operations: [read], provider: iam }
     ])
@@ -49,9 +50,10 @@ type VDSBooking
     rules: [
       # allow owners ability to update and delete their these messages (user pools)
       { allow: owner },
+      { allow: groups, groups: ["Admin"], operations: [create, update, delete, read]},
+      { allow: private, provider: userPools, operations: [read] },
       # allow all authenticated users to access this data
       #{ allow: private, provider: iam },
-      { allow: private },
       # allow all guest users (not authenticated) to access this data
       #{ allow: public, operations: [read], provider: iam }
     ]
