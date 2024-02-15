@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+import { BookingsContextProvider } from "./BookingsContext";
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -7,7 +9,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-
+import Button from '@mui/material/Button';
 
 import ListTwoToneIcon from '@mui/icons-material/ListTwoTone';
 import CalendarViewMonthTwoToneIcon from '@mui/icons-material/CalendarViewMonthTwoTone';
@@ -28,12 +30,15 @@ import {
 
 import VDSErrorBoundary from '../components/vdserrorboundary';
 import usePaginatedItems from './usePaginatedItems';
+import useStagedItems from './useStagedItems';
+import useOnScreen from './useOnScreen';
 import VDSBookingsList from './bookings/vdsbookinglist';
 import VDSBookingsCalendar from './bookings/vdsbookingscalendar';
 
 import dayjs from 'dayjs';
 
 const initDate = dayjs('2015-03-01')
+const endOfTime = dayjs('2099-01-01')
 const currentDate = dayjs().add(-14, "day")
 
 const debugIcon = false
@@ -98,34 +103,62 @@ export function VDSBookings() {
 
     const [startDate, setStartDate] = useState(currentDate)
 
-    const {
-        items: bookings,
-        loadMoreButton,
-        resetQuery,
-        errorDiv } = usePaginatedItems({
-            gqlQuery: gql(VDSBookingsByDate),
-            queryName: "VDSBookingsByDate",
-            queryVariables: {
-                checkOut: { ge: currentDate },
-                sortDirection: 'ASC',
-                limit: 10,
-                type: 'Booking',
-            }
-        })
+    // const vdsBookings = useStagedItems({ initDate: currentDate })
+
+    // const loadMoreRef = useRef();
+    // const isIntersecting = useOnScreen({
+    //     ref: loadMoreRef,
+    //     root: null,
+    // })
+
+    // useEffect(() => {
+    //     if (isIntersecting && !vdsBookings.endOfData && !vdsBookings.loading) {
+    //         let newStartDate = startDate.add(-180,"day")
+    //         console.log("updateing begin date", newStartDate)
+    //         setStartDate(newStartDate) 
+    //         vdsBookings.moveBeginDate(newStartDate)
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [isIntersecting]);
+
+    // const loadMoreButton = (() => {
+    //     return <Button onClick={vdsBookings.fetchMoreItems}
+    //         disabled={vdsBookings.endOfData || vdsBookings.loading}
+    //         ref={loadMoreRef}
+    //     >
+    //         {vdsBookings.endOfData ? "End Of Data" : vdsBookings.loading ? "Loading..." : "Load More"}
+    //     </Button>
+    // })
+
+    // const {
+    //     items: bookings,
+    //     loadMoreButton,
+    //     resetQuery,
+    //     errorDiv } = usePaginatedItems({
+    //         gqlQuery: gql(VDSBookingsByDate),
+    //         queryName: "VDSBookingsByDate",
+    //         queryVariables: {
+    //             checkOut: { ge: currentDate },
+    //             sortDirection: 'ASC',
+    //             limit: 10,
+    //             type: 'Booking',
+    //         }
+    //     })
+
     const [viewMode, setViewMode] = useState('Calendar');
     const handleViewModeChange = (event, newViewMode) => {
         setViewMode(newViewMode);
     };
 
-    const changeBookingsStartDate = (toDate) => {
-        let newDate = (toDate !== undefined) ? toDate :
-            (startDate.isSame(initDate) ? currentDate : initDate)
-        setStartDate(newDate)
-        resetQuery({
-            nextToken: null,
-            checkOut: { ge: newDate },
-        })
-    }
+    // const changeBookingsStartDate = (toDate) => {
+    //     let newDate = (toDate !== undefined) ? toDate :
+    //         (startDate.isSame(initDate) ? currentDate : initDate)
+    //     setStartDate(newDate)
+    //     resetQuery({
+    //         nextToken: null,
+    //         checkOut: { ge: newDate },
+    //     })
+    // }
 
     return (
         <VDSErrorBoundary>
@@ -212,7 +245,6 @@ export function VDSBookings() {
                             display: "flex",
                             flexDirection: "row",
                         }}
-
                     >
                         <Box>
                             <Tooltip
@@ -221,7 +253,7 @@ export function VDSBookings() {
                                 <IconButton
                                     aria-label='account'
                                     variant='contained'
-                                    onClick={() => { changeBookingsStartDate() }}
+                                    // onClick={() => { changeBookingsStartDate() }}
                                     float='right'
                                     height='40px'
                                 >
@@ -253,28 +285,31 @@ export function VDSBookings() {
                     handleBookingDialogClose={handleBookingDialogClose}
                 />
 
-                {errorDiv()}
+                {/* {vdsBookings.errorDiv()} */}
 
                 {
-                    viewMode === "Calendar" ?
-                        <VDSBookingsCalendar
-                            bookings={bookings}
-                            editBooking={editBooking}
-                            loadMoreButton={loadMoreButton}
-                        />
-                        :
-                        <VDSBookingsList
-                            bookings={bookings}
-                            editBooking={editBooking}
-                            loadMoreButton={loadMoreButton}
-                        />
+                    // vdsBookings.stagedLoading ?
+                    //     <p>Loading...</p>
+                    //     :
+                    <BookingsContextProvider>
+                        {viewMode === "Calendar" ?
+                            <VDSBookingsCalendar
+                                // vdsBookings={vdsBookings}
+                                editBooking={editBooking}
+                            />
+                            :
+                            <VDSBookingsList
+                                // vdsBookings={vdsBookings}
+                                editBooking={editBooking}
+                            />
+                        }
+                    </BookingsContextProvider>
+
+
                 }
             </Box >
         </VDSErrorBoundary>
 
     )
 };
-
-
-
 

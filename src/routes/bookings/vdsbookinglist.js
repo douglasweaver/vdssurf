@@ -1,10 +1,15 @@
+import { useState, useEffect, useRef } from 'react';
+
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 // import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 
 import { vdsCommitmentColor, vdsCommitmentLabel } from './vdsbookingcommitment';
 import { VDSLevelsIcons } from './vdsbookinglevels';
 import { VDSAutosIcons } from './vdsbookingautos';
+
+import useOnScreen from '../useOnScreen';
 
 import dayjs from 'dayjs';
 var utc = require('dayjs/plugin/utc')
@@ -105,12 +110,36 @@ const columns = [
 
 
 export default function VDSBookingList({
-    bookings,
+    vdsBookings,
     editBooking,
-    loadMoreButton
 }) {
 
+    const [startDate, setStartDate] = useState(dayjs().add(-7, "day"))
 
+    const loadMoreRef = useRef();
+    const isIntersecting = useOnScreen({
+        ref: loadMoreRef,
+        root: null,
+    })
+
+    useEffect(() => {
+        if (isIntersecting && !vdsBookings.endOfData && !vdsBookings.loading) {
+            let newStartDate = startDate.add(-180,"day")
+            console.log("updateing begin date", newStartDate)
+            setStartDate(newStartDate) 
+            vdsBookings.moveBeginDate(newStartDate)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isIntersecting]);
+
+    const loadMoreButton = (() => {
+        return <Button onClick={vdsBookings.fetchMoreItems}
+            disabled={vdsBookings.endOfData || vdsBookings.loading}
+            ref={loadMoreRef}
+        >
+            {vdsBookings.endOfData ? "End Of Data" : vdsBookings.loading ? "Loading..." : "Load More"}
+        </Button>
+    })
     const rowClick = (event, booking) => {
         editBooking(booking);
     };
@@ -170,7 +199,7 @@ export default function VDSBookingList({
                 }}
             >
                 {
-                    bookings.map((booking, idx) => {
+                    vdsBookings.bookings.map((booking, idx) => {
 
                         return (
 

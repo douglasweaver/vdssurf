@@ -85,6 +85,7 @@ function VDSBookingDayLevel({
 
 export default function VDSBookingsCalendarDay({
     date,
+    fullRender,
     bookings,
     editBooking,
 }) {
@@ -97,6 +98,12 @@ export default function VDSBookingsCalendarDay({
             editBooking(booking);
         }
     }
+
+    const dateHeight = fullRender ? '24px' : '96px'
+    const bookingsOnDay = fullRender ?
+        bookings.filter((bk) =>
+            date.isBetween(dayjs(bk.checkIn).tz("America/Puerto_Rico"),
+                dayjs(bk.checkOut).tz("America/Puerto_Rico"), 'day', '[]')) : []
 
     return (
 
@@ -114,46 +121,43 @@ export default function VDSBookingsCalendarDay({
                 ...(date.isToday() && { color: 'red' }),
             }}
         >
-
-            {/* <Tooltip title={date.format('ddd MMM DD YYYY')} > */}
-                <div
-                    style={{
-                        height: '24px',
-                        width: '100%',
-                        textAlign: 'right',
-                        fontWeight: 'bold',
-                        paddingRight: '5px',
-                        // overflowX: "auto",
-                        // overflowY: "hidden",                        
-                        // ...(date.date() === 1 && { backgroundColor: '#1AC1DD', }),
-                    }}
-                >
-                    {date.format((date.date() === 1 ? "MMM D" : "D"))}
-                </div>
-            {/* </Tooltip> */}
-
-            <VDSBookingDayLevel
-                bookings={bookings}
+            <div
+                style={{
+                    height: { dateHeight },
+                    width: '100%',
+                    textAlign: 'right',
+                    fontWeight: 'bold',
+                    paddingRight: '5px',
+                    // overflowX: "auto",
+                    // overflowY: "hidden",                        
+                    // ...(date.date() === 1 && { backgroundColor: '#1AC1DD', }),
+                }}
+            >
+                {date.format((date.date() === 1 ? "MMM D" : "D"))}
+            </div>
+            {fullRender && <VDSBookingDayLevel
+                bookings={bookingsOnDay}
                 onClickBooking={onClickBooking}
                 level='STEPS'
                 date={date}
             />
+            }
 
-            <VDSBookingDayLevel
-                bookings={bookings}
+            {fullRender && <VDSBookingDayLevel
+                bookings={bookingsOnDay}
                 onClickBooking={onClickBooking}
                 level='SANDY'
                 date={date}
             />
+            }
 
-            <VDSBookingDayLevel
-                bookings={bookings}
+            {fullRender && <VDSBookingDayLevel
+                bookings={bookingsOnDay}
                 onClickBooking={onClickBooking}
                 level='TRESPALMAS'
                 date={date}
             />
-
-            {/* {movingOffScreenButton} */}
+            }
         </div >
     )
 }
