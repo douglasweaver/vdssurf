@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext, useLayoutEffect } from 'react';
+import { useEffect, useRef, useContext } from 'react';
 
 import { BookingsContext } from './vdsBookingsContext'
 
