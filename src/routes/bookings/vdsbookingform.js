@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useContext } from 'react';
 
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
@@ -11,26 +11,15 @@ import DialogContent from '@mui/material/DialogContent';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-import {
-    gql,
-    useMutation,
-} from '@apollo/client';
-import {
-    deleteVDSBooking,
-    createVDSBooking,
-    updateVDSBooking
-} from '../../graphql/mutations';
+import { BookingsContext } from './vdsBookingsContext'
 
 import VDSCheckInCheckOut from '../../components/vdscheckincheckout';
 import { VDSBookingAutos } from './vdsbookingautos'
 import { VDSBookingLevels } from './vdsbookinglevels'
 import { VDSBookingCommitment, commitmentDefault } from './vdsbookingcommitment'
 
-import dayjs from 'dayjs';
-var utc = require('dayjs/plugin/utc')
-var timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
-dayjs.extend(utc)
-dayjs.extend(timezone)
+import { dayjsPR } from '../../components/vdsdayjspr';
+
 
 export function newBooking(inBook) 
  {
@@ -40,8 +29,8 @@ export function newBooking(inBook)
         levels: [],
         autos: [],
         commitment: commitmentDefault,
-        checkIn: dayjs().tz("America/Puerto_Rico").hour(3).minute(0).second(0).millisecond(0).toISOString(),
-        checkOut: dayjs().tz("America/Puerto_Rico").hour(3).minute(0).second(0).millisecond(0).add(7, 'day').toISOString(),
+        checkIn: dayjsPR().hour(3).minute(0).second(0).millisecond(0).toISOString(),
+        checkOut: dayjsPR().hour(3).minute(0).second(0).millisecond(0).add(7, 'day').toISOString(),
         type: "Booking"
     };
     Object.assign(newBook, inBook ?? {})
@@ -60,8 +49,8 @@ function vdsBookingToFormInitialValues(
             levels: booking.levels || [],
             autos: booking.autos || [],
             commitment: booking.commitment || commitmentDefault,
-            dateRange: [dayjs(booking.checkIn).tz("America/Puerto_Rico") || dayjs(),
-            dayjs(booking.checkOut).tz("America/Puerto_Rico") || dayjs().add(7, 'day')
+            dateRange: [dayjsPR(booking.checkIn) || dayjsPR(),
+            dayjsPR(booking.checkOut) || dayjsPR().add(7, 'day')
             ],
             type: booking.type
         });
@@ -96,96 +85,39 @@ export function VDSBookingForm({
     handleBookingDialogClose,
 }) {
 
-    const [graphQLErrors, setGraphqlErrors] = useState();
+    const { contextDeleteBooking, 
+        contextAddBooking, contextUpdateBooking} = useContext(BookingsContext);
 
-    const [deleteBooking] = useMutation(gql(deleteVDSBooking), {
-        onError(err) {
-            setGraphqlErrors(err.graphQLErrors)
-            // if (err.graphQLErrors[0]?.errorType === "Unauthorized") {
-            //     alert("Only user that created booking can delete")
-        },
-        update(cache, { data: { deleteVDSBooking } }) {
-            handleDialogClose()
-            cache.modify({
-                fields: {
-                    VDSBookingsByDate(previous) {
-                        let final = previous.items.filter((e) => (
-                            cache.data.data[e.__ref].id !== deleteVDSBooking.id
-                        ));
-                        return {
-                            ...previous,
-                            items: final,
-                        }
-                    }
-                }
-            })
-        }
-    })
-
-
-    const [addBooking] = useMutation(gql(createVDSBooking), {
-        onError(err) {
-            setGraphqlErrors(err.graphQLErrors)
-        },
-        update(cache, { data: { createVDSBooking } }) {
-            handleDialogClose()
-            cache.modify({
-                fields: {
-                    VDSBookingsByDate(previous) {
-                        const newBookingRef = cache.writeFragment({
-                            data: createVDSBooking,
-                            fragment: gql`
-                                    fragment NewBooking on VDSBooking {
-                                        id
-                                        guests
-                                        description
-                                        checkIn
-                                        checkOut
-                                        levels
-                                        autos
-                                        commitment
-                                        type
-                                    }
-                                    `
-                        });
-
-                        let existingBookings = previous.items
-                        let start = existingBookings.findIndex((e) => {
-                            return cache.data.data[e.__ref].checkOut > createVDSBooking.checkOut
-                        });
-                        start = start < 0 ? existingBookings.length : start
-                        let final = {
-                            ...previous,
-                            items: existingBookings.toSpliced(start, 0, newBookingRef)
-                        }
-                        return final
-                    }
-                }
-            })
-        }
-    })
-
-    const [updateBooking] = useMutation(gql(updateVDSBooking), {
-        onError(err) {
-            setGraphqlErrors(err.graphQLErrors)
-        },
-        update(cache, { data: { updateVDSBooking } }) {
-            handleDialogClose()
-        }
-    })
+    const [graphQLErrors, setGraphQLErrors] = useState();
 
     const handleCreateBooking = (booking) => {
         if ('id' in booking) {
-            updateBooking({ variables: { input: booking } });
+            contextUpdateBooking({
+                booking: booking,
+                onError(err) {setGraphQLErrors(err.graphQLErrors)},
+                onCompleted() {handleDialogClose()},
+            })
         } else {
-            addBooking({ variables: { input: booking } });
+            contextAddBooking({
+                booking: booking,
+                onError(err) {setGraphQLErrors(err.graphQLErrors)},
+                onCompleted() {handleDialogClose()},
+            })
         }
 
     }
 
+    const deleteBookingPressed = (values) => {
+        contextDeleteBooking({
+            id: values.id,
+            onError(err) {setGraphQLErrors(err.graphQLErrors)},
+            onCompleted() {handleDialogClose()},
+        })
+    }
+
     const handleDialogClose = (event, reason) => {
         if (reason !== 'backdropClick') {
-            setGraphqlErrors(null)
+            setGraphQLErrors(null)
             handleBookingDialogClose()
         }
     }
@@ -308,7 +240,7 @@ export function VDSBookingForm({
                             {('id' in values) &&
                                 <Button
                                     variant="contained"
-                                    onClick={() => deleteBooking({ variables: { input: { id: values.id } }})}
+                                    onClick={() => deleteBookingPressed(values)}
                                     float="right"
                                 >
                                     Delete

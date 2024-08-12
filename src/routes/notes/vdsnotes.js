@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-import VDSErrorBoundary from '../components/vdserrorboundary';
+import VDSErrorBoundary from '../../components/vdserrorboundary';
 
 import {
     gql,
@@ -19,12 +19,12 @@ import {
     deleteVDSNote,
     createVDSNote,
     updateVDSNote
-} from '../graphql/mutations';
-import { listVDSNotes } from '../graphql/queries';
+} from '../../graphql/mutations';
+import { listVDSNotes } from '../../graphql/queries';
 
-import usePaginatedItems from './usePaginatedItems';
-import VDSNotesList from './notes/vdsnotelist';
-import { VDSNoteForm } from './notes/vdsnoteform';
+import usePaginatedItems from '../../components/usePaginatedItems';
+import VDSNotesList from './vdsnotelist';
+import { VDSNoteForm } from './vdsnoteform';
 
 function newNote() {
     let newNote = {
@@ -149,11 +149,8 @@ export function VDSNotes() {
 
     //     importCSVNotes().forEach(item => addNote({ variables: { input: item } }));
 
-    //     console.log("Delete all Notes")
-    //     console.log(Notes)
 
     //     Notes.forEach(bk => {
-    //         console.log(bk.id)
     //         deleteNote({ variables: { input: { id: bk.id } } });
     //         // addNote({ variables: { input: bk } });
     //     });

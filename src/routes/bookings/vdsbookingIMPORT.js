@@ -8,7 +8,6 @@ var utc = require('dayjs/plugin/utc')
 var timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
 dayjs.extend(utc)
 dayjs.extend(timezone)
-// dayjs.tz.setDefault("America/Puerto_Rico")
 
 
 let csv = `id,title,body,created,enddate,level,startdate,place_id,commitment

@@ -85,7 +85,6 @@ function VDSBookingDayLevel({
 
 export default function VDSBookingsCalendarDay({
     date,
-    fullRender,
     bookings,
     editBooking,
 }) {
@@ -99,11 +98,9 @@ export default function VDSBookingsCalendarDay({
         }
     }
 
+    // const fullRender = bookings.length > 0
+    const fullRender = true
     const dateHeight = fullRender ? '24px' : '96px'
-    const bookingsOnDay = fullRender ?
-        bookings.filter((bk) =>
-            date.isBetween(dayjs(bk.checkIn).tz("America/Puerto_Rico"),
-                dayjs(bk.checkOut).tz("America/Puerto_Rico"), 'day', '[]')) : []
 
     return (
 
@@ -136,7 +133,7 @@ export default function VDSBookingsCalendarDay({
                 {date.format((date.date() === 1 ? "MMM D" : "D"))}
             </div>
             {fullRender && <VDSBookingDayLevel
-                bookings={bookingsOnDay}
+                bookings={bookings}
                 onClickBooking={onClickBooking}
                 level='STEPS'
                 date={date}
@@ -144,7 +141,7 @@ export default function VDSBookingsCalendarDay({
             }
 
             {fullRender && <VDSBookingDayLevel
-                bookings={bookingsOnDay}
+                bookings={bookings}
                 onClickBooking={onClickBooking}
                 level='SANDY'
                 date={date}
@@ -152,7 +149,7 @@ export default function VDSBookingsCalendarDay({
             }
 
             {fullRender && <VDSBookingDayLevel
-                bookings={bookingsOnDay}
+                bookings={bookings}
                 onClickBooking={onClickBooking}
                 level='TRESPALMAS'
                 date={date}

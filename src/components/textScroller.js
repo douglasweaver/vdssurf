@@ -1,58 +1,33 @@
-import { useState, useEffect, forwardRef } from 'react'
-import '../App.css'
+import { useState } from "react";
+import { useSpring, animated } from "react-spring";
 
+const TextScroller = ({ text }) => {
 
-const Fader = forwardRef(function Fader(props, ref) {
+  const springs = useSpring({
+    from: {
+      background: '#569AFF', y: "0%", x: "0%",
+      config : {duration: 500},
+    },
+    to: [
+      { x: "50%", background: '#569AFF' },
+      { x: "100%", background: '#569AFF' },
+      { x: "50%", background: '#569AFF' },
+    ],
+    loop: true,
+  })
 
-    const { text, Size, inDelay, outDelay } = props;
+  return (
+    <animated.div
+      style={{
+        width: "100%",
+        height: 40,
+        borderRadius: 4,
+        ...springs,
+      }}>{text}</animated.div>
+  )
+}
 
-    const [fadeProp, setFadeProp] = useState({
-        fade: 'fade-in',
-    });
+export default TextScroller;
 
-    useEffect(() => {
-        const timeout = setInterval(() => {
-            if (fadeProp.fade === 'fade-in') {
-                setFadeProp({
-                    fade: 'fade-out'
-                })
-            } else {
-                setFadeProp({
-                    fade: 'fade-in'
-                })
-            }
-        }, (fadeProp.fade === 'fade-in') ? inDelay: outDelay);
-
-        return () => clearInterval(timeout)
-    }, [fadeProp, inDelay, outDelay])
-
-    return (
-
-        <div
-            style={{
-                position: "sticky",
-                top: 0,
-            }}
-            ref={ref}
-        >
-            <Size
-                className={fadeProp.fade}
-                style={{
-                    whiteSpace: 'nowrap',
-                    position: "absolute",
-                    top: "-16px",
-                    overflowX: "visible",
-                    background: "white",
-                    height: '24px',
-                    fontWeight: 'bold',
-                    paddingRight: '5px',
-                    // ...styles
-                }}
-            >
-                {text}
-            </Size>
-        </div>
-    )
-})
-
-export default Fader
+// padding: '10px',
+// width: '300px',

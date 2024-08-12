@@ -1,37 +1,34 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useEffect, useRef, useContext, useMemo } from 'react';
 
-import { BookingsContext } from '../BookingsContext'
-
-import useOnScreen from '../useOnScreen';
+import { BookingsContext } from './vdsBookingsContext'
 
 import VDSBookingsCalendarDay from './vdsbookingscalendarday';
 import '../../App.css'
 
 import Fader from '../../components/fader'
+import Typography from '@mui/material/Typography';
 
-import Button from '@mui/material/Button';
-
+import { dayjsPR } from '../../components/vdsdayjspr';
 import dayjs from 'dayjs';
-import { CropLandscapeOutlined, Moped, StarBorderTwoTone } from '@mui/icons-material';
-import useTopBottomIntersection from '../useTopBottomIntersection';
-var isBetween = require('dayjs/plugin/isBetween')
-dayjs.extend(isBetween)
-var isBefore = require('dayjs/plugin/isSameOrBefore');
-dayjs.extend(isBefore);
-var minMax = require('dayjs/plugin/minMax')
-dayjs.extend(minMax)
-var utc = require('dayjs/plugin/utc')
-var timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
-dayjs.extend(utc)
-dayjs.extend(timezone)
+var isSameOrBefore = require("dayjs/plugin/isSameOrBefore");
+dayjs.extend(isSameOrBefore);
 
+function createAllDates(startDate, bookings) {
 
-function createAllDates(startDate, endDate) {
+  const endDate = bookings.length > 0 ? dayjsPR(bookings[0].checkOut).day(6) : startDate.day(6)
 
   const dates = [];
-  for (let q = startDate; q.isSameOrBefore(endDate, 'd'); q = q.add(1, 'd')) {
-    dates.push({ date: q });
+  for (let q = startDate; q.isSameOrBefore(endDate, "d"); q = q.add(1, "d")) {
+    dates.push({ date: q, bookings: [] });
   }
+
+  bookings.forEach((bk, bidx) => {
+    for (let i = Math.max(0, dayjsPR(bk.checkIn).diff(dates[0].date, 'day'));
+      i <= Math.max(dayjsPR(bk.checkOut).diff(dates[0].date, 'day'));
+      i++) {
+      dates[i].bookings.push(bk)
+    }
+  })
 
   const weeks = [];
   for (let iSun = 0; iSun < dates.length; iSun = iSun + 7) {
@@ -58,95 +55,34 @@ function createAllDates(startDate, endDate) {
 
 };
 
-const renderWindowMonths = 4
-const todayPR = dayjs().tz("America/Puerto_Rico").startOf("d")
-const months = createAllDates(
-  dayjs('2015-03-01').tz("America/Puerto_Rico").startOf("d").day(0),
-  todayPR.add(+28, "month").day(6))
-
-
-
 export default function VDSBookingsCalendar({
-  // vdsBookings,
+  startDate,
   editBooking,
 }) {
 
 
-  const {bookings, setEarliestCheckOut, bookingsLoading, errorDiv} = useContext(BookingsContext);
+  const contextValues = useContext(BookingsContext);
 
   const scrollBoxRef = useRef(null);
+
   const initFocusRef = useRef(null);
+  const focusDate = useRef(dayjsPR().startOf("d").day(0))
 
-  // const [initFocus, setInitFocus] = useState(true)
+  const months = useMemo(() => {
+    return contextValues.bookingsLoading ? [] :
+      createAllDates(startDate, contextValues.bookings)
+  }, [startDate, contextValues.bookings, contextValues.bookingsLoading])
 
-  const observerRef = useRef(null);
-
-  const [midDateState, setMIdDateState] = useState(todayPR.day(0))
-  const midDate = useRef(todayPR.day(0))
 
   useEffect(() => {
-    console.log("init focus ref", initFocusRef.current)
-    if (midDateState.isSame(todayPR.day(0)) && initFocusRef.current) {
+    if (focusDate.current && initFocusRef.current) {
+      focusDate.current = null
       initFocusRef.current?.scrollIntoView()
     }
   }, []);
 
-  const addIntObserver = ((node, nodeId) => {
-    if (!observerRef.current) {
-      observerRef.current = new IntersectionObserver((entries) => {
-        const isInter = entries.find((e) => e.isIntersecting)
-        if (isInter) { intersecting(isInter) }
-      },
-        {
-          root: null,
-          rootMargin: "0px",
-          threshold: 0.1
-        }
-      )
-    }
-    observerRef.current?.observe(node)
-  })
-
-  const intersecting = ((element) => {
-    if (element.target.id) {
-      const diffWeeks = dayjs(element.target.id).diff(midDate.current, "week")
-      if (diffWeeks < -6) {
-        console.log("UP WITH ID", dayjs(element.target.id))
-        midDate.current = dayjs(element.target.id)
-        // midDate.current = midDate.current.add(-renderWindowMonths, "month").day(0)
-        setMIdDateState(midDate.current)
-        setEarliestCheckOut(midDate.current.add(-2, "months"))
-        observerRef.current.unobserve(element.target)
-      } else if (diffWeeks > 6) {
-        console.log("DOWN WITH ID", dayjs(element.target.id))
-        midDate.current = dayjs(element.target.id)
-        // midDate.current = midDate.current.add(+renderWindowMonths, "month").day(0)
-        setMIdDateState(midDate.current)
-        observerRef.current.unobserve(element.target)
-      } else {
-        observerRef.current.unobserve(element.target)
-      }
-    } else {
-      console.log("INTERSECTING NULL ID", element.target.id)
-    }
-  })
-
-
   const columns = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
-  const dateRangeStart = midDateState.add(-renderWindowMonths, "months").day(0)
-  const dateRangeEnd = midDateState.add(renderWindowMonths, "months").day(6)
-  const renderStart = Math.max(0, months.findIndex((mo) =>
-    dateRangeStart.isBetween(mo.weeks[0][0].date, mo.weeks[mo.weeks.length - 1][6].date, 'day', '[]')) - 1)
-  const renderEnd = months.findIndex((mo) =>
-    dateRangeEnd.isBetween(mo.weeks[0][0].date, mo.weeks[mo.weeks.length - 1][6].date, 'day', '[]')) + 2
-
-  // console.log("bookings", vdsBookings.bookings.length, "months", months.length)
-  // console.log("renderStart", renderStart, "renderEnd", renderEnd)
-  // console.log("midDareState", midDateState, "midDate", midDate.current)
-  console.log("RERENDER", bookings?.length)
-
-  var wIndex = 0
   return (
 
     <div
@@ -157,18 +93,20 @@ export default function VDSBookingsCalendar({
         height: '100%',
         overflowX: "auto",
         overflowY: "hidden",
-        // borderTop: '1px solid black',
-        // borderLeft: '1px solid black',
       }}
     >
 
-      {errorDiv()}
+      {contextValues.error && (
+        <div>
+          <p>{contextValues.error.message}</p>
+        </div>
+      )}
 
-      {bookingsLoading && (
-            <div>
-                <p>LOADING BOOKINGS</p>
-            </div>
-        )
+
+      {contextValues.bookingsLoading &&
+        <Typography className="blinking" variant="h6" sx={{ fontWeight: 'bold', textAlign: 'center', }}>
+          ✌ PADDLING OUT 🏄
+        </Typography>
       }
 
       <div
@@ -180,13 +118,6 @@ export default function VDSBookingsCalendar({
           height: 'auto',
         }}
       >
-        {/* <Fader
-                    text={showMonth}
-                    Size="p"
-                    inDelay={1000}
-                    outDelay={2000}
-                >
-                </Fader> */}
 
         {
           columns.map((col, idx) => {
@@ -208,108 +139,93 @@ export default function VDSBookingsCalendar({
       </div>
 
       {
-          <div
-            ref={scrollBoxRef}
-            className="scrollable-element"
-            style={{
-              mb: 2,
-              display: "flex",
-              flexDirection: "column",
-              flexGrow: 1,
-              overflowX: "auto",
-              overflowY: "scroll",
-              // border: "1px solid #ccc",
-            }}
-          >
+        <div
+          ref={scrollBoxRef}
+          className="scrollable-element"
+          style={{
+            mb: 2,
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            overflowX: "auto",
+            overflowY: "scroll",
+          }}
+        >
 
-            {
-              months.map((month, midx) => {
-                const fullRender = (midx >= renderStart && renderEnd >= midx)
-                return (
-                  <div key={midx}
-                    style={{
-                      display: "flex",
-                      height: '100%',
-                      flexDirection: "column",
-                    }}
-                  >
+          {
+            months.map((month, midx) => {
+              return (
+                <div key={midx}
+                  style={{
+                    display: "flex",
+                    height: '100%',
+                    flexDirection: "column",
+                  }}
+                >
 
-                    <Fader
-                      text={month.key}
-                      Size="p"
-                      inDelay={1000}
-                      outDelay={2000}
-                    // ref={((node) => {
-                    //     if (node) monthObserverRef.current?.observe(node);
-                    // })}
-                    />
-                    {
-                      month.weeks.map((week, idx) => {
-                        const myRefProps =
-                          (wIndex % 12 === 0 &&
-                            week[0].date.isBetween(midDateState.add(-6, 'M'),
-                              midDateState.add(+6, 'M'))) ? {
-                            ref: (node) => {
-                              node && addIntObserver(node,
-                                week[0].date.format("MMM DD YYYY"))
-                            },
-                            id: week[0].date.format("MMM DD YYYY")
-                          } :
-                            week[0].date.isSame(midDateState) ? {
-                              ref: initFocusRef,
-                              // ref: (node) => { node && scrollToMid(node) },
-                              id: "vdsMidDate"
-                            } : {};
-                        wIndex += 1
-                        return (
-                          <div
-                            key={idx}
-                            {...myRefProps}
-                            style={{
-                              // mb: 2,
-                              display: "flex",
-                              flexDirection: "row",
-                              height: '100%',
-                              background: (myRefProps.id === week[0].date.format("MMM DD YYYY")) ? 'red' : '',
-                              // overflowX: "auto",
-                              // overflowY: "hidden",
-                            }}
-                          >
-                            {
-                              week.map((day, cidx) => {
-                                return (
-                                  <div key={cidx}
-                                    style={{
-                                      display: "flex",
-                                      flexBasis: 0, flexGrow: 1,
-                                      align: 'center',
-                                      borderRight: '1px solid black',
-                                      borderBottom: '1px solid black',
-                                      overflowX: "auto",
-                                      overflowY: "hidden",
-                                    }}>
+                  <Fader
+                    text={month.key}
+                    Size="p"
+                    inDelay={2000}
+                    outDelay={1000}
+                  // ref={((node) => {
+                  //     if (node) monthObserverRef.current?.observe(node);
+                  // })}
+                  />
+
+                  {
+                    month.weeks.map((week, idx) => {
+                      const myRefProps =
+                        week[0].date.isSame(focusDate.current) ? {
+                          ref: initFocusRef,
+                          id: "vdsFocusDate"
+                        } : {};
+                      return (
+                        <div
+                          key={idx}
+                          {...myRefProps}
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            height: '100%',
+                            borderLeft: '1px solid black',
+                            // background: (myRefProps.id === week[0].date.format("MMM DD YYYY")) ? 'red' : '',
+                          }}
+                        >
+                          {
+                            week.map((day, cidx) => {
+                              return (
+                                <div key={cidx}
+                                  style={{
+                                    display: "flex",
+                                    flexBasis: 0, flexGrow: 1,
+                                    align: 'center',
+                                    borderRight: '1px solid black',
+                                    borderBottom: '1px solid black',
+                                    overflowX: "auto",
+                                    overflowY: "hidden",
+                                  }}>
 
 
-                                    <VDSBookingsCalendarDay
-                                      date={day.date}
-                                      fullRender={fullRender}
-                                      bookings={bookings}
-                                      editBooking={editBooking}
-                                    />
-                                  </div>
-                                )
-                              })
-                            }
+                                  <VDSBookingsCalendarDay
+                                    date={day.date}
+                                    bookings={day.bookings}
+                                    editBooking={editBooking}
+                                  />
+                                </div>
+                              )
+                            })
+                          }
 
-                          </div>
-                        )
-                      })
-                    }
-                  </div>
-                )
-              })
-            }
-          </div>
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              )
+            })
+          }
+        </div>
       }
     </div>
   )

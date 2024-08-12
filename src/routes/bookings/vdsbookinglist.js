@@ -1,249 +1,235 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useContext, useLayoutEffect } from 'react';
+
+import { BookingsContext } from './vdsBookingsContext'
+
+import '../../App.css'
 
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-// import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 
 import { vdsCommitmentColor, vdsCommitmentLabel } from './vdsbookingcommitment';
 import { VDSLevelsIcons } from './vdsbookinglevels';
 import { VDSAutosIcons } from './vdsbookingautos';
 
-import useOnScreen from '../useOnScreen';
-
-import dayjs from 'dayjs';
-var utc = require('dayjs/plugin/utc')
-var timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
-dayjs.extend(utc)
-dayjs.extend(timezone)
-
+import { dayjsPR } from '../../components/vdsdayjspr';
 
 const VDSGuestCell = ({ row, field }) => {
-    let commitColor = (row.commitment === 'CONFIRMED' ||
-        !dayjs().isSameOrBefore(row.checkOut, 'day'))
-        ? {}
-        : { backgroundColor: vdsCommitmentColor(row.commitment) }
+  let commitColor = (row.commitment === 'CONFIRMED' ||
+    !dayjsPR().isSameOrBefore(row.checkOut, 'day'))
+    ? {}
+    : { backgroundColor: vdsCommitmentColor(row.commitment) }
 
-    const toolTip = (bk) => {
-        let tt = vdsCommitmentLabel(bk.commitment) + ": " + bk.guests +
-            (bk.description !== "" ? " NOTE: " + bk.description : "")
-        return tt
-    }
+  const toolTip = (bk) => {
+    let tt = vdsCommitmentLabel(bk.commitment) + ": " + bk.guests +
+      (bk.description !== "" ? " NOTE: " + bk.description : "")
+    return tt
+  }
 
-    return (
-        <Tooltip title={toolTip(row)} >
-            <Box ml='15px'
-                sx={{
-                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                    ...commitColor,
-                }}
-            >
-                {row[field]}
-            </Box>
-        </Tooltip>
-    )
+  return (
+    <Tooltip title={toolTip(row)} >
+      <Box ml='15px'
+        sx={{
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          ...commitColor,
+        }}
+      >
+        {row[field]}
+      </Box>
+    </Tooltip>
+  )
 }
-
-// const VDSDateCell = ({ row, field }) => {
-
-//     let date = dayjs(row[field]).toDate()
-//     let formatDate = (dayjs(date).year() !== dayjs().year()) ? 'MM/DD/YY' : 'MM/DD'
-//     return (
-//         <Tooltip title={dayjs(date).format('ddd MMM DD YYYY @ hA')} >
-//             <Box>
-//                 {dayjs(date).format(formatDate)}
-//             </Box>
-//         </Tooltip>
-//     )
-// }
 
 const VDSDateRangeCell = ({ row, field }) => {
 
-    let checkInDate = dayjs(row.checkIn).tz("America/Puerto_Rico")
-    let checkOutDate = dayjs(row.checkOut).tz("America/Puerto_Rico")
-    let formatDate = (checkOutDate.year() !== dayjs().year()) ? 'MM/DD/YY' : 'MM/DD'
-    return (
-        <Tooltip title={checkInDate.format('ddd MMM DD YYYY @ hA') + ' - ' + checkOutDate.format('ddd MMM DD YYYY @ hA')} >
-            <Box>
-                {checkInDate.format('MM/DD') + '-' + checkOutDate.format(formatDate)}
-            </Box>
-        </Tooltip>
-    )
+  let checkInDate = dayjsPR(row.checkIn)
+  let checkOutDate = dayjsPR(row.checkOut)
+  let formatDate = (checkOutDate.year() !== dayjsPR().year()) ? 'MM/DD/YY' : 'MM/DD'
+  return (
+    <Tooltip title={checkInDate.format('ddd MMM DD YYYY @ hA') + ' - ' + checkOutDate.format('ddd MMM DD YYYY @ hA')} >
+      <Box>
+        {checkInDate.format('MM/DD') + '-' + checkOutDate.format(formatDate)}
+      </Box>
+    </Tooltip>
+  )
 }
 
 const columns = [
-    {
-        field: "guests", headerName: "Guests",
-        flex: 6,
-        textAlign: 'left',
-        renderCell: VDSGuestCell,
+  {
+    field: "guests", headerName: "Guests",
+    flex: 6,
+    textAlign: 'left',
+    renderCell: VDSGuestCell,
+  },
+  {
+    field: 'checkIn-checkOut', headerName: '\u2713-In - \u2713-Out',
+    headerAlign: 'center',
+    flex: 6,
+    width: 200,
+    textAlign: 'center',
+    renderCell: VDSDateRangeCell,
+  },
+  {
+    field: "levels", headerName: "Levels",
+    headerAlign: 'center',
+    flex: 4,
+    width: 90,
+    textAlign: 'center',
+    renderCell: ({ row, field }) => {
+      return <VDSLevelsIcons levels={row[field]} />
     },
-    {
-        field: 'checkIn-checkOut', headerName: '\u2713-In - \u2713-Out',
-        headerAlign: 'center',
-        flex: 6,
-        width: 200,
-        textAlign: 'center',
-        renderCell: VDSDateRangeCell,
+  },
+  {
+    field: "autos", headerName: "Car",
+    headerAlign: 'center',
+    flex: 2,
+    width: 90,
+    textAlign: 'center',
+    renderCell: ({ row, field }) => {
+      return <VDSAutosIcons autos={row[field]} />
     },
-    {
-        field: "levels", headerName: "Levels",
-        headerAlign: 'center',
-        flex: 4,
-        width: 90,
-        textAlign: 'center',
-        renderCell: ({ row, field }) => {
-            return <VDSLevelsIcons levels={row[field]} />
-        },
-    },
-    {
-        field: "autos", headerName: "Car",
-        headerAlign: 'center',
-        flex: 2,
-        width: 90,
-        textAlign: 'center',
-        renderCell: ({ row, field }) => {
-            return <VDSAutosIcons autos={row[field]} />
-        },
-    },
+  },
 ];
 
-
 export default function VDSBookingList({
-    vdsBookings,
-    editBooking,
+  editBooking,
 }) {
 
-    const [startDate, setStartDate] = useState(dayjs().add(-7, "day"))
 
-    const loadMoreRef = useRef();
-    const isIntersecting = useOnScreen({
-        ref: loadMoreRef,
-        root: null,
-    })
+  const contextValues = useContext(BookingsContext);
+  // const { bookings, setEarliestCheckOut, bookingsLoading, error } =
+  //   useContext(BookingsContext);
 
-    useEffect(() => {
-        if (isIntersecting && !vdsBookings.endOfData && !vdsBookings.loading) {
-            let newStartDate = startDate.add(-180,"day")
-            console.log("updateing begin date", newStartDate)
-            setStartDate(newStartDate) 
-            vdsBookings.moveBeginDate(newStartDate)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isIntersecting]);
+  const initFocusRef = useRef(null);
+  const focusDate = useRef(dayjsPR().startOf("d").day(0))
 
-    const loadMoreButton = (() => {
-        return <Button onClick={vdsBookings.fetchMoreItems}
-            disabled={vdsBookings.endOfData || vdsBookings.loading}
-            ref={loadMoreRef}
-        >
-            {vdsBookings.endOfData ? "End Of Data" : vdsBookings.loading ? "Loading..." : "Load More"}
-        </Button>
-    })
-    const rowClick = (event, booking) => {
-        editBooking(booking);
-    };
+  useEffect(() => {
+    if (focusDate.current && initFocusRef.current) {
+      focusDate.current = null
+      initFocusRef.current?.scrollIntoView()
+    }
+  }, []);
 
-    return (
-        <Box
-            sx={{
-                paddingBottom: 0,
-                display: "flex",
-                flexDirection: "column",
-                height: '100%',
-                overflow: "hidden",
-                overflowY: "scroll",
-            }}
-        >
 
-            <Box
-                sx={{
-                    paddingBottom: 0,
-                    display: "flex",
-                    flexDirection: "row",
-                }}
-            >
-                {
-                    columns.map((col, idx) => {
-                        return (
-                            <Box key={idx}
-                                sx={{
-                                    width: col.width,
-                                    flex: col.flex,
-                                    textAlign: 'center',
-                                    height: '40px',
-                                    lineHeight: '40px',
-                                    fontWeight: 'bold',
-                                    borderTop: 1,
-                                    // border: "1px solid red",
-                                }}
-                            >
-                                {col.headerName}
-                            </Box>
-                        )
-                    })
-                }
-            </Box>
+  // useLayoutEffect(() => {
+  //   if (initFocusRef.current)
+  //     initFocusRef.current.scrollIntoView(true)
+  // }, [contextValues])
 
-            <Box
-                sx={{
-                    paddingBottom: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    flexGrow: 1,
-                    overflow: "hidden",
-                    overflowY: "scroll",
-                    borderTop: 1,
-                    borderLeft: 1,
-                    borderRight: 1,
-                }}
-            >
-                {
-                    vdsBookings.bookings.map((booking, idx) => {
+  const rowClick = (event, booking) => {
+    editBooking(booking);
+  };
 
-                        return (
 
-                            <Box
-                                key={idx}
-                                onClick={(event) => { rowClick(event, booking) }}
-                                sx={{
-                                    paddingTop: 1,
-                                    paddingBottom: 1,
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    height: '100%',
-                                    borderBottom: 1,
-                                    // overflow: "hidden",
-                                    // overflowY: "scroll",
-                                }}
-                            >
-                                {
-                                    columns.map((col, cidx) => {
-                                        return (
-                                            <Box key={cidx}
-                                                sx={{
-                                                    width: col.width,
-                                                    flex: col.flex,
-                                                    textAlign: col.textAlign,
-                                                    align: 'center',
-                                                    overflow: 'hidden',
-                                                }}
-                                            >
-                                                {col.renderCell({ row: booking, field: col.field })}
-                                            </Box>
-                                        )
-                                    })
-                                }
-
-                            </Box>
-                        )
-                    })
-                }
-
-                {loadMoreButton()}
-            </Box>
-        </Box>
+  let firstFutureBooking =
+    focusDate.current && contextValues.bookings.find((booking) =>
+      dayjsPR(booking.checkOut).isSameOrBefore(dayjsPR(focusDate.current).add(30, "d"))
     )
+
+  return (
+    <Box
+      sx={{
+        paddingBottom: 0,
+        display: "flex",
+        flexDirection: "column",
+        height: '100%',
+        overflow: "hidden",
+        overflowY: "scroll",
+      }}
+    >
+
+      <Box
+        sx={{
+          paddingBottom: 0,
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        {
+          columns.map((col, idx) => {
+            return (
+              <Box key={idx}
+                sx={{
+                  width: col.width,
+                  flex: col.flex,
+                  textAlign: 'center',
+                  height: '40px',
+                  lineHeight: '40px',
+                  fontWeight: 'bold',
+                  borderTop: 1,
+                }}
+              >
+                {col.headerName}
+              </Box>
+            )
+          })
+        }
+      </Box>
+
+      <Box
+        sx={{
+          paddingBottom: 1,
+          display: "flex",
+          flexDirection: "column",
+          flexGrow: 1,
+          overflow: "hidden",
+          overflowY: "scroll",
+          borderTop: 1,
+          borderLeft: 1,
+          borderRight: 1,
+        }}
+      >
+
+        {
+          contextValues.bookings.toReversed().map((booking, idx) => {
+            const myRefProps =
+              (firstFutureBooking?.id === booking.id) ?
+                {
+                  ref: initFocusRef,
+                  id: booking.id
+                  // id: "vdsFocusDate"
+                } :
+                {}
+
+            return (
+              <Box
+                key={idx}
+                {...myRefProps}
+                onClick={(event) => { rowClick(event, booking) }}
+                sx={{
+                  paddingTop: 1,
+                  paddingBottom: 1,
+                  display: "flex",
+                  flexDirection: "row",
+                  height: '100%',
+                  borderBottom: 1,
+                  background: (myRefProps.id === "paging") ? "red" : "",
+                }}
+              >
+                {
+                  columns.map((col, cidx) => {
+                    return (
+                      <Box key={cidx}
+                        sx={{
+                          width: col.width,
+                          flex: col.flex,
+                          textAlign: col.textAlign,
+                          align: 'center',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {col.renderCell({ row: booking, field: col.field })}
+                      </Box>
+                    )
+                  })
+                }
+
+              </Box>
+            )
+          })
+        }
+      </Box>
+    </Box>
+  )
 
 }
 

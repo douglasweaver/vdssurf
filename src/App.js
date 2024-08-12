@@ -24,8 +24,9 @@ import Avatar from '@mui/material/Avatar';
 import { deepOrange } from '@mui/material/colors';
 
 import VDSErrorBoundary from './components/vdserrorboundary';
-import { VDSBookings, vdsBookingsTypePolicies } from './routes/vdsbookings.js';
-import { VDSNotes, vdsNotesTypePolicies } from './routes/vdsnotes.js';
+import { BookingsContextProvider } from "./routes/bookings/vdsBookingsContext";
+import { VDSBookings, vdsBookingsTypePolicies } from './routes/bookings/vdsbookings.js';
+import { VDSNotes, vdsNotesTypePolicies } from './routes/notes/vdsnotes.js';
 
 import VDSGallery from './routes/vdsgallery'
 import VDSAppBar from './vdsappbar';
@@ -34,6 +35,7 @@ import { ApolloProvider, } from '@apollo/client';
 import client from './apollo/client.js'
 
 import { fetchUserAttributes, } from 'aws-amplify/auth'
+
 
 const appTitle = 'VDS ✌🏄';
 
@@ -173,7 +175,11 @@ function App() {
                 element={
                   <Fragment>
                     <Authenticator variation="modal" hideSignUp={true} />
-                    {user !== undefined && (<VDSBookings />)}
+                    {user !== undefined &&
+                      (<BookingsContextProvider>
+                        <VDSBookings />
+                      </BookingsContextProvider>
+                      )}
                   </Fragment>
                 }
               />

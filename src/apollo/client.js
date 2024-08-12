@@ -9,18 +9,18 @@ import {
 import config from '../amplifyconfiguration.json';
 import { fetchAuthSession } from 'aws-amplify/auth';
 
-async function getCognitoCredentials() {
-  try {
-    // customCredentialsProvider.loadFederatedLogin({
-    //   domain,
-    //   token: idToken
-    // });
-    const fetchSessionResult = await fetchAuthSession({ forceRefresh: true }); // will return the credentials
-    console.log('fetchSessionResult: ', fetchSessionResult);
-  } catch (err) {
-    console.log(err);
-  }
-}
+// async function getCognitoCredentials() {
+//   try {
+//     // customCredentialsProvider.loadFederatedLogin({
+//     //   domain,
+//     //   token: idToken
+//     // });
+//     const fetchSessionResult = await fetchAuthSession({ forceRefresh: true }); // will return the credentials
+//     console.log('fetchSessionResult: ', fetchSessionResult);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 
 
 export default function client(typePolicies) {
