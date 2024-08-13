@@ -22,7 +22,7 @@ function createAllDates(startDate, bookings) {
     dates.push({ date: q, bookings: [] });
   }
 
-  bookings.forEach((bk, bidx) => {
+  bookings.forEach((bk) => {
     for (let i = Math.max(0, dayjsPR(bk.checkIn).diff(dates[0].date, 'day'));
       i <= Math.max(dayjsPR(bk.checkOut).diff(dates[0].date, 'day'));
       i++) {
@@ -51,7 +51,6 @@ function createAllDates(startDate, bookings) {
   months.push(month)
 
   return months
-
 
 };
 

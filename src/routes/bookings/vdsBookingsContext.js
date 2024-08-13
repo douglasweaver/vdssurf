@@ -53,6 +53,7 @@ export function BookingsContextProvider({ children }) {
         }
     })
 
+    // should actually resort cache here!!!!
     const [updateBooking] = useMutation(gql(updateVDSBooking), {
         update(cache, { data: { updateVDSBooking } }) {
         }
@@ -82,7 +83,7 @@ export function BookingsContextProvider({ children }) {
 
                         let existingBookings = previous.items
                         let start = existingBookings.findIndex((e) => {
-                            return cache.data.data[e.__ref].checkOut > createVDSBooking.checkOut
+                            return cache.data.data[e.__ref].checkOut < createVDSBooking.checkOut
                         });
                         start = start < 0 ? existingBookings.length : start
                         let final = {
@@ -142,7 +143,11 @@ export function BookingsContextProvider({ children }) {
         //     }
         // }
         if (!loading && earliestCheckOut) {
-            let bookings = (data !== undefined) ? data[queryName].items : []
+            let bookings = (data !== undefined) ?
+            data[queryName].items.toSorted((a, b) => {
+                return (a.checkOut < b.checkOut ? 1 : -1)
+            }) : []
+
             if (bookings.length < 1 || earliestCheckOut.isBefore(dayjsPR(bookings[bookings.length - 1].checkOut))) {
                 fetchMoreBookings()
             } else {
@@ -176,7 +181,10 @@ export function BookingsContextProvider({ children }) {
     // }
 
     const value = useMemo(() => {
-        let bookings = (data !== undefined) ? data[queryName].items : []
+        let bookings = (data !== undefined) ?
+            data[queryName].items.toSorted((a, b) => {
+                return (a.checkOut < b.checkOut ? 1 : -1)
+            }) : []
 
         return ({
             bookings,
@@ -184,14 +192,14 @@ export function BookingsContextProvider({ children }) {
             changeEarliestCheckOut,
             bookingsLoading: loading ||
                 (!(data !== undefined && data[queryName]?.nextToken === null)
-                && (bookings.length < 1 ||
-                    earliestCheckOut.isBefore(dayjsPR(bookings[bookings.length - 1].checkOut)))),
-                error,
+                    && (bookings.length < 1 ||
+                        earliestCheckOut.isBefore(dayjsPR(bookings[bookings.length - 1].checkOut)))),
+            error,
             contextDeleteBooking,
             contextAddBooking,
             contextUpdateBooking,
         })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [earliestCheckOut, mutated, loading])
 
     return (
