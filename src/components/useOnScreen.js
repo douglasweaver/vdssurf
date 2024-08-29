@@ -13,7 +13,7 @@ import { useState, useEffect, useRef } from 'react';
 export default function useOnScreen({
     ref,
     defaultValue = false,
-    root=null,
+    root = null,
 }) {
     const [isIntersecting, setIntersecting] = useState(defaultValue);
     const observerRef = useRef(null);
@@ -22,22 +22,22 @@ export default function useOnScreen({
         root: root,
         rootMargin: "0px",
         threshold: 1.0,
-      };
-    
-      console.log("USEONSCREEN",ref)
+    };
+
     useEffect(() => {
         observerRef.current = new IntersectionObserver(([entry]) => {
             console.log("INTERSECTING", entry.isIntersecting)
             setIntersecting(entry.isIntersecting)
         },
-        options
+            options
         );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        console.log("adding ovserver",ref)
-        observerRef.current.observe(ref.current);
+        if (ref?.current) {
+            observerRef.current.observe(ref.current);
+        } 
 
         return () => {
             observerRef.current.disconnect();

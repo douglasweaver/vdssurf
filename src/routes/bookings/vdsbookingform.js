@@ -222,14 +222,6 @@ export function VDSBookingForm({
                         >
 
                             <Button
-                                type="submit"
-                                variant="contained"
-                                float="left"
-                            >
-                                Save
-                            </Button>
-
-                            <Button
                                 variant="contained"
                                 onClick={handleDialogClose}
                                 float="center"
@@ -246,6 +238,15 @@ export function VDSBookingForm({
                                     Delete
                                 </Button>
                             }
+
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                float="left"
+                            >
+                                Save
+                            </Button>
+
                         </Box>
                         {graphQLErrors && <span style={{color:"red"}}>{graphQLErrors[0].message}</span>}
                     </Form>

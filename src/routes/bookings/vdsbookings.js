@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback } from 'react';
+import { useState, useRef, useContext, useCallback } from 'react';
 
 import { BookingsContext } from './vdsBookingsContext'
 
@@ -65,6 +65,8 @@ export function VDSBookings() {
 
     const [startDate, setStartDate] = useState(todayPR.day(0).add(-14, "day").day(0))
 
+    const todayFocusRef = useRef(null);
+
 
     const handleBookingDialogClose = () => {
         setBookingDialogOpen(false);
@@ -103,10 +105,16 @@ export function VDSBookings() {
         setViewMode(newViewMode);
     };
 
-    const handleBackSixMonths = (event) => {
+    const handleOlderBookings = (event) => {
         const newStartDate = startDate.add(-12, "month").day(0)
         contextValues.changeEarliestCheckOut(newStartDate)
         setStartDate(newStartDate)
+    }
+
+    const handleToday = (event) => {
+        if (todayFocusRef.current) {
+            todayFocusRef.current?.scrollIntoView()
+          }     
     }
 
     return (
@@ -173,9 +181,16 @@ export function VDSBookings() {
 
                         <Button variant="outlined"
                             height='40px'
-                            onClick={handleBackSixMonths}
+                            onClick={handleOlderBookings}
                         >
-                            {(viewMode === "Calendar" ? "One Year Back" : "Older")}
+                            {(viewMode === "Calendar" ? "Older Bookings" : "Older Bookings")}
+                        </Button>
+
+                        <Button variant="outlined"
+                            height='40px'
+                            onClick={handleToday}
+                        >
+                            {(viewMode === "Calendar" ? "Today" : "Today")}
                         </Button>
                     </Box>
 
@@ -246,11 +261,13 @@ export function VDSBookings() {
                 {viewMode === "Calendar" ?
                     <VDSBookingsCalendar
                         startDate={startDate}
+                        todayFocusRef={todayFocusRef}
                         editBooking={editBooking}
                     />
                     :
                     <VDSBookingsList
-                        editBooking={editBooking}
+                    todayFocusRef={todayFocusRef}
+                    editBooking={editBooking}
                     />
                 }
                 {/* </BookingsContextProvider>

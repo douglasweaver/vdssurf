@@ -56,6 +56,7 @@ function createAllDates(startDate, bookings) {
 
 export default function VDSBookingsCalendar({
   startDate,
+  todayFocusRef,
   editBooking,
 }) {
 
@@ -64,21 +65,10 @@ export default function VDSBookingsCalendar({
 
   const scrollBoxRef = useRef(null);
 
-  const initFocusRef = useRef(null);
-  const focusDate = useRef(dayjsPR().startOf("d").day(0))
-
   const months = useMemo(() => {
     return contextValues.bookingsLoading ? [] :
       createAllDates(startDate, contextValues.bookings)
   }, [startDate, contextValues.bookings, contextValues.bookingsLoading])
-
-
-  useEffect(() => {
-    if (focusDate.current && initFocusRef.current) {
-      focusDate.current = null
-      initFocusRef.current?.scrollIntoView()
-    }
-  }, []);
 
   const columns = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
@@ -175,8 +165,8 @@ export default function VDSBookingsCalendar({
                   {
                     month.weeks.map((week, idx) => {
                       const myRefProps =
-                        week[0].date.isSame(focusDate.current) ? {
-                          ref: initFocusRef,
+                        week[0].date.isSame(dayjsPR().startOf("d").day(0)) ? {
+                          ref: todayFocusRef,
                           id: "vdsFocusDate"
                         } : {};
                       return (

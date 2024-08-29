@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext } from 'react';
+import {useContext } from 'react';
 
 import { BookingsContext } from './vdsBookingsContext'
 
@@ -43,7 +43,7 @@ const VDSDateRangeCell = ({ row, field }) => {
 
   let checkInDate = dayjsPR(row.checkIn)
   let checkOutDate = dayjsPR(row.checkOut)
-  let formatDate = (checkOutDate.year() !== dayjsPR().year()) ? 'MM/DD/YY' : 'MM/DD'
+  let formatDate = (checkOutDate.year() !== dayjsPR().year()) ? 'MM/DD/YY' : 'MM/DD/YY'
   return (
     <Tooltip title={checkInDate.format('ddd MMM DD YYYY @ hA') + ' - ' + checkOutDate.format('ddd MMM DD YYYY @ hA')} >
       <Box>
@@ -91,6 +91,7 @@ const columns = [
 ];
 
 export default function VDSBookingList({
+  todayFocusRef,
   editBooking,
 }) {
 
@@ -99,30 +100,15 @@ export default function VDSBookingList({
   // const { bookings, setEarliestCheckOut, bookingsLoading, error } =
   //   useContext(BookingsContext);
 
-  const initFocusRef = useRef(null);
-  const focusDate = useRef(dayjsPR().startOf("d").day(0))
-
-  useEffect(() => {
-    if (focusDate.current && initFocusRef.current) {
-      focusDate.current = null
-      initFocusRef.current?.scrollIntoView()
-    }
-  }, []);
-
-
-  // useLayoutEffect(() => {
-  //   if (initFocusRef.current)
-  //     initFocusRef.current.scrollIntoView(true)
-  // }, [contextValues])
 
   const rowClick = (event, booking) => {
     editBooking(booking);
   };
 
 
-  let firstFutureBooking =
-    focusDate.current && contextValues.bookings.find((booking) =>
-      dayjsPR(booking.checkOut).isSameOrBefore(dayjsPR(focusDate.current).add(30, "d"))
+  let firstFutureBooking = contextValues.bookings.find((booking) =>
+      dayjsPR(booking.checkOut).isSameOrBefore(
+        dayjsPR().startOf("d").add(30,"d").day(0))
     )
 
   return (
@@ -184,7 +170,7 @@ export default function VDSBookingList({
             const myRefProps =
               (firstFutureBooking?.id === booking.id) ?
                 {
-                  ref: initFocusRef,
+                  ref: todayFocusRef,
                   id: booking.id
                   // id: "vdsFocusDate"
                 } :

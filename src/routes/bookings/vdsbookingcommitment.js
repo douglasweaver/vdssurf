@@ -9,13 +9,20 @@ import {
 
 // const stoplightGreen = '#57E964'
 const stopLightRed = '#cc3232'
-const stopLightYellow = '#f7B500'
+const stopLightYellow = '#ffffc5'
+const ecru = '#e0cd95'
+// const stopLightYellow = '#f7B500'
+
+
 
 const commitmentLabel = 'Commitment'
 const commitmentOptions = [
+    // { value: 'THINKINGABOUTIT', label: 'Thinking About It', short: 'Thinking', icon: <VDSThinkingIcon />, color: stopLightYellow},
+    // { value: 'PRETTYSURE', label: 'Pretty Sure', short: 'Likely', icon: <VDSPrettySureIcon />, color: stopLightRed },
+    // { value: 'CONFIRMED', label: 'Confirmed', short: 'Confirmed', icon: <VDSConfirmedIcon />, color: undefined },
     { value: 'THINKINGABOUTIT', label: 'Thinking About It', short: 'Thinking', icon: <VDSThinkingIcon />, color: stopLightYellow},
-    { value: 'PRETTYSURE', label: 'Pretty Sure', short: 'Likely', icon: <VDSPrettySureIcon />, color: stopLightRed },
-    { value: 'CONFIRMED', label: 'Confirmed', short: 'Confirmed', icon: <VDSConfirmedIcon />, color: undefined },
+    { value: 'PRETTYSURE', label: 'Pretty Sure', short: 'Likely', icon: <VDSPrettySureIcon />, color: ecru },
+    { value: 'CONFIRMED', label: 'Confirmed', short: 'Confirmed', icon: <VDSConfirmedIcon />, color: stopLightRed },
 ]
 
 export const commitmentDefault = commitmentOptions[0].value;
