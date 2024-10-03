@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import { Formik, Form } from 'formik';
 import * as yup from 'yup';
@@ -18,8 +18,12 @@ import { VDSBookingAutos } from './vdsbookingautos'
 import { VDSBookingLevels } from './vdsbookinglevels'
 import { VDSBookingCommitment, commitmentDefault } from './vdsbookingcommitment'
 
-import { dayjsPR } from '../../components/vdsdayjspr';
+import { VDSBookingOwner} from './vdsbookingowner'
 
+import { dayjsPR } from '../../components/vdsdayjspr';
+// import { useControlledValueWithTimezone } from '@mui/x-date-pickers/internals';
+
+import { fetchAuthSession } from "aws-amplify/auth";
 
 export function newBooking(inBook) 
  {
@@ -41,7 +45,7 @@ function vdsBookingToFormInitialValues(
     booking,
 ) {
     // strip out __typename so mutation add will work
-    const bk = ('id' in booking) ? { id: booking.id } : {};
+    const bk = ('id' in booking) ? { id: booking.id, owner: booking.owner } : {};
     Object.assign(bk,
         {
             guests: booking.guests || '',
@@ -90,6 +94,22 @@ export function VDSBookingForm({
 
     const [graphQLErrors, setGraphQLErrors] = useState();
 
+    const [adminUser, setAdminUser] = useState(false)
+    
+    useEffect(() => {
+        const fetchAtt = async () => {
+          try {
+            const { tokens } = await fetchAuthSession();
+            setAdminUser(tokens.accessToken.payload["cognito:groups"].includes("Admin"))
+          } catch {
+            setAdminUser(false)
+          }
+        }
+        fetchAtt()
+      },[]);
+
+
+    
     const handleCreateBooking = (booking) => {
         if ('id' in booking) {
             contextUpdateBooking({
@@ -210,6 +230,18 @@ export function VDSBookingForm({
                             helperText={touched.commitment && errors.commitment}
                         />
 
+                        {adminUser && ('owner' in values) &&
+
+                        <VDSBookingOwner
+                            id="owner"
+                            name="owner"
+                            value={values.owner}
+                            setFieldValue={setFieldValue}
+                            error={touched.owner && Boolean(errors.owner)}
+                            helperText={touched.owner && errors.owner}
+                        />
+                        }       
+
                         <Box
                             component="span"
                             sx={{
@@ -248,7 +280,10 @@ export function VDSBookingForm({
                             </Button>
 
                         </Box>
-                        {graphQLErrors && <span style={{color:"red"}}>{graphQLErrors[0].message}</span>}
+                        {graphQLErrors && <span style={{color:"red"}}>
+                            {(graphQLErrors[0].errorType === "Unauthorized" ? 
+                                "Booking can only be modified by creator" : graphQLErrors[0].message)}
+                        </span>}
                     </Form>
                 )}
             </Formik>

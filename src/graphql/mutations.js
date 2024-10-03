@@ -8,6 +8,7 @@ export const createVDSBooking = /* GraphQL */ `
   ) {
     createVDSBooking(input: $input, condition: $condition) {
       id
+      owner
       guests
       description
       checkIn
@@ -18,7 +19,6 @@ export const createVDSBooking = /* GraphQL */ `
       type
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -30,6 +30,7 @@ export const updateVDSBooking = /* GraphQL */ `
   ) {
     updateVDSBooking(input: $input, condition: $condition) {
       id
+      owner
       guests
       description
       checkIn
@@ -40,7 +41,6 @@ export const updateVDSBooking = /* GraphQL */ `
       type
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -52,6 +52,7 @@ export const deleteVDSBooking = /* GraphQL */ `
   ) {
     deleteVDSBooking(input: $input, condition: $condition) {
       id
+      owner
       guests
       description
       checkIn
@@ -62,7 +63,6 @@ export const deleteVDSBooking = /* GraphQL */ `
       type
       createdAt
       updatedAt
-      owner
       __typename
     }
   }

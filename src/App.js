@@ -36,7 +36,6 @@ import client from './apollo/client.js'
 
 import { fetchUserAttributes, } from 'aws-amplify/auth'
 
-
 const appTitle = 'VDS ✌🏄';
 
 const apolloTypePolicies =
@@ -72,6 +71,8 @@ function accountInitials(attributes) {
   return (attributes === undefined ? "UNK" :
     (attributes["custom:initials"] ?? "???"))
 }
+
+
 
 // function Login() {
 

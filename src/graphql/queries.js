@@ -5,6 +5,7 @@ export const getVDSBooking = /* GraphQL */ `
   query GetVDSBooking($id: ID!) {
     getVDSBooking(id: $id) {
       id
+      owner
       guests
       description
       checkIn
@@ -15,7 +16,6 @@ export const getVDSBooking = /* GraphQL */ `
       type
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -29,6 +29,7 @@ export const listVDSBookings = /* GraphQL */ `
     listVDSBookings(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        owner
         guests
         description
         checkIn
@@ -39,7 +40,6 @@ export const listVDSBookings = /* GraphQL */ `
         type
         createdAt
         updatedAt
-        owner
         __typename
       }
       nextToken
@@ -102,6 +102,7 @@ export const VDSBookingsByDate = /* GraphQL */ `
     ) {
       items {
         id
+        owner
         guests
         description
         checkIn
@@ -112,7 +113,6 @@ export const VDSBookingsByDate = /* GraphQL */ `
         type
         createdAt
         updatedAt
-        owner
         __typename
       }
       nextToken
