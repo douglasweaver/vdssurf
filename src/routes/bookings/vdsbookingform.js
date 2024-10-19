@@ -61,6 +61,8 @@ function vdsBookingToFormInitialValues(
     return bk;
 }
 
+// convert datarange to separate checkin checkout values
+// remove OWNER field because not in write schema
 function vdsFormValuesToBooking(
     values,
 ) {
@@ -71,6 +73,7 @@ function vdsFormValuesToBooking(
             checkOut: values.dateRange[1].toISOString(),
         });
     delete bk.dateRange;
+    delete bk.owner
     return bk;
 }
 

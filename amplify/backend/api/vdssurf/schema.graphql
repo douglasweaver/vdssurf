@@ -31,7 +31,6 @@ type VDSBooking
     ])
   {
   id: ID!
-  owner: String!
   guests: String!
   description: String
   checkIn: AWSDateTime!

@@ -8,7 +8,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 
 const ImagePath = 'assets/photos/'
-
 // function srcset(image, size, rows = 1, cols = 1) {
 //     let tmp = {
 //         src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
@@ -24,6 +23,7 @@ const VDSImage = ({ imageSpec }) => {
     const [imageRef, setImageRef] = useState("");
 
     useEffect(() => {
+
         const imageUrl = async (imageName) => {
             const picUrl = await getUrl({
                 key: (ImagePath + imageName),
@@ -35,11 +35,14 @@ const VDSImage = ({ imageSpec }) => {
             setImageRef({ result: picUrl.url });
         };
         imageUrl(imageSpec.img);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
     return ((imageRef === undefined) ?
         <p>LOADING...</p>
         :
+
         <Box
             component="img"
             sx={{
@@ -54,6 +57,7 @@ const VDSImage = ({ imageSpec }) => {
         />
     )
 }
+
 
 export default function VDSGallery() {
 
@@ -81,6 +85,7 @@ export default function VDSGallery() {
         </div>
     )
 }
+
 
 const itemData = [
     {

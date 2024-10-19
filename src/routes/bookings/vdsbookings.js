@@ -4,16 +4,15 @@ import { BookingsContext } from './vdsBookingsContext'
 
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
+// import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+// import ToggleButton from '@mui/material/ToggleButton';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Button from '@mui/material/Button';
 
-import ListTwoToneIcon from '@mui/icons-material/ListTwoTone';
-import CalendarViewMonthTwoToneIcon from '@mui/icons-material/CalendarViewMonthTwoTone';
-
+// import ListTwoToneIcon from '@mui/icons-material/ListTwoTone';
+// import CalendarViewMonthTwoToneIcon from '@mui/icons-material/CalendarViewMonthTwoTone';
 
 // import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 // import { importCSVBookings } from './bookings/vdsbookingIMPORT';
@@ -56,7 +55,13 @@ export const vdsBookingsTypePolicies =
 
 const todayPR = dayjsPR().startOf("d")
 
-export function VDSBookings() {
+export function VDSBookings({
+        initViewMode,
+      }) {
+
+    // const [viewMode, setViewMode] = useState('Calendar');
+
+    const viewMode = initViewMode
 
     const contextValues = useContext(BookingsContext);
 
@@ -100,10 +105,9 @@ export function VDSBookings() {
         }
     }, [])
 
-    const [viewMode, setViewMode] = useState('Calendar');
-    const handleViewModeChange = (event, newViewMode) => {
-        setViewMode(newViewMode);
-    };
+    // const handleViewModeChange = (event, newViewMode) => {
+    //     setViewMode(newViewMode);
+    // };
 
     const handleOlderBookings = (event) => {
         const newStartDate = startDate.add(-12, "month").day(0)
@@ -151,7 +155,7 @@ export function VDSBookings() {
                             flexDirection: "row",
                         }}
                     >
-                        <ToggleButtonGroup
+                        {/* <ToggleButtonGroup
                             color="standard"
                             orientation="horizontal"
                             exclusive
@@ -177,7 +181,7 @@ export function VDSBookings() {
                                     <ListTwoToneIcon />
                                 </Tooltip>
                             </ToggleButton>
-                        </ToggleButtonGroup>
+                        </ToggleButtonGroup> */}
 
                         <Button variant="outlined"
                             height='40px'

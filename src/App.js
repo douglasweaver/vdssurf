@@ -51,7 +51,8 @@ const apolloClient = client(apolloTypePolicies);
 
 const pages = [
   { label: 'Gallery', link: '/gallery', },
-  { label: 'Bookings', link: '/bookings', },
+  { label: 'Calendar', link: '/bookings/calendar', },
+  { label: 'List', link: '/bookings/list', },
   { label: 'Notes', link: '/notes', },
 ]
 
@@ -71,8 +72,6 @@ function accountInitials(attributes) {
   return (attributes === undefined ? "UNK" :
     (attributes["custom:initials"] ?? "???"))
 }
-
-
 
 // function Login() {
 
@@ -158,12 +157,12 @@ function App() {
               // border: "3px solid green",
             }}
           >
+                        <BookingsContextProvider>
 
             <Routes>
               <Route path="/" element={<VDSGallery />} />
               <Route path="/gallery" element={<VDSGallery />} />
-              <Route
-                path="/login"
+              <Route path="/login"
                 element={
                   <Fragment>
                     <Authenticator variation="modal" hideSignUp={true} />
@@ -171,14 +170,58 @@ function App() {
                   </Fragment>
                 }
               />
+
+              <Route path="/bookings">
+                <Route index element={<VDSGallery />} />
+                <Route path="calendar"
+                  element={
+                    <Fragment>
+                      <Authenticator variation="modal" hideSignUp={true} />
+                      {user !== undefined &&
+                        (
+                        // <BookingsContextProvider>
+                          <VDSBookings initViewMode="Calendar" />
+                        // </BookingsContextProvider>
+                        )}
+                    </Fragment>
+                  }
+                />
+                <Route path="list"
+                  element={
+                    <Fragment>
+                      <Authenticator variation="modal" hideSignUp={true} />
+                      {user !== undefined &&
+                        (
+                        // <BookingsContextProvider>
+                          <VDSBookings initViewMode="List" />
+                        // </BookingsContextProvider>
+                        )}
+                    </Fragment>
+                  }
+                />
+              </Route>
+
               <Route
-                path="/bookings"
+                path="/bookingsCalendar"
                 element={
                   <Fragment>
                     <Authenticator variation="modal" hideSignUp={true} />
                     {user !== undefined &&
                       (<BookingsContextProvider>
-                        <VDSBookings />
+                        <VDSBookings initViewMode="Calendar" />
+                      </BookingsContextProvider>
+                      )}
+                  </Fragment>
+                }
+              />
+              <Route
+                path="/bookingsList"
+                element={
+                  <Fragment>
+                    <Authenticator variation="modal" hideSignUp={true} />
+                    {user !== undefined &&
+                      (<BookingsContextProvider>
+                        <VDSBookings initViewMode="List" />
                       </BookingsContextProvider>
                       )}
                   </Fragment>
@@ -195,6 +238,7 @@ function App() {
               />
 
             </Routes>
+            </BookingsContextProvider>
           </Box>
         </Box>
       </VDSErrorBoundary>
