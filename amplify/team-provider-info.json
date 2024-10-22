@@ -33,7 +33,7 @@
           "nativeClientId": "7l9bdo49cp6ucarodj6i5msrhu",
           "identityPoolId": "us-east-1:b02f9f99-15af-46c6-9125-cdba35448f8d",
           "identityPoolName": "vdsidentitypool",
-          "allowUnauthenticatedIdentities": true,
+          "allowUnauthenticatedIdentities": false,
           "authRoleArn": "arn:aws:iam::915284507039:role/service-role/vdsuthrole",
           "authRoleName": "vdsuthrole",
           "unauthRoleArn": "arn:aws:iam::915284507039:role/service-role/vdsguestaccess",
