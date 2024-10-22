@@ -36,8 +36,8 @@
           "allowUnauthenticatedIdentities": true,
           "authRoleArn": "arn:aws:iam::915284507039:role/service-role/vdsuthrole",
           "authRoleName": "vdsuthrole",
-          "unauthRoleArn": "arn:aws:iam::915284507039:role/service-role/vdsunauthiamrole",
-          "unauthRoleName": "vdsunauthiamrole"
+          "unauthRoleArn": "arn:aws:iam::915284507039:role/service-role/vdsguestaccess",
+          "unauthRoleName": "vdsguestaccess"
         }
       },
       "api": {

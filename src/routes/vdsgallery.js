@@ -88,13 +88,15 @@ export default function VDSGallery() {
 
 
 const itemData = [
-    {
+        {
         img: 'vds0.jpg',
         title: 'Vista Del Surf',
         rows: 2,
         cols: 2,
     },
-    {
+]
+    const itemData2 = [
+        {
         img: 'signbanner.jpg',
         title: 'Vista Del Surf',
         rows: 2,
