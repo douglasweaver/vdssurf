@@ -1,71 +1,14 @@
-import { useState, useEffect } from 'react';
-
-import { getUrl } from 'aws-amplify/storage';
-// import { AmplifyS3Image, AmplifyS3Album, AmplifyS3ImagePicker } from "@aws-amplify/ui-react/legacy";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 
-const ImagePath = 'assets/photos/'
-// function srcset(image, size, rows = 1, cols = 1) {
-//     let tmp = {
-//         src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-//         // srcSet: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format&dpr=2 2x`,
-//     };
-//     return tmp;
-// }
-
-//     // image name should be relative to the public folder
-//     // example: public/images/test.png => Storage.get('images/test.png' ...
-const VDSImage = ({ imageSpec }) => {
-
-    const [imageRef, setImageRef] = useState("");
-
-    useEffect(() => {
-
-        const imageUrl = async (imageName) => {
-            const picUrl = await getUrl({
-                key: (ImagePath + imageName),
-                options: {
-                    accessLevel: 'guest', // can be 'private', 'protected', or 'guest' but defaults to `guest`
-                    expiresIn: 20 // validity of the URL, in seconds. defaults to 900 (15 minutes) and maxes at 3600 (1 hour)
-                },
-            })
-            setImageRef({ result: picUrl.url });
-        };
-        imageUrl(imageSpec.img);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return ((imageRef === undefined) ?
-        <p>LOADING...</p>
-        :
-
-        <Box
-            component="img"
-            sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-            }}
-            src={imageRef.result}
-            alt={imageSpec.title}
-            loading="lazy"
-        />
-    )
-}
-
+const ImagePath = '/assets/photos/'
 
 export default function VDSGallery() {
 
     return (
         <div>
-            {/* <AmplifyS3Album path={ImagePath} />
-            <AmplifyS3Image imgKey={ImagePath + item.img} /> */}
-            {/* <AmplifyS3Image style={srcset(ImagePath + item.img, 121, item.rows, item.cols)} imgKey={ImagePath + item.img} />  */}
 
             <ImageList
                 sx={{ width: '100%', height: '100%' }}
@@ -77,7 +20,18 @@ export default function VDSGallery() {
                 {itemData.map((item) => (
                     <Tooltip title={item.title} key={item.img}>
                         <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
-                            <VDSImage imageSpec={item} />
+                            <Box
+                                component="img"
+                                sx={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    objectPosition: 'center',
+                                }}
+                                src={ImagePath + item.img}
+                                alt={item.title}
+                                loading="lazy"
+                            />
                         </ImageListItem>
                     </Tooltip>
                 ))}
@@ -88,15 +42,15 @@ export default function VDSGallery() {
 
 
 const itemData = [
-        {
+    {
         img: 'vds0.jpg',
         title: 'Vista Del Surf',
         rows: 2,
         cols: 2,
     },
-]
-    const itemData2 = [
-        {
+    // ]
+    // const itemData2 = [
+    {
         img: 'signbanner.jpg',
         title: 'Vista Del Surf',
         rows: 2,
