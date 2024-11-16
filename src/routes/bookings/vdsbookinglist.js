@@ -95,11 +95,9 @@ export default function VDSBookingList({
   editBooking,
 }) {
 
-
   const contextValues = useContext(BookingsContext);
   // const { bookings, setEarliestCheckOut, bookingsLoading, error } =
   //   useContext(BookingsContext);
-
 
   const rowClick = (event, booking) => {
     editBooking(booking);

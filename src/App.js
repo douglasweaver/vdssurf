@@ -92,6 +92,11 @@ function App() {
   const navigate = useNavigate()
 
   useEffect(() => {
+    userUpdate()
+  }, [user]);
+
+
+  const userUpdate = () => {
     const fetchAtt = async () => {
       try {
         const attributes = await fetchUserAttributes();
@@ -101,8 +106,8 @@ function App() {
       }
     }
     fetchAtt()
-  }, [user]);
-
+    // window.location.reload();
+  }
 
   const handleNavigate = (selection) => {
     navigate(selection.link)
@@ -112,7 +117,7 @@ function App() {
 
     if (selection === SignOutText) {
       signOut();
-      setUserAttributes(undefined)
+      userUpdate()
       navigate('/gallery')
     } else if (selection === SignInText) {
       navigate('/login')
@@ -157,7 +162,7 @@ function App() {
               // border: "3px solid green",
             }}
           >
-                        <BookingsContextProvider>
+            {/* <BookingsContextProvider> */}
 
             <Routes>
               <Route path="/" element={<VDSGallery />} />
@@ -171,7 +176,7 @@ function App() {
                 }
               />
 
-              <Route path="/bookings">
+              {/* <Route path="/bookings">
                 <Route index element={<VDSGallery />} />
                 <Route path="calendar"
                   element={
@@ -179,9 +184,9 @@ function App() {
                       <Authenticator variation="modal" hideSignUp={true} />
                       {user !== undefined &&
                         (
-                        // <BookingsContextProvider>
+                          // <BookingsContextProvider>
                           <VDSBookings initViewMode="Calendar" />
-                        // </BookingsContextProvider>
+                          // </BookingsContextProvider>
                         )}
                     </Fragment>
                   }
@@ -192,28 +197,33 @@ function App() {
                       <Authenticator variation="modal" hideSignUp={true} />
                       {user !== undefined &&
                         (
-                        // <BookingsContextProvider>
+                          // <BookingsContextProvider>
                           <VDSBookings initViewMode="List" />
-                        // </BookingsContextProvider>
+                          // </BookingsContextProvider>
                         )}
                     </Fragment>
                   }
                 />
-              </Route>
+              </Route> */}
 
               <Route
-                path="/bookingsCalendar"
+                path="/bookings/*"
                 element={
                   <Fragment>
                     <Authenticator variation="modal" hideSignUp={true} />
                     {user !== undefined &&
                       (<BookingsContextProvider>
-                        <VDSBookings initViewMode="Calendar" />
+                        <Routes>
+                          <Route path="/List" element={<VDSBookings initViewMode="List" />} />
+                          <Route path="/Calendar" element={<VDSBookings initViewMode="Calendar" />} />
+                        </Routes>
                       </BookingsContextProvider>
                       )}
                   </Fragment>
                 }
               />
+
+
               <Route
                 path="/bookingsList"
                 element={
@@ -238,7 +248,7 @@ function App() {
               />
 
             </Routes>
-            </BookingsContextProvider>
+            {/* </BookingsContextProvider> */}
           </Box>
         </Box>
       </VDSErrorBoundary>
