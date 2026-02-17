@@ -3,6 +3,7 @@ import { ReactComponent as PalmTreeIcon } from './palm-tree-svgrepo-com.svg';
 import { ReactComponent as StepsIcon } from './stairs-svgrepo-com.svg';
 import { ReactComponent as SandyIcon } from './sand-bucket-svgrepo-com.svg';
 import { ReactComponent as JeepIcon } from './jeep-svgrepo-com.svg';
+import { ReactComponent as ScionIcon } from './scion-svgrepo-com.svg';
 import { ReactComponent as FordIcon } from './pickup-truck-svgrepo-com.svg';
 // import { ReactComponent as VolvoIcon } from './volvo-logo-svgrepo-com.svg';
 import { ReactComponent as VolvoIcon } from './volvo.svg';
@@ -14,6 +15,7 @@ import { ReactComponent as HistoryLogManuscriptIcon } from './history-log-manusc
 // import StairsIcon from '@mui/icons-material/Stairs';
 
 export const VDSJeepIcon = () => (VDSWrapIcon({SvgIcon: JeepIcon}));
+export const VDSScionIcon = () => (VDSWrapIcon({SvgIcon: ScionIcon}));
 export const VDSFordIcon = () => (VDSWrapIcon({SvgIcon: FordIcon}));
 export const VDSVolvoIcon = () => (VDSWrapIcon({SvgIcon: VolvoIcon}));
 

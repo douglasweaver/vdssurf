@@ -247,6 +247,7 @@ export default function VDSBookingCreateForm(props) {
         JEEP: "Jeep",
         FORD: "Ford",
         VOLVO: "Volvo",
+        SCION: "Scion",
       };
       return enumDisplayValueMap[r];
     },
@@ -644,6 +645,11 @@ export default function VDSBookingCreateForm(props) {
             children="Volvo"
             value="VOLVO"
             {...getOverrideProps(overrides, "autosoption2")}
+          ></option>
+          <option
+            children="Scion"
+            value="SCION"
+            {...getOverrideProps(overrides, "autosoption3")}
           ></option>
         </SelectField>
       </ArrayField>
