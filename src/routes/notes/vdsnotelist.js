@@ -1,11 +1,55 @@
 import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player'
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 // import { styled } from '@mui/material/styles';
 
 import { getUrl } from 'aws-amplify/storage';
 
 const ImagePath = 'vdsNotes/'
+const VDSNoteComment = ({ comment, fileName }) => {
+    const [fileUrl, setFileUrl] = useState("");
+
+    useEffect(() => {
+        const fetchFileUrl = async () => {
+            const url = await getUrl({
+                key: ImagePath + fileName,
+                options: {
+                    accessLevel: 'guest',
+                    expiresIn: 3600
+                },
+            });
+            setFileUrl(url.url.toString());
+        };
+        if (fileName) fetchFileUrl();
+    }, [fileName]);
+
+    const isPdf = fileName && fileName.toLowerCase().endsWith('.pdf');
+
+    const openInViewer = () => {
+        if (fileUrl) {
+            if (isPdf) {
+                const viewerUrl = 'https://docs.google.com/gview?url=' + encodeURIComponent(fileUrl) + '&embedded=false';
+                window.open(viewerUrl, '_blank', 'noopener,noreferrer');
+            } else {
+                const videoHtml = `<html><head><title>${fileName}</title><style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;height:100vh;}</style></head><body><video src="${fileUrl}" controls autoplay style="max-width:100%;max-height:100vh;"></video></body></html>`;
+                const blob = new Blob([videoHtml], { type: 'text/html' });
+                window.open(URL.createObjectURL(blob), '_blank');
+            }
+        }
+    };
+
+    return (
+        <Link
+            component="button"
+            variant="body1"
+            onClick={openInViewer}
+            sx={{ cursor: 'pointer' }}
+        >
+            {comment}
+        </Link>
+    );
+}
 
 const VDSNoteVideo = ({ fileName }) => {
 
@@ -18,7 +62,7 @@ const VDSNoteVideo = ({ fileName }) => {
                 options: {
                     accessLevel: 'guest' , // can be 'private', 'protected', or 'guest' but defaults to `guest`
                     // validateObjectExistence: false,  // defaults to false
-                    expiresIn: 20 // validity of the URL, in seconds. defaults to 900 (15 minutes) and maxes at 3600 (1 hour)
+                    expiresIn: 3600 // validity of the URL, in seconds. defaults to 900 (15 minutes) and maxes at 3600 (1 hour)
                     // useAccelerateEndpoint: true; // Whether to use accelerate endpoint.
                   },
                 })
@@ -43,10 +87,7 @@ const VDSNoteVideo = ({ fileName }) => {
             controls
             height='100%'
             width='auto'
-        // light={true}
-        // playing
         />
-        // </Box>
     )
 }
 
@@ -89,9 +130,9 @@ export default function VDSNoteList({
                     <p>Comments</p>
                 </Box>
 
-                <Box sx={{ m: 1, fontWeight: 'bold', flex: 2, align: 'center', textAlign: 'center' }}>
+                {/* <Box sx={{ m: 1, fontWeight: 'bold', flex: 2, align: 'center', textAlign: 'center' }}>
                     <p>Media</p>
-                </Box>
+                </Box> */}
             </Box>
 
             <Box
@@ -126,7 +167,6 @@ export default function VDSNoteList({
                                     sx={{
                                         m: 1, flex: 2,
                                         align: 'center', textAlign: 'center',
-                                        // overflowY: "scroll",
                                     }}
                                 >
                                     <p>{note.name}</p>
@@ -139,16 +179,16 @@ export default function VDSNoteList({
                                         overflowY: "scroll",
                                     }}
                                 >
-                                    <p>{note.comments}</p>
+                                    <VDSNoteComment comment={note.comments} fileName={note.fileName} />
                                 </Box>
 
-                                <Box sx={{
+                                {/* <Box sx={{
                                     m: 1, flex: 6,
                                     width: '100%', height: '100%',
                                     align: 'center', textAlign: 'center',
                                 }}>
                                     <VDSNoteVideo fileName={note.fileName} />
-                                </Box>
+                                </Box> */}
                             </Box>
                         )
                     })

@@ -88,24 +88,29 @@ export function VDSNoteForm({
                 />
             </Box>
             <Box
-                component="span"
                 sx={{
+                    m: 2,
                     display: "flex",
-                    border: "1px solid",
-                    padding: 1,
-                    justifyContent: "space-between",
                     alignItems: "center",
                 }}
             >
-
                 <input type='file'
                     accept='video/mov'
                     onChange={chooseFilePressed} />
+            </Box>
 
+            <Box
+                sx={{
+                    m: 2,
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 2,
+                    justifyContent: "flex-end",
+                }}
+            >
                 <Button
                     variant="contained"
                     onClick={uploadMedia}
-                    float="LEFT"
                 >
                     Upload
                 </Button>
@@ -113,7 +118,6 @@ export function VDSNoteForm({
                 <Button
                     variant="contained"
                     onClick={handleNoteDialogClose}
-                    float="center"
                 >
                     Cancel
                 </Button>
@@ -121,8 +125,8 @@ export function VDSNoteForm({
                 {('id' in noteData) &&
                     <Button
                         variant="contained"
+                        color="error"
                         onClick={() => handleDelete()}
-                        float="right"
                     >
                         Delete
                     </Button>
