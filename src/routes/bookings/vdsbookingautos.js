@@ -12,7 +12,7 @@ import {
 
 const autosTitle = 'Autos'
 const autoOptions = [
-    { value: 'JEEP', label: 'Jeep', icon: <VDSJeepIcon />, active: true },
+    { value: 'JEEP', label: 'Jeep', icon: <VDSJeepIcon />, active: false },
     { value: 'SCION', label: 'Scion', icon: <VDSScionIcon />, active: true },
     { value: 'FORD', label: 'Ford', icon: <VDSFordIcon />, active: true },
     { value: 'VOLVO', label: 'Volvo', icon: <VDSVolvoIcon />, active: false }
@@ -79,7 +79,7 @@ export function VDSBookingAutos({
         <VDSCheckboxList
             label={autosTitle}
             name={name}
-            checkOptions={autoOptions.filter((auto, index) => (auto.active))}
+            checkOptions={autoOptions.filter((auto) => (auto.active || value.includes(auto.value)))}
             value={value}
             setFieldValue={setFieldValue}
             error={error}
